@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>키움 API 알고리즘 매매 프로그램 개발 로드맵</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2em;
+            font-weight: 300;
+        }
+        
+        .tech-stack {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            color: white;
+        }
+        
+        .tech-stack h3 {
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        
+        .tech-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .tech-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .timeline {
+            position: relative;
+            margin: 40px 0;
+        }
+        
+        .week {
+            margin-bottom: 50px;
+            position: relative;
+        }
+        
+        .week-header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(79, 172, 254, 0.3);
+        }
+        
+        .week-title {
+            font-size: 1.8em;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .week-subtitle {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .day-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
+        }
+        
+        .day-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .day-title {
+            color: #2c3e50;
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .day-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: 700;
+        }
+        
+        .task-list {
+            list-style: none;
+        }
+        
+        .task-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .task-item:last-child {
+            border-bottom: none;
+        }
+        
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #bdc3c7;
+            border-radius: 4px;
+            margin-right: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .task-checkbox:hover {
+            border-color: #667eea;
+        }
+        
+        .task-checkbox.checked {
+            background: #667eea;
+            border-color: #667eea;
+            position: relative;
+        }
+        
+        .task-checkbox.checked::after {
+            content: '✓';
+            color: white;
+            position: absolute;
+            top: -2px;
+            left: 3px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .task-text {
+            color: #34495e;
+            line-height: 1.5;
+            transition: all 0.3s ease;
+        }
+        
+        .task-text.completed {
+            text-decoration: line-through;
+            color: #95a5a6;
+        }
+        
+        .priority-high { border-left-color: #e74c3c; }
+        .priority-medium { border-left-color: #f39c12; }
+        .priority-low { border-left-color: #27ae60; }
+        
+        .progress-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 40px;
+            text-align: center;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #ecf0f1;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+        
+        .progress-text {
+            color: #2c3e50;
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .tips-section {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+        
+        .tips-title {
+            color: #8b4513;
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .tips-list {
+            color: #5d4037;
+            line-height: 1.6;
+        }
+        
+        .tips-list li {
+            margin-bottom: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .days-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 키움 API 알고리즘 매매 프로그램</h1>
+            <div class="subtitle">2주 완성 개발 로드맵 | 1인 개발 프로젝트</div>
+        </div>
+        
+        <div class="tech-stack">
+            <h3>🛠️ 기술 스택</h3>
+            <div class="tech-items">
+                <div class="tech-item">
+                    <strong>Python 3.13</strong><br>
+                    최신 안정 버전 (2024.10 릴리즈)
+                </div>
+                <div class="tech-item">
+                    <strong>Streamlit</strong><br>
+                    빠른 웹 UI 개발
+                </div>
+                <div class="tech-item">
+                    <strong>키움 REST API</strong><br>
+                    차세대 웹 기반 API (2025.3 출시)
+                </div>
+                <div class="tech-item">
+                    <strong>pandas + numpy</strong><br>
+                    데이터 분석 및 처리
+                </div>
+                <div class="tech-item">
+                    <strong>SQLite</strong><br>
+                    매매 이력 및 설정 데이터 저장
+                </div>
+                <div class="tech-item">
+                    <strong>Plotly</strong><br>
+                    인터랙티브 차트 및 시각화
+                </div>
+            </div>
+        </div>
+        
+        <div class="tech-stack" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            <h3>🤖 AI 협업 도구</h3>
+            <div class="tech-items">
+                <div class="tech-item">
+                    <strong>Cursor ($20/월)</strong><br>
+                    AI 코드 에디터, 전체 프로젝트 맥락 이해
+                </div>
+                <div class="tech-item">
+                    <strong>Notion (무료)</strong><br>
+                    개발 진행상황 및 코드 스니펫 관리
+                </div>
+                <div class="tech-item">
+                    <strong>Git + GitHub (무료)</strong><br>
+                    버전 관리 및 코드 변경 이력 추적
+                </div>
+                <div class="tech-item">
+                    <strong>Claude</strong><br>
+                    코드 리뷰, 디버깅, 맥락 기반 협업
+                </div>
+            </div>
+        </div>
+
+        <div class="timeline">
+            <div class="week">
+                <div class="week-header">
+                    <div class="week-title">1주차: 기반 구축 및 API 연동</div>
+                    <div class="week-subtitle">환경 설정부터 기본 매매 로직까지</div>
+                </div>
+                
+                <div class="days-grid">
+                    <div class="day-card priority-high">
+                        <div class="day-title">
+                            <div class="day-number">1</div>
+                            환경 설정 & 키움 API 설치
+                        </div>
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">Python 3.13 설치 및 가상환경 생성</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">키움 REST API 개발자 계정 신청</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">API Key 및 Secret 발급받기</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">requests 라이브러리로 인증 테스트</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">필수 라이브러리 설치 (streamlit, pandas, numpy, requests, plotly, python-dotenv)</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">SQLite 데이터베이스 초기 설정</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">.env 파일로 API 키 환경변수 관리</div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="day-card priority-high">
+                        <div class="day-title">
+                            <div class="day-number">2</div>
+                            API 연결 테스트
+                        </div>
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">OAuth 토큰 인증 구현</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">REST API 계좌 정보 조회</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">HTTP 기반 실시간 시세 수신 구현</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">JSON 기반 매수/매도 주문 테스트</div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="day-card priority-medium">
+                        <div class="day-title">
+                            <div class="day-number">3</div>
+                            데이터 수집 모듈
+                        </div>
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">REST API 일봉/분봉 데이터 수집</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">종목 검색 API 연동</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">웹소켓 실시간 체결가 수신</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">JSON 데이터 파싱 및 SQLite 저장</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">로깅 시스템 구축 (Python logging)</div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="day-card priority-medium">
+                        <div class="day-title">
+                            <div class="day-number">4</div>
+                            기본 알고리즘 구현
+                        </div>
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">이동평균 기반 매매 신호</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">볼린저 밴드 지표 계산</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">RSI 오실레이터 구현</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">매매 조건 로직 구성</div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="day-card priority-low">
+                        <div class="day-title">
+                            <div class="day-number">5</div>
+                            주문 관리 시스템
+                        </div>
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">REST API 주문 클래스 구현</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">HTTP 기반 손절/익절 설정</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">비동기 주문 처리 (asyncio)</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">주문체결 상태 실시간 모니터링</div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="day-card priority-low">
+                        <div class="day-title">
+                            <div class="day-number">6-7</div>
+                            백테스팅 & 검증
+                        </div>
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">과거 데이터 백테스팅 엔진</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">수익률 계산 및 리포트</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">전략 성과 분석 도구</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">파라미터 최적화 기능</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="week">
+                <div class="week-header">
+                    <div class="week-title">2주차: UI 개발 및 최종 완성</div>
+                    <div class="week-subtitle">사용자 인터페이스 구축 및 실전 배포</div>
+                </div>
+                
+                <div class="days-grid">
+                    <div class="day-card priority-high">
+                        <div class="day-title">
+                            <div class="day-number">8</div>
+                            Streamlit UI 기본 구조
+                        </div>
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">메인 대시보드 레이아웃</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">사이드바 설정 패널</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">실시간 시세 차트 표시 (Plotly 연동)</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">로그인 인증 화면</div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="day-card priority-high">
+                        <div class="day-title">
+                            <div class="day-number">9</div>
+                            거래 관리 UI
+                        </div>
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">포트폴리오 현황 대시보드</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">매매 이력 테이블</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">수익률 그래프 시각화</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">실시간 잔고 표시</div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="day-card priority-medium">
+                        <div class="day-title">
+                            <div class="day-number">10</div>
+                            전략 설정 UI
+                        </div>
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">알고리즘 파라미터 조정</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">관심종목 관리 화면</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">위험 관리 설정</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">자동매매 ON/OFF 스위치</div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="day-card priority-medium">
+                        <div class="day-title">
+                            <div class="day-number">11</div>
+                            모니터링 & 알림
+                        </div>
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">실시간 로그 표시</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">매매 신호 알림 시스템</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">오류 상황 처리</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">성과 리포트 생성</div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="day-card priority-low">
+                        <div class="day-title">
+                            <div class="day-number">12</div>
+                            최적화 & 테스트
+                        </div>
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">코드 리팩토링 및 최적화</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">모의투자 환경 테스트</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">예외 상황 처리 보완</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">사용자 매뉴얼 작성</div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="day-card priority-low">
+                        <div class="day-title">
+                            <div class="day-number">13-14</div>
+                            실전 배포 & 런칭
+                        </div>
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">실계좌 연동 최종 점검</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">소액 자금 실전 테스트</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">안정성 모니터링</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                                <div class="task-text">향후 개선사항 정리</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="progress-section">
+            <div class="progress-text">전체 진행률: <span id="progress-percentage">0%</span></div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div>완료된 작업: <span id="completed-tasks">0</span> / <span id="total-tasks">0</span></div>
+        </div>
+        
+        <div class="tips-section">
+            <div class="tips-title">💡 개발 성공 팁</div>
+            <ul class="tips-list">
+                <li><strong>웹 기반 장점:</strong> 별도 프로그램 설치 없이 Windows/Mac/Linux 모두 지원</li>
+                <li><strong>다양한 언어:</strong> Python, Java 등 다양한 프로그래밍 언어 지원</li>
+                <li><strong>REST API:</strong> HTTP 요청으로 간단한 JSON 데이터 처리</li>
+                <li><strong>실시간 데이터:</strong> 웹소켓 기반 실시간 시세 수신</li>
+                <li><strong>간편한 인증:</strong> API Key 기반 OAuth 토큰 인증</li>
+                <li><strong>API 제한:</strong> REST API 호출 횟수 제한 고려한 설계</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        let completedCount = 0;
+        let
