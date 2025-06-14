@@ -1,0 +1,250 @@
+# 키움 API 알고리즘 매매 프로그램 개발 규칙
+
+## 프로젝트 개요
+- Python 3.13 기반 키움 REST API 활용
+- Streamlit을 이용한 웹 UI 개발  
+- 2주 완성 목표의 1인 개발 프로젝트
+- SQLite 데이터베이스 사용
+- pandas, numpy, plotly 활용
+
+## 필수 라이브러리
+- streamlit: 웹 UI 개발
+- requests: REST API 호출
+- pandas, numpy: 데이터 분석
+- plotly: 차트 시각화
+- python-dotenv: 환경변수 관리
+- sqlite3: 데이터베이스
+
+## 코딩 스타일 규칙
+
+### 네이밍 컨벤션
+- 클래스: PascalCase (예: KiwoomApiClient, TradingStrategy)
+- 함수/변수: snake_case (예: get_stock_price, current_price)
+- 상수: UPPER_SNAKE_CASE (예: MAX_RETRY_COUNT, API_TIMEOUT)
+- 파일명: snake_case (예: kiwoom_client.py, trading_strategy.py)
+
+### 타입 힌트 필수
+- 모든 함수 매개변수와 반환값에 타입 힌트 적용
+- from typing import Dict, List, Optional, Union 활용
+- pandas DataFrame은 pd.DataFrame으로 명시
+
+### 디렉토리 구조 준수
+```
+AutoStockTrading/
+├── 📄 index.html                   # 프로젝트 로드맵맵
+├── 📄 README.md                    # 프로젝트 설명
+├── 📄 requirements.txt             # Python 패키지 목록
+├── 📄 .env                         # 환경변수 (API 키 등)
+├── 📄 .gitignore                   # Git 제외 파일 목록
+├── 📄 config.yaml                  # 설정 파일
+│
+├── 📁 src/                         # 메인 소스 코드
+│   ├── 📄 main.py                  # 프로그램 진입점
+│   ├── 📁 api/                     # 키움 API 관련
+│   │   ├── 📄 __init__.py
+│   │   ├── 📄 kiwoom_client.py     # REST API 클라이언트
+│   │   ├── 📄 auth.py              # OAuth 인증
+│   │   └── 📄 websocket_client.py  # 실시간 데이터
+│   │
+│   ├── 📁 strategies/              # 매매 전략
+│   │   ├── 📄 __init__.py
+│   │   ├── 📄 moving_average.py    # 이동평균 전략
+│   │   ├── 📄 bollinger_band.py    # 볼린저 밴드
+│   │   └── 📄 rsi_strategy.py      # RSI 전략
+│   │
+│   ├── 📁 data/                    # 데이터 처리
+│   │   ├── 📄 __init__.py
+│   │   ├── 📄 collector.py         # 데이터 수집
+│   │   ├── 📄 processor.py         # 데이터 전처리
+│   │   └── 📄 database.py          # SQLite 관리
+│   │
+│   ├── 📁 trading/                 # 매매 관련
+│   │   ├── 📄 __init__.py
+│   │   ├── 📄 order_manager.py     # 주문 관리
+│   │   ├── 📄 portfolio.py         # 포트폴리오 관리
+│   │   └── 📄 risk_manager.py      # 위험 관리
+│   │
+│   └── 📁 ui/                      # Streamlit UI
+│       ├── 📄 __init__.py
+│       ├── 📄 dashboard.py         # 메인 대시보드
+│       ├── 📄 components.py        # UI 컴포넌트
+│       └── 📄 charts.py            # 차트 및 시각화
+│
+├── 📁 tests/                       # 테스트 코드
+│   ├── 📄 test_api.py
+│   ├── 📄 test_strategies.py
+│   └── 📄 test_trading.py
+│
+├── 📁 data/                        # 데이터 파일
+│   ├── 📄 trading.db               # SQLite 데이터베이스
+│   ├── 📁 historical/              # 과거 데이터
+│   └── 📁 logs/                    # 로그 파일
+│
+├── 📁 docs/                        # 문서
+│   ├── 📄 api_guide.md            # API 사용법
+│   ├── 📄 strategy_guide.md       # 전략 설명
+│   └── 📄 deployment.md           # 배포 가이드
+│
+├── 📁 scripts/                     # 유틸리티 스크립트
+│   ├── 📄 setup.py                # 초기 설정
+│   ├── 📄 backup.py               # 데이터 백업
+│   └── 📄 github_notion_sync.py   # 🎯 GitHub-Notion 연동
+│
+└── 📁 streamlit_app/               # Streamlit 앱
+    ├── 📄 app.py                   # Streamlit 메인
+    ├── 📄 pages/                   # 페이지별 UI
+    └── 📄 static/                  # 정적 파일
+```
+
+## 보안 및 환경 관리
+
+### API 키 관리 (절대 준수)
+- API 키/시크릿 하드코딩 절대 금지
+- 반드시 환경변수(.env) 또는 os.getenv() 사용
+- .env 파일은 .gitignore에 포함
+- 예시: API_KEY = os.getenv('KIWOOM_API_KEY')
+
+### 민감한 정보 보호
+- 계좌번호, 비밀번호 등 하드코딩 금지
+- 설정 파일과 환경변수 분리
+- .env.example 파일로 필요한 환경변수 가이드 제공
+
+## 에러 처리 및 로깅
+
+### 예외 처리 필수
+- 모든 API 호출에 try-except 블록 사용
+- 특정 예외 타입별로 구체적인 처리
+- requests.exceptions.RequestException 활용
+- 재시도 로직 구현 (최대 3회)
+
+### 로깅 시스템
+- print() 사용 금지, logging 모듈 사용
+- 로깅 레벨 구분: DEBUG, INFO, WARNING, ERROR, CRITICAL
+- 파일과 콘솔 동시 출력
+- 로그 파일은 logs/ 디렉토리에 저장
+
+### 로깅 예시
+```python
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('logs/trading.log'),
+        logging.StreamHandler()
+    ]
+)
+```
+
+## API 호출 규칙
+
+### REST API 호출 패턴
+- requests 라이브러리 사용
+- timeout 설정 필수 (기본 30초)
+- JSON 응답 처리
+- HTTP 상태 코드 확인
+- Rate limiting 고려
+
+### 재시도 로직 구현
+```python
+def api_call_with_retry(func, max_retries: int = 3):
+    for attempt in range(max_retries):
+        try:
+            return func()
+        except RequestException as e:
+            logging.warning(f"API 호출 실패 (시도 {attempt + 1}/{max_retries}): {e}")
+            if attempt == max_retries - 1:
+                raise
+```
+
+## 데이터 처리 규칙
+
+### pandas 활용
+- DataFrame 컬럼명은 snake_case
+- 시계열 데이터는 datetime 인덱스 사용
+- 메모리 효율을 위한 dtype 최적화
+- 대용량 데이터는 청크 단위 처리
+
+### SQLite 데이터베이스
+- 테이블명과 컬럼명은 snake_case
+- PRIMARY KEY 설정
+- DATETIME 필드는 CURRENT_TIMESTAMP 기본값
+- 인덱스 설정으로 조회 성능 최적화
+
+## Streamlit UI 규칙
+
+### 컴포넌트 구성
+- 사이드바 활용으로 설정 패널 분리
+- st.session_state로 상태 관리
+- 실시간 데이터는 st.empty()와 while 루프 활용
+- 차트는 plotly 사용
+
+### 페이지 구조
+- 메인 대시보드: 포트폴리오 현황
+- 전략 설정: 알고리즘 파라미터 조정
+- 매매 이력: 거래 내역 테이블
+- 로그 모니터링: 실시간 로그 표시
+
+## 매매 전략 개발
+
+### 전략 클래스 구조
+- 추상 베이스 클래스 상속
+- buy_signal(), sell_signal() 메서드 구현
+- 파라미터는 __init__에서 설정
+- 백테스팅 지원을 위한 인터페이스 통일
+
+### 기술적 지표 계산
+- 이동평균: pandas.rolling() 활용
+- 볼린저 밴드: 표준편차 계산
+- RSI: 상승/하락 폭 기반 계산
+- 모든 지표는 NaN 처리 포함
+
+## 테스트 및 검증
+
+### 단위 테스트
+- pytest 프레임워크 사용
+- 각 함수별 테스트 케이스 작성
+- Mock 객체로 API 호출 시뮬레이션
+- 테스트 커버리지 80% 이상 목표
+
+### 백테스팅
+- 과거 데이터로 전략 성과 검증
+- 수익률, 최대 낙폭, 샤프 비율 계산
+- 파라미터 최적화 기능
+- 결과 시각화
+
+## 성능 최적화
+
+### 메모리 관리
+- 불필요한 DataFrame 복사 방지
+- del 키워드로 메모리 해제
+- 대용량 데이터는 제너레이터 활용
+
+### API 호출 최적화
+- 배치 처리로 호출 횟수 최소화
+- 캐싱으로 중복 호출 방지
+- 비동기 처리 (asyncio) 고려
+
+## 개발 우선순위
+1. 환경 설정 및 API 연동 (1-2일)
+2. 기본 데이터 수집 및 저장 (3일)
+3. 매매 전략 구현 (4-5일)
+4. Streamlit UI 개발 (8-10일)
+5. 백테스팅 및 최적화 (6-7일, 11-12일)
+6. 실전 테스트 및 배포 (13-14일)
+
+## 금지사항
+- API 키/시크릿 하드코딩
+- print() 사용 (logging 사용)
+- 예외 처리 없는 API 호출
+- 타입 힌트 누락
+- 전역 변수 남용
+- 매직 넘버 사용 (상수로 정의)
+
+## 코드 품질
+- 함수는 단일 책임 원칙 준수
+- 클래스는 응집도 높게 설계
+- 의존성 주입 패턴 활용
+- 설정과 로직 분리
+- 문서화 주석 포함
