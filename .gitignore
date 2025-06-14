@@ -3,6 +3,7 @@ __pycache__/
 *.pyc
 
 # 환경변수
+!.env.example
 .env
 
 # 데이터베이스 및 로그
