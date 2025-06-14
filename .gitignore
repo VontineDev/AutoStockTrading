@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+
+# 환경변수
+.env
+
+# 데이터베이스 및 로그
+/data/
+/logs/
+*.db
+
+# 기타
+.DS_Store
+
+venv/ 

@@ -1,0 +1,5 @@
+# config.yaml 예시
+app_name: AutoStockTrading
+log_level: INFO
+db_path: ./data/trading.db
+api_base_url: https://openapi.kiwoom.com 
