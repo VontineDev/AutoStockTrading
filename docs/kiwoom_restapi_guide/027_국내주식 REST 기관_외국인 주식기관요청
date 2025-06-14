@@ -1,0 +1,130 @@
+파일이름 : 027_국내주식 REST 기관/외국인 주식기관요청.md
+# 국내주식
+
+## REST 기관/외국인
+
+### 기본 정보
+| 항목              | 내용                                                                 |
+|-------------------|----------------------------------------------------------------------|
+| Method            | POST                                                                |
+| 운영 도메인        | https://api.kiwoom.com                                              |
+| 모의투자 도메인    | https://mockapi.kiwoom.com (KRX만 지원 가능)                         |
+| URL               | `/api/dostk/frgnistt`                                               |
+| Format            | JSON                                                                |
+| Content-Type      | `application/json;charset=UTF-8`                                    |
+
+### 다른 TR 확인하기
+#### TR명
+- 주식기관요청 (ka10009)
+- 주식외국인종목별매매동향 (ka10008)
+- 주식기관요청 (ka10009)
+- 기관외국인연속매매현황요청 (ka10131)
+
+---
+
+### 요청
+#### Header
+| 한글명         | type    | Required | Length | Description                          |
+|----------------|---------|----------|--------|--------------------------------------|
+| authorization  | String  | Y        | 1000   | 접근토큰 (예: `Bearer Egicyx...`)     |
+| cont-yn        | String  | N        | 1      | 연속조회여부 (응답 Header 값 사용)     |
+| next-key       | String  | N        | 50     | 연속조회키 (응답 Header 값 사용)       |
+| api-id         | String  | Y        | 10     | TR명                                 |
+
+#### Body
+| 한글명   | type    | Required | Length | Description                          |
+|----------|---------|----------|--------|--------------------------------------|
+| stk_cd   | String  | Y        | 20     | 거래소별 종목코드 (예: KRX:039490, NXT:039490_NX, SOR:039490_AL) |
+
+---
+
+### 응답
+#### Header
+| 한글명   | type    | Required | Length | Description              |
+|----------|---------|----------|--------|--------------------------|
+| cont-yn  | String  | N        | 1      | 연속조회여부 (Y/N)        |
+| next-key | String  | N        | 50     | 연속조회키                |
+| api-id   | String  | Y        | 10     | TR명                     |
+
+#### Body
+| 한글명               | type    | Required | Length | Description                  |
+|----------------------|---------|----------|--------|------------------------------|
+| date                | String  | N        | 20     | 날짜                          |
+| close_pric          | String  | N        | 20     | 종가                          |
+| pre                 | String  | N        | 20     | 대비                          |
+| orgn_dt_acc         | String  | N        | 20     | 기관기간누적                  |
+| orgn_daly_nettrde   | String  | N        | 20     | 기관일별순매매                |
+| frgnr_daly_nettrde  | String  | N        | 20     | 외국인일별순매매              |
+| frgnr_qota_rt       | String  | N        | 20     | 외국인지분율                  |
+```
+
+
+## Python
+
+```python
+import requests
+import json
+
+# 주식기관요청
+def fn_ka10009(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/frgnistt'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10009', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken' # 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'stk_cd': '005930', # 종목코드 거래소별 종목코드 (KRX:039490,NXT:039490_NX,SOR:039490_AL)
+	}
+
+	# 3. API 실행
+	fn_ka10009(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10009(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+```
+
+
+
+## Example
+
+
+Request
+{
+	"stk_cd" : "005930"
+}
+Response
+{
+	"date":"20241105",
+	"close_pric":"135300",
+	"pre":"0",
+	"orgn_dt_acc":"",
+	"orgn_daly_nettrde":"",
+	"frgnr_daly_nettrde":"",
+	"frgnr_qota_rt":"",
+	"return_code":0,
+	"return_msg":"정상적으로 처리되었습니다"
+}

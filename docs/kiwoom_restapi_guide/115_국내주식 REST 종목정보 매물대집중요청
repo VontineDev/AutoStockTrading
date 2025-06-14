@@ -1,0 +1,229 @@
+파일이름 : 115_국내주식 REST 종목정보 매물대집중요청.md
+# 국내주식  
+**REST**  
+**종목정보**  
+
+## 기본 정보  
+
+| 항목             | 내용                                             |  
+|------------------|--------------------------------------------------|  
+| Method           | POST                                             |  
+| 운영 도메인      | https://api.kiwoom.com                           |  
+| 모의투자 도메인  | https://mockapi.kiwoom.com (KRX만 지원가능)      |  
+| URL              | /api/dostk/stkinfo                               |  
+| Format           | JSON                                             |  
+| Content-Type     | application/json;charset=UTF-8                   |  
+
+[다른 TR 확인하기]  
+
+## TR명  
+
+| TR명                            | 코드     |  
+|---------------------------------|----------|  
+| 매물대집중요청                  | ka10025  |  
+| 주식기본정보요청                | ka10001  |  
+| 주식거래원요청                  | ka10002  |  
+| 체결정보요청                    | ka10003  |  
+| 신용매매동향요청                | ka10013  |  
+| 일별거래상세요청                | ka10015  |  
+| 신고저가요청                    | ka10016  |  
+| 상하한가요청                    | ka10017  |  
+| 고저가근접요청                  | ka10018  |  
+| 가격급등락요청                  | ka10019  |  
+| 거래량갱신요청                  | ka10024  |  
+| 매물대집중요청                  | ka10025  |  
+| 고저PER요청                     | ka10026  |  
+| 시가대비등락률요청              | ka10028  |  
+| 거래원매물대분석요청            | ka10043  |  
+| 거래원순간거래량요청            | ka10052  |  
+| 변동성완화장치발동종목요청      | ka10054  |  
+| 당일전일체결량요청              | ka10055  |  
+| 투자자별일별매매종목요청        | ka10058  |  
+| 종목별투자자기관별요청          | ka10059  |  
+| 종목별투자자기관별합계요청      | ka10061  |  
+| 당일전일체결요청                | ka10084  |  
+| 관심종목정보요청                | ka10095  |  
+| 종목정보 리스트                 | ka10099  |  
+| 종목정보 조회                   | ka10100  |  
+| 업종코드 리스트                 | ka10101  |  
+| 회원사 리스트                   | ka10102  |  
+| 프로그램순매수상위50요청        | ka90003  |  
+| 종목별프로그램매매현황요청      | ka90004  |  
+| 대차거래내역요청                | ka90012  |  
+
+## 요청  
+
+### Header  
+
+| Element          | 한글명         | type     | Required | Length | Description                                        |  
+|------------------|---------------|----------|----------|--------|----------------------------------------------------|  
+| authorization    | 접근토큰       | String   | Y        | 1000   | 토큰 지정시 토큰타입("Bearer") 붙혀서 호출         |  
+|                  |               |          |          |        | 예) Bearer Egicyx...                               |  
+| cont-yn          | 연속조회여부   | String   | N        | 1      | 응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅 |  
+| next-key         | 연속조회키     | String   | N        | 50     | 응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅 |  
+| api-id           | TR명           | String   | Y        | 10     |                                                    |  
+
+### Body  
+
+| Element          | 한글명         | type     | Required | Length | Description                                           |  
+|------------------|---------------|----------|----------|--------|-------------------------------------------------------|  
+| mrkt_tp          | 시장구분       | String   | Y        | 3      | 000:전체, 001:코스피, 101:코스닥                      |  
+| prps_cnctr_rt    | 매물집중비율   | String   | Y        | 3      | 0~100 입력                                           |  
+| cur_prc_entry    | 현재가진입     | String   | Y        | 1      | 0:현재가 매물대 진입 미포함, 1:현재가 매물대 진입포함 |  
+| prpscnt          | 매물대수       | String   | Y        | 2      | 숫자입력                                             |  
+| cycle_tp         | 주기구분       | String   | Y        | 2      | 50:50일, 100:100일, 150:150일, 200:200일, 250:250일, 300:300일 |  
+| stex_tp          | 거래소구분     | String   | Y        | 1      | 1:KRX, 2:NXT, 3:통합                                  |  
+
+## 응답  
+
+### Header  
+
+| Element          | 한글명         | type     | Required | Length | Description                                 |  
+|------------------|---------------|----------|----------|--------|---------------------------------------------|  
+| cont-yn          | 연속조회여부   | String   | N        | 1      | 다음 데이터가 있을시 Y값 전달               |  
+| next-key         | 연속조회키     | String   | N        | 50     | 다음 데이터가 있을시 다음 키값 전달         |  
+| api-id           | TR명           | String   | Y        | 10     |                                             |  
+
+### Body  
+
+| Element               | 한글명           | type     | Required | Length | Description             |  
+|-----------------------|------------------|----------|----------|--------|-------------------------|  
+| prps_cnctr           | 매물대집중       | LIST     | N        |        |                         |  
+| - stk_cd             | 종목코드         | String   | N        | 20     |                         |  
+| - stk_nm             | 종목명           | String   | N        | 20     |                         |  
+| - cur_prc            | 현재가           | String   | N        | 20     |                         |  
+| - pred_pre_sig       | 전일대비기호     | String   | N        | 20     |                         |  
+| - pred_pre           | 전일대비         | String   | N        | 20     |                         |  
+| - flu_rt             | 등락률           | String   | N        | 20     |                         |  
+| - now_trde_qty       | 현재거래량       | String   | N        | 20     |                         |  
+| - pric_strt          | 가격대시작       | String   | N        | 20     |                         |  
+| - pric_end           | 가격대끝         | String   | N        | 20     |                         |  
+| - prps_qty           | 매물량           | String   | N        | 20     |                         |  
+| - prps_rt            | 매물비           | String   | N        | 20     |                         |  
+```
+
+
+## PYTHON
+import requests
+import json
+
+# 매물대집중요청
+def fn_ka10025(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/stkinfo'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10025', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken' # 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'mrkt_tp': '000', # 시장구분 000:전체, 001:코스피, 101:코스닥
+		'prps_cnctr_rt': '50', # 매물집중비율 0~100 입력
+		'cur_prc_entry': '0', # 현재가진입 0:현재가 매물대 진입 포함안함, 1:현재가 매물대 진입포함
+		'prpscnt': '10', # 매물대수 숫자입력
+		'cycle_tp': '50', # 주기구분 50:50일, 100:100일, 150:150일, 200:200일, 250:250일, 300:300일
+		'stex_tp': '3', # 거래소구분 1:KRX, 2:NXT 3.통합
+	}
+
+	# 3. API 실행
+	fn_ka10025(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10025(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+
+    ## Example
+
+
+Request
+{
+	"mrkt_tp" : "000",
+	"prps_cnctr_rt" : "50",
+	"cur_prc_entry" : "0",
+	"prpscnt" : "10",
+	"cycle_tp" : "50",
+	"stex_tp" : "3"
+}
+Response
+{
+	"prps_cnctr":
+		[
+			{
+				"stk_cd":"005930",
+				"stk_nm":"삼성전자",
+				"cur_prc":"30000",
+				"pred_pre_sig":"3",
+				"pred_pre":"0",
+				"flu_rt":"0.00",
+				"now_trde_qty":"0",
+				"pric_strt":"31350",
+				"pric_end":"31799",
+				"prps_qty":"4",
+				"prps_rt":"+50.00"
+			},
+			{
+				"stk_cd":"005930",
+				"stk_nm":"삼성전자",
+				"cur_prc":"30000",
+				"pred_pre_sig":"3",
+				"pred_pre":"0",
+				"flu_rt":"0.00",
+				"now_trde_qty":"0",
+				"pric_strt":"32700",
+				"pric_end":"33149",
+				"prps_qty":"4",
+				"prps_rt":"+50.00"
+			},
+			{
+				"stk_cd":"005930",
+				"stk_nm":"삼성전자",
+				"cur_prc":"109",
+				"pred_pre_sig":"3",
+				"pred_pre":"0",
+				"flu_rt":"0.00",
+				"now_trde_qty":"1",
+				"pric_strt":"109",
+				"pric_end":"326",
+				"prps_qty":"8",
+				"prps_rt":"+50.00"
+			},
+			{
+				"stk_cd":"005930",
+				"stk_nm":"삼성전자",
+				"cur_prc":"2555",
+				"pred_pre_sig":"3",
+				"pred_pre":"0",
+				"flu_rt":"0.00",
+				"now_trde_qty":"0",
+				"pric_strt":"2669",
+				"pric_end":"2685",
+				"prps_qty":"4",
+				"prps_rt":"+50.00"
+			}
+		],
+	"return_code":0,
+	"return_msg":"정상적으로 처리되었습니다"
+}
+

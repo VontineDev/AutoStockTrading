@@ -1,0 +1,231 @@
+파일이름 : 045_국내주식 REST 순위정보 당일주요거래원요청.md
+
+# 당일주요거래원요청
+
+## 기본 정보
+| Element         | 한글명      | type   | Required | Length | Description                              |
+|-----------------|-------------|--------|----------|--------|------------------------------------------|
+| Method          |             | POST   |          |        |                                          |
+| 운영 도메인      |             | String |          |        | `https://api.kiwoom.com`                 |
+| 모의투자 도메인  |             | String |          |        | `https://mockapi.kiwoom.com`(KRX만 지원) |
+| URL             |             | String |          |        | `/api/dostk/rkinfo`                      |
+| Format          |             | JSON   |          |        |                                          |
+| Content-Type    |             | String |          |        | `application/json;charset=UTF-8`         |
+
+## 다른 TR 확인하기
+| TR명                               | TR 코드 |
+|------------------------------------|---------|
+| 호가잔량상위요청                   | ka10020 |
+| 호가잔량급증요청                   | ka10021 |
+| 잔량율급증요청                     | ka10022 |
+| 거래량급증요청                     | ka10023 |
+| 전일대비등락률상위요청             | ka10027 |
+| 예상체결등락률상위요청             | ka10029 |
+| 당일거래량상위요청                 | ka10030 |
+| 전일거래량상위요청                 | ka10031 |
+| 거래대금상위요청                   | ka10032 |
+| 신용비율상위요청                   | ka10033 |
+| 외인기간별매매상위요청             | ka10034 |
+| 외인연속순매매상위요청             | ka10035 |
+| 외인한도소진율증가상위             | ka10036 |
+| 외국계창구매매상위요청             | ka10037 |
+| 종목별증권사순위요청               | ka10038 |
+| 증권사별매매상위요청               | ka10039 |
+| 당일주요거래원요청                 | ka10040 |
+| 순매수거래원순위요청               | ka10042 |
+| 당일상위이탈원요청                 | ka10053 |
+| 동일순매매순위요청                 | ka10062 |
+| 장중투자자별매매상위요청           | ka10065 |
+| 대차거래상위10종목요청             | ka10069 |
+| 시간외단일가등락율순위요청         | ka10098 |
+| 외국인기관매매상위요청             | ka90009 |
+
+## 요청
+
+### Header
+| Element         | 한글명      | type   | Required | Length | Description                              |
+|-----------------|-------------|--------|----------|--------|------------------------------------------|
+| authorization   | 접근토큰    | String | Y        | 1000   | `Bearer Egicyx...` 형식                  |
+| cont-yn         | 연속조회여부| String | N        | 1      | 응답 Header의 `cont-yn` 값 세팅          |
+| next-key        | 연속조회키  | String | N        | 50     | 응답 Header의 `next-key` 값 세팅         |
+| api-id          | TR명        | String | Y        | 10     |                                          |
+
+### Body
+| Element         | 한글명      | type   | Required | Length | Description                              |
+|-----------------|-------------|--------|----------|--------|------------------------------------------|
+| stk_cd          | 종목코드    | String | Y        | 6      |                                          |
+
+## 응답
+
+### Header
+| Element         | 한글명      | type   | Required | Length | Description                              |
+|-----------------|-------------|--------|----------|--------|------------------------------------------|
+| cont-yn         | 연속조회여부| String | N        | 1      | 다음 데이터 존재 시 `Y`                  |
+| next-key        | 연속조회키  | String | N        | 50     | 다음 데이터 키값                         |
+| api-id          | TR명        | String | Y        | 10     |                                          |
+
+### Body
+| Element                           | 한글명                | type   | Required | Length | Description              |
+|------------------------------------|-----------------------|--------|----------|--------|--------------------------|
+| sel_trde_ori_irds_1                | 매도거래원별증감1     | String | N        |        |                          |
+| sel_trde_ori_qty_1                 | 매도거래원수량1       | String | N        |        |                          |
+| sel_trde_ori_1                     | 매도거래원1           | String | N        |        |                          |
+| sel_trde_ori_cd_1                  | 매도거래원코드1       | String | N        |        |                          |
+| buy_trde_ori_1                     | 매수거래원1           | String | N        |        |                          |
+| buy_trde_ori_cd_1                  | 매수거래원코드1       | String | N        |        |                          |
+| buy_trde_ori_qty_1                 | 매수거래원수량1       | String | N        |        |                          |
+| buy_trde_ori_irds_1                | 매수거래원별증감1     | String | N        |        |                          |
+| sel_trde_ori_irds_2                | 매도거래원별증감2     | String | N        |        |                          |
+| sel_trde_ori_qty_2                 | 매도거래원수량2       | String | N        |        |                          |
+| sel_trde_ori_2                     | 매도거래원2           | String | N        |        |                          |
+| sel_trde_ori_cd_2                  | 매도거래원코드2       | String | N        |        |                          |
+| buy_trde_ori_2                     | 매수거래원2           | String | N        |        |                          |
+| buy_trde_ori_cd_2                  | 매수거래원코드2       | String | N        |        |          | 
+| buy_trde_ori_qty_2                 | 매수거래원수량2       | String | N        |        |                          |
+| buy_trde_ori_irds_2                | 매수거래원별증감2     | String | N        |        |                          |
+| sel_trde_ori_irds_3                | 매도거래원별증감3     | String | N        |        |                          |
+| sel_trde_ori_qty_3                 | 매도거래원수량3       | String | N        |        |                          |
+| sel_trde_ori_3                     | 매도거래원3           | String | N        |        |                          |
+| sel_trde_ori_cd_3                  | 매도거래원코드3       | String | N        |        |                          |
+| buy_trde_ori_3                     | 매수거래원3           | String | N        |        |                          |
+| buy_trde_ori_cd_3                  | 매수거래원코드3       | String | N        |        |                          |
+| buy_trde_ori_qty_3                 | 매수거래원수량3       | String | N        |        |                          |
+| buy_trde_ori_irds_3                | 매수거래원별증감3     | String | N        |        |                          |
+| sel_trde_ori_irds_4                | 매도거래원별증감4     | String | N        |        |                          |
+| sel_trde_ori_qty_4                 | 매도거래원수량4       | String | N        |        |                          |
+| sel_trde_ori_4                     | 매도거래원4           | String | N        |        |                          |
+| sel_trde_ori_cd_4                  | 매도거래원코드4       | String | N        |        |                          |
+| buy_trde_ori_4                     | 매수거래원4           | String | N        |        |                          |
+| buy_trde_ori_cd_4                  | 매수거래원코드4       | String | N        |        |                          |
+| buy_trde_ori_qty_4                 | 매수거래원수량4       | String | N        |        |                          |
+| buy_trde_ori_irds_4                | 매수거래원별증감4     | String | N        |        |                          |
+| sel_trde_ori_irds_5                | 매도거래원별증감5     | String | N        |        |                          |
+| sel_trde_ori_qty_5                 | 매도거래원수량5       | String | N        |        |                          |
+| sel_trde_ori_5                     | 매도거래원5           | String | N        |        |                          |
+| sel_trde_ori_cd_5                  | 매도거래원코드5       | String | N        |        |                          |
+| buy_trde_ori_5                     | 매수거래원5           | String | N        |        |                          |
+| buy_trde_ori_cd_5                  | 매수거래원코드5       | String | N        |        |                          |
+| buy_trde_ori_qty_5                 | 매수거래원수량5       | String | N        |        |                          |
+| buy_trde_ori_irds_5                | 매수거래원별증감5     | String | N        |        |                          |
+| frgn_sel_prsm_sum_chang            | 외국계매도추정합변동   | String | N        |        |                          |
+| frgn_sel_prsm_sum                  | 외국계매도추정합      | String | N        |        |                          |
+| frgn_buy_prsm_sum                  | 외국계매수추정합      | String | N        |        |                          |
+| frgn_buy_prsm_sum_chang            | 외국계매수추정합변동  | String | N        |        |                          |
+| tdy_main_trde_ori                  | 당일주요거래원        | LIST   | N        |        |                          |
+| - sel_scesn_tm                     | 매도이탈시간          | String | N        | 20     |                          |
+| - sell_qty                         | 매도수량              | String | N        | 20     |                          |
+| - sel_upper_scesn_ori              | 매도상위이탈원        | String | N        | 20     |                          |
+| - buy_scesn_tm                     | 매수이탈시간          | String | N        | 20     |                          |
+| - buy_qty                          | 매수수량              | String | N        | 20     |                          |
+| - buy_upper_scesn_ori              | 매수상위이탈원        | String | N        | 20     |                          |
+| - qry_dt                           | 조회일자              | String | N        | 20     |                          |
+| - qry_tm                           | 조회시간              | String | N        | 20     |                          |
+
+---
+
+
+## PYTHON
+import requests
+import json
+
+# 당일주요거래원요청
+def fn_ka10040(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/rkinfo'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10040', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken' # 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'stk_cd': '005930', # 종목코드 
+	}
+
+	# 3. API 실행
+	fn_ka10040(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10040(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+
+## Example
+
+
+Request
+{
+	"stk_cd" : "005930"
+}
+Response
+{
+	"sel_trde_ori_irds_1":"0",
+	"sel_trde_ori_qty_1":"-5689",
+	"sel_trde_ori_1":"모건스탠리",
+	"sel_trde_ori_cd_1":"036",
+	"buy_trde_ori_1":"모건스탠리",
+	"buy_trde_ori_cd_1":"036",
+	"buy_trde_ori_qty_1":"+6305",
+	"buy_trde_ori_irds_1":"+615",
+	"sel_trde_ori_irds_2":"+615",
+	"sel_trde_ori_qty_2":"-615",
+	"sel_trde_ori_2":"신  영",
+	"sel_trde_ori_cd_2":"006",
+	"buy_trde_ori_2":"키움증권",
+	"buy_trde_ori_cd_2":"050",
+	"buy_trde_ori_qty_2":"+7",
+	"buy_trde_ori_irds_2":"0",
+	"sel_trde_ori_irds_3":"0",
+	"sel_trde_ori_qty_3":"-8",
+	"sel_trde_ori_3":"키움증권",
+	"sel_trde_ori_cd_3":"050",
+	"buy_trde_ori_3":"",
+	"buy_trde_ori_cd_3":"000",
+	"buy_trde_ori_qty_3":"0",
+	"buy_trde_ori_irds_3":"0",
+	"sel_trde_ori_irds_4":"0",
+	"sel_trde_ori_qty_4":"0",
+	"sel_trde_ori_4":"",
+	"sel_trde_ori_cd_4":"000",
+	"buy_trde_ori_4":"",
+	"buy_trde_ori_cd_4":"000",
+	"buy_trde_ori_qty_4":"0",
+	"buy_trde_ori_irds_4":"0",
+	"sel_trde_ori_irds_5":"0",
+	"sel_trde_ori_qty_5":"0",
+	"sel_trde_ori_5":"",
+	"sel_trde_ori_cd_5":"000",
+	"buy_trde_ori_5":"",
+	"buy_trde_ori_cd_5":"000",
+	"buy_trde_ori_qty_5":"0",
+	"buy_trde_ori_irds_5":"0",
+	"frgn_sel_prsm_sum_chang":"0",
+	"frgn_sel_prsm_sum":"-5689",
+	"frgn_buy_prsm_sum":"+6305",
+	"frgn_buy_prsm_sum_chang":"+615",
+	"tdy_main_trde_ori":
+		[
+		],
+	"return_code":0,
+	"return_msg":"정상적으로 처리되었습니다"
+}

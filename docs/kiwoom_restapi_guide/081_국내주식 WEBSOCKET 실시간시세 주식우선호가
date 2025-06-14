@@ -1,0 +1,219 @@
+파일이름 : 081_국내주식 WEBSOCKET 실시간시세 주식우선호가.md
+# 국내주식  
+## WEBSOCKET 실시간시세 (주식우선호가)
+
+### 기본 정보
+
+- **Method:** POST  
+- **운영 도메인:** `wss://api.kiwoom.com:10000`  
+- **모의투자 도메인:** `wss://mockapi.kiwoom.com:10000` (KRX만 지원가능)  
+- **URL:** `/api/dostk/websocket`  
+- **Format:** JSON  
+- **Content-Type:** `application/json;charset=UTF-8`  
+- **다른 TR 확인하기:**  
+  - 주식우선호가: 0C  
+  - 주문체결: 00  
+  - 잔고: 04  
+  - 주식기세: 0A  
+  - 주식체결: 0B  
+  - 주식우선호가: 0C  
+  - 주식호가잔량: 0D  
+  - 주식시간외호가: 0E  
+  - 주식당일거래원: 0F  
+  - ETF NAV: 0G  
+  - 주식예상체결: 0H  
+  - 업종지수: 0J  
+  - 업종등락: 0U  
+  - 주식종목정보: 0g  
+  - ELW 이론가: 0m  
+  - 장시작시간: 0s  
+  - ELW 지표: 0u  
+  - 종목프로그램매매: 0w  
+  - VI발동/해제: 1h  
+
+---
+
+## 요청
+
+### Body  
+| Element   | 한글명           | type    | Required | Length | Description                                                                 |
+|-----------|-----------------|---------|----------|--------|-----------------------------------------------------------------------------|
+| trnm      | 서비스명         | String  | Y        | 10     | `REG`: 등록, `REMOVE`: 해지                                                  |
+| grp_no    | 그룹번호         | String  | Y        | 4      |                                                                             |
+| refresh   | 기존등록유지여부 | String  | Y        | 1      | **등록(REG)시:**`0`: 기존유지안함, `1`: 기존유지(Default)**해지(REMOVE)시:** 값 불필요 |
+| data      | 실시간 등록 리스트 | LIST    |          |        |                                                                             |
+| - item    | 실시간 등록 요소  | String[] | N       | 100    | 거래소별 종목코드, 업종코드 (예: `KRX:039490`, `NXT:039490_NX`, `SOR:039490_AL`) |
+| - type    | 실시간 항목      | String[] | Y       | 2      | TR 명(`0A`, `0B`, ...)                                                      |
+
+---
+
+## 응답
+
+### Body  
+| Element       | 한글명             | type    | Required | Length | Description                                  |
+|---------------|-------------------|---------|----------|--------|----------------------------------------------|
+| return_code   | 결과코드           | int     | N        |        | `0`: 정상, `1`: 오류 (등록/해지 요청시에만 전송) |
+| return_msg    | 결과메시지         | String  | N        |        | (등록/해지 요청시에만 전송)                  |
+| trnm          | 서비스명           | String  | N        |        | 요청값 반환 (실시간 수신시 `REAL`)            |
+| data          | 실시간 등록리스트  | LIST    | N        |        |                                              |
+| - type        | 실시간항목         | String  | N        |        | TR 명(`0A`, `0B`, ...)                       |
+| - name        | 실시간 항목명      | String  | N        |        |                                              |
+| - item        | 실시간 등록 요소   | String  | N        |        | 종목코드                                     |
+| - values      | 실시간 값 리스트   | LIST    | N        |        |                                              |
+| - - 27        | (최우선)매도호가    | String  | N        |        |                                              |
+| - - 28        | (최우선)매수호가    | String  | N        |        |                                              |
+
+
+## PYTHON
+import asyncio 
+import websockets
+import json
+
+# socket 정보
+# SOCKET_URL = 'wss://mockapi.kiwoom.com:10000/api/dostk/websocket'  # 모의투자 접속 URL
+SOCKET_URL = 'wss://api.kiwoom.com:10000/api/dostk/websocket'  # 접속 URL
+ACCESS_TOKEN = '사용자 AccessToken'  # 고객 Access Token
+
+class WebSocketClient:
+	def __init__(self, uri):
+		self.uri = uri
+		self.websocket = None
+		self.connected = False
+		self.keep_running = True
+
+	# WebSocket 서버에 연결합니다.
+	async def connect(self):
+		try:
+			self.websocket = await websockets.connect(self.uri)
+			self.connected = True
+			print("서버와 연결을 시도 중입니다.")
+
+			# 로그인 패킷
+			param = {
+				'trnm': 'LOGIN',
+				'token': ACCESS_TOKEN
+			}
+
+			print('실시간 시세 서버로 로그인 패킷을 전송합니다.')
+			# 웹소켓 연결 시 로그인 정보 전달
+			await self.send_message(message=param)
+
+		except Exception as e:
+			print(f'Connection error: {e}')
+			self.connected = False
+
+	# 서버에 메시지를 보냅니다. 연결이 없다면 자동으로 연결합니다.
+	async def send_message(self, message):
+		if not self.connected:
+			await self.connect()  # 연결이 끊어졌다면 재연결
+		if self.connected:
+			# message가 문자열이 아니면 JSON으로 직렬화
+			if not isinstance(message, str):
+				message = json.dumps(message)
+
+		await self.websocket.send(message)
+		print(f'Message sent: {message}')
+
+	# 서버에서 오는 메시지를 수신하여 출력합니다.
+	async def receive_messages(self):
+		while self.keep_running:
+			try:
+				# 서버로부터 수신한 메시지를 JSON 형식으로 파싱
+				response = json.loads(await self.websocket.recv())
+
+				# 메시지 유형이 LOGIN일 경우 로그인 시도 결과 체크
+				if response.get('trnm') == 'LOGIN':
+					if response.get('return_code') != 0:
+						print('로그인 실패하였습니다. : ', response.get('return_msg'))
+						await self.disconnect()
+					else:
+						print('로그인 성공하였습니다.')
+
+				# 메시지 유형이 PING일 경우 수신값 그대로 송신
+				elif response.get('trnm') == 'PING':
+					await self.send_message(response)
+
+				if response.get('trnm') != 'PING':
+					print(f'실시간 시세 서버 응답 수신: {response}')
+
+			except websockets.ConnectionClosed:
+				print('Connection closed by the server')
+				self.connected = False
+				await self.websocket.close()
+
+	# WebSocket 실행
+	async def run(self):
+		await self.connect()
+		await self.receive_messages()
+
+	# WebSocket 연결 종료
+	async def disconnect(self):
+		self.keep_running = False
+		if self.connected and self.websocket:
+			await self.websocket.close()
+			self.connected = False
+			print('Disconnected from WebSocket server')
+
+async def main():
+	# WebSocketClient 전역 변수 선언
+	websocket_client = WebSocketClient(SOCKET_URL)
+
+	# WebSocket 클라이언트를 백그라운드에서 실행합니다.
+	receive_task = asyncio.create_task(websocket_client.run())
+
+	# 실시간 항목 등록
+	await asyncio.sleep(1)
+	await websocket_client.send_message({ 
+		'trnm': 'REG', # 서비스명
+		'grp_no': '1', # 그룹번호
+		'refresh': '1', # 기존등록유지여부
+		'data': [{ # 실시간 등록 리스트
+			'item': ['005930'], # 실시간 등록 요소
+			'type': ['0C'], # 실시간 항목
+		}]
+	})
+
+	# 수신 작업이 종료될 때까지 대기
+	await receive_task
+
+# asyncio로 프로그램을 실행합니다.
+if __name__ == '__main__':
+	asyncio.run(main())
+
+
+    ## Example
+
+
+Request
+{
+	"trnm" : "REG",
+	"grp_no" : "1",
+	"refresh" : "1",
+	"data" : [{
+		" item" : [ "005930" ],
+		" type" : [ "0C" ]
+	}]
+}
+Response
+#요청
+{
+	'trnm': 'REG',
+	'return_code': 0,
+	'return_msg': ''
+}
+
+#실시간 수신
+{
+	'trnm': 'REAL',
+	'data': [
+		{
+			'type': '0C',
+			'name': '주식우선호가',
+			'item': '005930',
+			'values': {
+				'27': '-20800',
+				'28': '-20700'
+			}
+		}
+	]
+}

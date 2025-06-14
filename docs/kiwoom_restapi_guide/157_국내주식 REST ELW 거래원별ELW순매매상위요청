@@ -1,0 +1,213 @@
+파일이름 : 157_국내주식 REST ELW 거래원별ELW순매매상위요청.md
+# 국내주식  
+## REST  
+### ELW
+
+---
+
+## 기본 정보  
+**Method**  
+POST  
+
+**운영 도메인**  
+https://api.kiwoom.com  
+
+**모의투자 도메인**  
+https://mockapi.kiwoom.com (KRX만 지원가능)  
+
+**URL**  
+/api/dostk/elw  
+
+**Format**  
+JSON  
+
+**Content-Type**  
+application/json;charset=UTF-8  
+
+[다른 TR 확인하기](#)
+
+---
+
+## TR명
+
+| TR명                         | 코드      |
+|------------------------------|-----------|
+| 거래원별ELW순매매상위요청    | ka30002   |
+| ELW일별민감도지표요청        | ka10048   |
+| ELW민감도지표요청            | ka10050   |
+| ELW가격급등락요청            | ka30001   |
+| 거래원별ELW순매매상위요청    | ka30002   |
+| ELWLP보유일별추이요청        | ka30003   |
+| ELW괴리율요청                | ka30004   |
+| ELW조건검색요청              | ka30005   |
+| ELW등락율순위요청            | ka30009   |
+| ELW잔량순위요청              | ka30010   |
+| ELW근접율요청                | ka30011   |
+| ELW종목상세정보요청          | ka30012   |
+
+---
+
+## 요청
+
+### Header
+
+| Element           | 한글명         | type    | Required | Length | Description                                 |
+|-------------------|---------------|---------|----------|--------|---------------------------------------------|
+| authorization     | 접근토큰       | String  | Y        | 1000   | 토큰 지정시 토큰타입("Bearer") 붙혀서 호출예) Bearer Egicyx... |
+| cont-yn           | 연속조회여부   | String  | N        | 1      | 응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅 |
+| next-key          | 연속조회키     | String  | N        | 50     | 응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅 |
+| api-id            | TR명          | String  | Y        | 10     |                                             |
+
+---
+
+### Body
+
+| Element             | 한글명             | type    | Required | Length | Description                                      |
+|---------------------|-------------------|---------|----------|--------|--------------------------------------------------|
+| isscomp_cd          | 발행사코드         | String  | Y        | 3      | 3자리, 영웅문4 0273화면참조 (교보:001, 신한금융투자:002, 한국투자증권:003, 대신:004, 미래대우:005, ...) |
+| trde_qty_tp         | 거래량구분         | String  | Y        | 4      | 0:전체, 5:5천주, 10:만주, 50:5만주, 100:10만주, 500:50만주, 1000:백만주 |
+| trde_tp             | 매매구분           | String  | Y        | 1      | 1:순매수, 2:순매도                               |
+| dt                  | 기간               | String  | Y        | 2      | 1:전일, 5:5일, 10:10일, 40:40일, 60:60일          |
+| trde_end_elwskip    | 거래종료ELW제외    | String  | Y        | 1      | 0:포함, 1:제외                                   |
+
+---
+
+## 응답
+
+### Header
+
+| Element     | 한글명         | type    | Required | Length | Description                          |
+|-------------|---------------|---------|----------|--------|--------------------------------------|
+| cont-yn     | 연속조회여부   | String  | N        | 1      | 다음 데이터가 있을시 Y값 전달        |
+| next-key    | 연속조회키     | String  | N        | 50     | 다음 데이터가 있을시 다음 키값 전달  |
+| api-id      | TR명          | String  | Y        | 10     |                                      |
+
+---
+
+### Body
+
+| Element                  | 한글명             | type    | Required | Length | Description           |
+|--------------------------|-------------------|---------|----------|--------|-----------------------|
+| trde_ori_elwnettrde_upper| 거래원별ELW순매매상위 | LIST    | N        |        |                       |
+| - stk_cd                 | 종목코드           | String  | N        | 20     |                       |
+| - stk_nm                 | 종목명             | String  | N        | 20     |                       |
+| - stkpc_flu              | 주가등락           | String  | N        | 20     |                       |
+| - flu_rt                 | 등락율             | String  | N        | 20     |                       |
+| - trde_qty               | 거래량             | String  | N        | 20     |                       |
+| - netprps                | 순매수             | String  | N        | 20     |                       |
+| - buy_trde_qty           | 매수거래량         | String  | N        | 20     |                       |
+| - sel_trde_qty           | 매도거래량         | String  | N        | 20     |                       |
+
+
+
+## PYTHON
+import requests
+import json
+
+# 거래원별ELW순매매상위요청
+def fn_ka30002(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/elw'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka30002', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken' # 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'isscomp_cd': '003', # 발행사코드 3자리, 영웅문4 0273화면참조 (교보:001, 신한금융투자:002, 한국투자증권:003, 대신:004, 미래대우:005, ,,,)
+		'trde_qty_tp': '0', # 거래량구분 0:전체, 5:5천주, 10:만주, 50:5만주, 100:10만주, 500:50만주, 1000:백만주
+		'trde_tp': '2', # 매매구분 1:순매수, 2:순매도
+		'dt': '60', # 기간 1:전일, 5:5일, 10:10일, 40:40일, 60:60일
+		'trde_end_elwskip': '0', # 거래종료ELW제외 0:포함, 1:제외
+	}
+
+	# 3. API 실행
+	fn_ka30002(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka30002(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+
+
+    ## Example
+
+
+Request
+{
+	"isscomp_cd" : "003",
+	"trde_qty_tp" : "0",
+	"trde_tp" : "2",
+	"dt" : "60",
+	"trde_end_elwskip" : "0"
+}
+Response
+{
+	"trde_ori_elwnettrde_upper":
+		[
+			{
+				"stk_cd":"57JBHH",
+				"stk_nm":"한국JBHHKOSPI200풋",
+				"stkpc_flu":"--3140",
+				"flu_rt":"-88.95",
+				"trde_qty":"500290",
+				"netprps":"--846970",
+				"buy_trde_qty":"+719140",
+				"sel_trde_qty":"-1566110"
+			},
+			{
+				"stk_cd":"57JBHH",
+				"stk_nm":"한국JBHHKOSPI200풋",
+				"stkpc_flu":"+205",
+				"flu_rt":"+73.21",
+				"trde_qty":"4950000",
+				"netprps":"--108850",
+				"buy_trde_qty":"+52450",
+				"sel_trde_qty":"-161300"
+			},
+			{
+				"stk_cd":"57JBHH",
+				"stk_nm":"한국JBHHKOSPI200풋",
+				"stkpc_flu":"+340",
+				"flu_rt":"+115.25",
+				"trde_qty":"60",
+				"netprps":"--73960",
+				"buy_trde_qty":"+29560",
+				"sel_trde_qty":"-103520"
+			},
+			{
+				"stk_cd":"57JBHH",
+				"stk_nm":"한국JBHHKOSPI200풋",
+				"stkpc_flu":"--65",
+				"flu_rt":"-86.67",
+				"trde_qty":"20",
+				"netprps":"--23550",
+				"buy_trde_qty":"+422800",
+				"sel_trde_qty":"-446350"
+			}
+		],
+	"return_code":0,
+	"return_msg":"정상적으로 처리되었습니다"
+}
+

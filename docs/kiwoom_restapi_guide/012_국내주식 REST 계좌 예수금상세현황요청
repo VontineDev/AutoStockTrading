@@ -1,0 +1,293 @@
+파일이름 : 012_국내주식 REST 계좌 예수금상세현황요청.md
+
+## 국내주식
+
+### 기본 정보
+| 항목              | 내용                                                                 |
+|-------------------|----------------------------------------------------------------------|
+| Method            | POST                                                                |
+| 운영 도메인        | https://api.kiwoom.com                                              |
+| 모의투자 도메인    | https://mockapi.kiwoom.com (KRX만 지원 가능)                         |
+| URL               | `/api/dostk/acnt`                                                   |
+| Format            | JSON                                                                |
+| Content-Type      | `application/json;charset=UTF-8`                                    |
+
+### 다른 TR 확인하기
+#### TR명
+- 예수금상세현황요청 (kt00001)
+- 일자별종목별실현손익요청_일자 (ka10072)
+- 일자별종목별실현손익요청_기간 (ka10073)
+- 일자별실현손익요청 (ka10074)
+- 미체결요청 (ka10075)
+- 체결요청 (ka10076)
+- 당일실현손익상세요청 (ka10077)
+- 계좌수익률요청 (ka10085)
+- 미체결 분할주문 상세 (ka10088)
+- 당일매매일지요청 (ka10170)
+- 예수금상세현황요청 (kt00001)
+- 일별추정예탁자산현황요청 (kt00002)
+- 추정자산조회요청 (kt00003)
+- 계좌평가현황요청 (kt00004)
+- 체결잔고요청 (kt00005)
+- 계좌별주문체결내역상세요청 (kt00007)
+- 계좌별익일결제예정내역요청 (kt00008)
+- 계좌별주문체결현황요청 (kt00009)
+- 주문인출가능금액요청 (kt00010)
+- 증거금율별주문가능수량조회요청 (kt00011)
+- 신용보증금율별주문가능수량조회요청 (kt00012)
+- 증거금세부내역조회요청 (kt00013)
+- 위탁종합거래내역요청 (kt00015)
+- 일별계좌수익률상세현황요청 (kt00016)
+- 계좌별당일현황요청 (kt00017)
+- 계좌평가잔고내역요청 (kt00018)
+
+---
+
+### 요청
+#### Header
+| 한글명         | type    | Required | Length | Description                          |
+|----------------|---------|----------|--------|--------------------------------------|
+| authorization  | String  | Y        | 1000   | 접근토큰 (예: `Bearer Egicyx...`)     |
+| cont-yn        | String  | N        | 1      | 연속조회여부 (응답 Header 값 사용)     |
+| next-key       | String  | N        | 50     | 연속조회키 (응답 Header 값 사용)       |
+| api-id         | String  | Y        | 10     | TR명                                 |
+
+#### Body
+| 한글명   | type    | Required | Length | Description      |
+|----------|---------|----------|--------|------------------|
+| qry_tp   | String  | Y        | 1      | 3:추정조회, 2:일반조회 |
+
+---
+
+### 응답
+#### Header
+| 한글명   | type    | Required | Length | Description              |
+|----------|---------|----------|--------|--------------------------|
+| cont-yn  | String  | N        | 1      | 연속조회여부 (Y/N)        |
+| next-key | String  | N        | 50     | 연속조회키                |
+| api-id   | String  | Y        | 10     | TR명                     |
+
+#### Body
+| 한글명                       | type    | Required | Length | Description                  |
+|------------------------------|---------|----------|--------|------------------------------|
+| entr                        | String  | N        | 15     | 예수금                       |
+| profa_ch                    | String  | N        | 15     | 주식증거금현금                |
+| bncr_profa_ch               | String  | N        | 15     | 수익증권증거금현금            |
+| nxdy_bncr_sell_exct         | String  | N        | 15     | 익일수익증권매도정산대금      |
+| fc_stk_krw_repl_set_amt     | String  | N        | 15     | 해외주식원화대용설정금        |
+| crd_grnta_ch                | String  | N        | 15     | 신용보증금현금                |
+| crd_grnt_ch                 | String  | N        | 15     | 신용담보금현금                |
+| add_grnt_ch                 | String  | N        | 15     | 추가담보금현금                |
+| etc_profa                   | String  | N        | 15     | 기타증거금                    |
+| uncl_stk_amt                | String  | N        | 15     | 미수확보금                    |
+| shrts_prica                 | String  | N        | 15     | 공매도대금                    |
+| crd_set_grnta               | String  | N        | 15     | 신용설정평가금                |
+| chck_ina_amt                | String  | N        | 15     | 수표입금액                    |
+| etc_chck_ina_amt            | String  | N        | 15     | 기타수표입금액                |
+| crd_grnt_ruse               | String  | N        | 15     | 신용담보재사용                |
+| knx_asset_evltv             | String  | N        | 15     | 코넥스기본예탁금              |
+| elwdpst_evlta               | String  | N        | 15     | ELW예탁평가금                 |
+| crd_ls_rght_frcs_amt        | String  | N        | 15     | 신용대주권리예정금액          |
+| lvlh_join_amt               | String  | N        | 15     | 생계형가입금액                |
+| lvlh_trns_alowa             | String  | N        | 15     | 생계형입금가능금액            |
+| repl_amt                    | String  | N        | 15     | 대용금평가금액(합계)          |
+| remn_repl_evlta             | String  | N        | 15     | 잔고대용평가금액              |
+| trst_remn_repl_evlta        | String  | N        | 15     | 위탁대용잔고평가금액          |
+| bncr_remn_repl_evlta        | String  | N        | 15     | 수익증권대용평가금액          |
+| profa_repl                  | String  | N        | 15     | 위탁증거금대용                |
+| crd_grnta_repl              | String  | N        | 15     | 신용보증금대용                |
+| crd_grnt_repl               | String  | N        | 15     | 신용담보금대용                |
+| add_grnt_repl               | String  | N        | 15     | 추가담보금대용                |
+| rght_repl_amt               | String  | N        | 15     | 권리대용금                    |
+| pymn_alow_amt               | String  | N        | 15     | 출금가능금액                  |
+| wrap_pymn_alow_amt          | String  | N        | 15     | 랩출금가능금액                |
+| ord_alow_amt                | String  | N        | 15     | 주문가능금액                  |
+| bncr_buy_alowa              | String  | N        | 15     | 수익증권매수가능금액          |
+| 20stk_ord_alow_amt          | String  | N        | 15     | 20%종목주문가능금액           |
+| 30stk_ord_alow_amt          | String  | N        | 15     | 30%종목주문가능금액           |
+| 40stk_ord_alow_amt          | String  | N        | 15     | 40%종목주문가능금액           |
+| 100stk_ord_alow_amt         | String  | N        | 15     | 100%종목주문가능금액          |
+| ch_uncla                    | String  | N        | 15     | 현금미수금                    |
+| ch_uncla_dlfe               | String  | N        | 15     | 현금미수연체료                |
+| ch_uncla_tot                | String  | N        | 15     | 현금미수금합계                |
+| crd_int_npay                | String  | N        | 15     | 신용이자미납                  |
+| int_npay_amt_dlfe           | String  | N        | 15     | 신용이자미납연체료            |
+| int_npay_amt_tot            | String  | N        | 15     | 신용이자미납합계              |
+| etc_loana                   | String  | N        | 15     | 기타대여금                    |
+| etc_loana_dlfe              | String  | N        | 15     | 기타대여금연체료              |
+| etc_loan_tot                | String  | N        | 15     | 기타대여금합계                |
+| nrpy_loan                   | String  | N        | 15     | 미상환융자금                  |
+| loan_sum                    | String  | N        | 15     | 융자금합계                    |
+| ls_sum                      | String  | N        | 15     | 대주금합계                    |
+| crd_grnt_rt                 | String  | N        | 15     | 신용담보비율                  |
+| mdstrm_usfe                 | String  | N        | 15     | 중도이용료                    |
+| min_ord_alow_yn             | String  | N        | 15     | 최소주문가능금액              |
+| loan_remn_evlt_amt          | String  | N        | 15     | 대출총평가금액                |
+| dpst_grntl_remn             | String  | N        | 15     | 예탁담보대출잔고              |
+| sell_grntl_remn             | String  | N        | 15     | 매도담보대출잔고              |
+| d1_entra                    | String  | N        | 15     | d+1추정예수금                 |
+| d1_slby_exct_amt            | String  | N        | 15     | d+1매도매수정산금             |
+| d1_buy_exct_amt             | String  | N        | 15     | d+1매수정산금                 |
+| d1_out_rep_mor              | String  | N        | 15     | d+1미수변제소요금             |
+| d1_sel_exct_amt             | String  | N        | 15     | d+1매도정산금                 |
+| d1_pymn_alow_amt            | String  | N        | 15     | d+1출금가능금액               |
+| d2_entra                    | String  | N        | 15     | d+2추정예수금                 |
+| d2_slby_exct_amt            | String  | N        | 15     | d+2매도매수정산금             |
+| d2_buy_exct_amt             | String  | N        | 15     | d+2매수정산금                 |
+| d2_out_rep_mor              | String  | N        | 15     | d+2미수변제소요금             |
+| d2_sel_exct_amt             | String  | N        | 15     | d+2매도정산금                 |
+| d2_pymn_alow_amt            | String  | N        | 15     | d+2출금가능금액               |
+| 50stk_ord_alow_amt          | String  | N        | 15     | 50%종목주문가능금액           |
+| 60stk_ord_alow_amt          | String  | N        | 15     | 60%종목주문가능금액           |
+| stk_entr_prst               | LIST    | N        | -      | 종목별예수금                  |
+| - crnc_cd                  | String  | N        | 3      | 통화코드                      |
+| - fx_entr                 | String  | N        | 15     | 외화예수금                     |
+| - fc_krw_repl_evlta       | String  | N        | 15     | 원화대용평가금                 |
+| - fc_trst_profa           | String  | N        | 15     | 해외주식증거금                 |
+| - pymn_alow_amt           | String  | N        | 15     | 출금가능금액                   |
+| - pymn_alow_amt_entr      | String  | N        | 15     | 출금가능금액(예수금)           |
+| - ord_alow_amt_entr       | String  | N        | 15     | 주문가능금액(예수금)           |
+| - fc_uncla                | String  | N        | 15     | 외화미수(합계)                 |
+| - fc_ch_uncla             | String  | N        | 15     | 외화현금미수금                 |
+| - dly_amt                 | String  | N        | 15     | 연체료                        |
+| - d1_fx_entr              | String  | N        | 15     | d+1외화예수금                  |
+| - d2_fx_entr              | String  | N        | 15     | d+2외화예수금                  |
+| - d3_fx_entr              | String  | N        | 15     | d+3외화예수금                  |
+| - d4_fx_entr              | String  | N        | 15     | d+4외화예수금                  |
+```
+
+
+## Python
+
+```python
+import requests
+import json
+
+# 예수금상세현황요청
+def fn_kt00001(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/acnt'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'kt00001', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken' # 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'qry_tp': '3', # 조회구분 3:추정조회, 2:일반조회
+	}
+
+	# 3. API 실행
+	fn_kt00001(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_kt00001(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+```
+
+
+
+## Example
+
+
+Request
+{
+	"qry_tp" : "3"
+}
+Response
+{
+	"entr":"000000000017534",
+	"profa_ch":"000000000032193",
+	"bncr_profa_ch":"000000000000000",
+	"nxdy_bncr_sell_exct":"000000000000000",
+	"fc_stk_krw_repl_set_amt":"000000000000000",
+	"crd_grnta_ch":"000000000000000",
+	"crd_grnt_ch":"000000000000000",
+	"add_grnt_ch":"000000000000000",
+	"etc_profa":"000000000000000",
+	"uncl_stk_amt":"000000000000000",
+	"shrts_prica":"000000000000000",
+	"crd_set_grnta":"000000000000000",
+	"chck_ina_amt":"000000000000000",
+	"etc_chck_ina_amt":"000000000000000",
+	"crd_grnt_ruse":"000000000000000",
+	"knx_asset_evltv":"000000000000000",
+	"elwdpst_evlta":"000000000031269",
+	"crd_ls_rght_frcs_amt":"000000000000000",
+	"lvlh_join_amt":"000000000000000",
+	"lvlh_trns_alowa":"000000000000000",
+	"repl_amt":"000000003915500",
+	"remn_repl_evlta":"000000003915500",
+	"trst_remn_repl_evlta":"000000000000000",
+	"bncr_remn_repl_evlta":"000000000000000",
+	"profa_repl":"000000000000000",
+	"crd_grnta_repl":"000000000000000",
+	"crd_grnt_repl":"000000000000000",
+	"add_grnt_repl":"000000000000000",
+	"rght_repl_amt":"000000000000000",
+	"pymn_alow_amt":"000000000085341",
+	"wrap_pymn_alow_amt":"000000000000000",
+	"ord_alow_amt":"000000000085341",
+	"bncr_buy_alowa":"000000000085341",
+	"20stk_ord_alow_amt":"000000000012550",
+	"30stk_ord_alow_amt":"000000000012550",
+	"40stk_ord_alow_amt":"000000000012550",
+	"100stk_ord_alow_amt":"000000000012550",
+	"ch_uncla":"000000000000000",
+	"ch_uncla_dlfe":"000000000000000",
+	"ch_uncla_tot":"000000000000000",
+	"crd_int_npay":"000000000000000",
+	"int_npay_amt_dlfe":"000000000000000",
+	"int_npay_amt_tot":"000000000000000",
+	"etc_loana":"000000000000000",
+	"etc_loana_dlfe":"000000000000000",
+	"etc_loan_tot":"000000000000000",
+	"nrpy_loan":"000000000000000",
+	"loan_sum":"000000000000000",
+	"ls_sum":"000000000000000",
+	"crd_grnt_rt":"0.00",
+	"mdstrm_usfe":"000000000388388",
+	"min_ord_alow_yn":"000000000000000",
+	"loan_remn_evlt_amt":"000000000000000",
+	"dpst_grntl_remn":"000000000000000",
+	"sell_grntl_remn":"000000000000000",
+	"d1_entra":"000000000017450",
+	"d1_slby_exct_amt":"-00000000000084",
+	"d1_buy_exct_amt":"000000000048240",
+	"d1_out_rep_mor":"000000000000000",
+	"d1_sel_exct_amt":"000000000048156",
+	"d1_pymn_alow_amt":"000000000012550",
+	"d2_entra":"000000000012550",
+	"d2_slby_exct_amt":"-00000000004900",
+	"d2_buy_exct_amt":"000000000004900",
+	"d2_out_rep_mor":"000000000000000",
+	"d2_sel_exct_amt":"000000000000000",
+	"d2_pymn_alow_amt":"000000000012550",
+	"50stk_ord_alow_amt":"000000000012550",
+	"60stk_ord_alow_amt":"000000000012550",
+	"stk_entr_prst":
+		[
+		],
+	"return_code":0,
+	"return_msg":"조회가 완료되었습니다."
+}

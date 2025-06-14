@@ -1,0 +1,142 @@
+파일이름 : 074_국내주식 REST 시세 신용매도주문.md
+
+# 국내주식 신용주문  
+## REST API
+
+### 기본 정보
+
+- **Method:** POST  
+- **운영 도메인:** https://api.kiwoom.com  
+- **모의투자 도메인:** https://mockapi.kiwoom.com (KRX만 지원가능)  
+- **URL:** `/api/dostk/crdordr`  
+- **Format:** JSON  
+- **Content-Type:** `application/json;charset=UTF-8`  
+- **다른 TR 확인하기:**  
+  - **신용 매도주문:** kt10007  
+  - **신용 매수주문:** kt10006  
+  - **신용 매도주문:** kt10007  
+  - **신용 정정주문:** kt10008  
+  - **신용 취소주문:** kt10009  
+
+---
+
+## 요청
+
+### Header
+
+| Element         | 한글명         | type    | Required | Length | Description                                                                 |
+|-----------------|---------------|---------|----------|--------|-----------------------------------------------------------------------------|
+| authorization   | 접근토큰        | String  | Y        | 1000   | 토큰 지정시 토큰타입("Bearer") 붙혀서 호출예) Bearer Egicyx...           |
+| cont-yn         | 연속조회여부    | String  | N        | 1      | 응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅 |
+| next-key        | 연속조회키      | String  | N        | 50     | 응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅 |
+| api-id          | TR명           | String  | Y        | 10     |                                                                             |
+
+### Body
+
+| Element         | 한글명         | type    | Required | Length | Description                                                                 |
+|-----------------|---------------|---------|----------|--------|-----------------------------------------------------------------------------|
+| dmst_stex_tp    | 국내거래소구분  | String  | Y        | 3      | KRX,NXT,SOR                                                                |
+| stk_cd          | 종목코드        | String  | Y        | 12     |                                                                             |
+| ord_qty         | 주문수량        | String  | Y        | 12     |                                                                             |
+| ord_uv          | 주문단가        | String  | N        | 12     |                                                                             |
+| trde_tp         | 매매구분        | String  | Y        | 2      | 0:보통, 3:시장가, 5:조건부지정가, 81:장마감후시간외, 61:장시작전시간외, 62:시간외단일가, 6:최유리지정가, 7:최우선지정가, 10:보통(IOC), 13:시장가(IOC), 16:최유리(IOC), 20:보통(FOK), 23:시장가(FOK), 26:최유리(FOK), 28:스톱지정가, 29:중간가, 30:중간가(IOC), 31:중간가(FOK) |
+| crd_deal_tp     | 신용거래구분    | String  | Y        | 2      | 33:융자, 99:융자합                                                         |
+| crd_loan_dt     | 대출일          | String  | N        | 8      | YYYYMMDD(융자일경우필수)                                                   |
+| cond_uv         | 조건단가        | String  | N        | 12     |                                                                             |
+
+---
+
+## 응답
+
+### Header
+
+| Element         | 한글명         | type    | Required | Length | Description                     |
+|-----------------|---------------|---------|----------|--------|---------------------------------|
+| cont-yn         | 연속조회여부    | String  | N        | 1      | 다음 데이터가 있을시 Y값 전달   |
+| next-key        | 연속조회키      | String  | N        | 50     | 다음 데이터가 있을시 다음 키값 전달 |
+| api-id          | TR명           | String  | Y        | 10     |                                 |
+
+### Body
+
+| Element         | 한글명         | type    | Required | Length | Description         |
+|-----------------|---------------|---------|----------|--------|---------------------|
+| ord_no          | 주문번호        | String  | N        | 7      |                     |
+| dmst_stex_tp    | 국내거래소구분  | String  | N        | 6      |                     |
+
+
+## PYTHON
+import requests
+import json
+
+# 신용 매도주문
+def fn_kt10007(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/crdordr'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'kt10007', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken' # 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'dmst_stex_tp': 'KRX', # 국내거래소구분 KRX,NXT,SOR
+		'stk_cd': '005930', # 종목코드 
+		'ord_qty': '3', # 주문수량 
+		'ord_uv': '6450', # 주문단가 
+		'trde_tp': '0', # 매매구분 0:보통 , 3:시장가 , 5:조건부지정가 , 81:장마감후시간외 , 61:장시작전시간외, 62:시간외단일가 , 6:최유리지정가 , 7:최우선지정가 , 10:보통(IOC) , 13:시장가(IOC) , 16:최유리(IOC) , 20:보통(FOK) , 23:시장가(FOK) , 26:최유리(FOK) , 28:스톱지정가,29:중간가,30:중간가(IOC),31:중간가(FOK)
+		'crd_deal_tp': '99', # 신용거래구분 33:융자 , 99:융자합
+		'crd_loan_dt': '', # 대출일 YYYYMMDD(융자일경우필수)
+		'cond_uv': '', # 조건단가 
+	}
+
+	# 3. API 실행
+	fn_kt10007(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_kt10007(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+
+    ## Example
+
+
+Request
+{
+	"dmst_stex_tp" : "KRX",
+	"stk_cd" : "005930",
+	"ord_qty" : "3",
+	"ord_uv" : "6450",
+	"trde_tp" : "0",
+	"crd_deal_tp" : "99",
+	"crd_loan_dt" : "",
+	"cond_uv" : ""
+}
+Response
+{
+	"ord_no": "0001614",
+	"dmst_stex_tp": "KRX",
+	"return_code": 0,
+	"return_msg": "신용 매도주문이 완료되었습니다."
+}
+
+

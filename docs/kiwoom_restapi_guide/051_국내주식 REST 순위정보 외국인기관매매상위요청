@@ -1,0 +1,191 @@
+파일이름 : 051_국내주식 REST 순위정보 외국인기관매매상위요청.md
+
+```markdown
+## 국내주식 REST 순위정보
+
+### 기본 정보
+
+| 항목             | 내용                                      |
+|------------------|-----------------------------------------|
+| Method           | POST                                    |
+| 운영 도메인      | https://api.kiwoom.com                  |
+| 모의투자 도메인  | https://mockapi.kiwoom.com (KRX만 지원가능) |
+| URL              | `/api/dostk/rkinfo`                     |
+| Format           | JSON                                    |
+| Content-Type     | `application/json;charset=UTF-8`        |
+
+---
+
+### 다른 TR 확인하기
+
+**TR명**
+- **시간외단일가등락율순위요청:** `ka10098`
+- **호가잔량상위요청:** `ka10020`
+- **호가잔량급증요청:** `ka10021`
+- **잔량율급증요청:** `ka10022`
+- **거래량급증요청:** `ka10023`
+- **전일대비등락률상위요청:** `ka10027`
+- **예상체결등락률상위요청:** `ka10029`
+- **당일거래량상위요청:** `ka10030`
+- **전일거래량상위요청:** `ka10031`
+- **거래대금상위요청:** `ka10032`
+- **신용비율상위요청:** `ka10033`
+- **외인기간별매매상위요청:** `ka10034`
+- **외인연속순매매상위요청:** `ka10035`
+- **외인한도소진율증가상위:** `ka10036`
+- **외국계창구매매상위요청:** `ka10037`
+- **종목별증권사순위요청:** `ka10038`
+- **증권사별매매상위요청:** `ka10039`
+- **당일주요거래원요청:** `ka10040`
+- **순매수거래원순위요청:** `ka10042`
+- **당일상위이탈원요청:** `ka10053`
+- **동일순매매순위요청:** `ka10062`
+- **장중투자자별매매상위요청:** `ka10065`
+- **대차거래상위10종목요청:** `ka10069`
+- **시간외단일가등락율순위요청:** `ka10098`
+- **외국인기관매매상위요청:** `ka90009`
+
+---
+
+### 요청
+
+#### Header
+
+| Element         | 한글명      | Type   | Required | Length | Description                              |
+|-----------------|------------|--------|----------|--------|------------------------------------------|
+| authorization   | 접근토큰    | String | Y        | 1000   | 토큰 지정시 `Bearer` 포함 (예: `Bearer Egicyx...`) |
+| cont-yn         | 연속조회여부| String | N        | 1      | 응답 Header의 `cont-yn` 값이 `Y`일 경우 설정      |
+| next-key        | 연속조회키  | String | N        | 50     | 응답 Header의 `next-key` 값 세팅              |
+| api-id          | TR명       | String | Y        | 10     |                                          |
+
+#### Body
+
+| Element       | 한글명    | Type   | Required | Length | Description                              |
+|---------------|----------|--------|----------|--------|------------------------------------------|
+| mrkt_tp       | 시장구분  | String | Y        | 3      | 000:전체, 001:코스피, 101:코스닥           |
+| sort_base     | 정렬기준  | String | Y        | 1      | 1:상승률, 2:상승폭, 3:하락률, 4:하락폭, 5:보합 |
+| stk_cnd       | 종목조건  | String | Y        | 2      | 0:전체조회, 1:관리종목제외, 2:정리매매종목제외, 3:우선주제외, 4:관리종목우선주제외, 5:증100제외, 6:증100만보기, 7:증40만보기, 8:증30만보기, 9:증20만보기, 12:증50만보기, 13:증60만보기, 14:ETF제외, 15:스팩제외, 16:ETF+ETN제외, 17:ETN제외 |
+| trde_qty_cnd  | 거래량조건| String | Y        | 5      | 0:전체조회, 10:백주이상, 50:5백주이상, 100:천주이상, 500:5천주이상, 1000:만주이상, 5000:5만주이상, 10000:10만주이상 |
+| crd_cnd       | 신용조건  | String | Y        | 1      | 0:전체조회, 9:신용융자전체, 1:신용융자A군, 2:신용융자B군, 3:신용융자C군, 4:신용융자D군, 8:신용대주, 5:신용한도초과제외 |
+| trde_prica    | 거래대금  | String | Y        | 5      | 0:전체조회, 5:5백만원이상, 10:1천만원이상, 30:3천만원이상, 50:5천만원이상, 100:1억원이상, 300:3억원이상, 500:5억원이상, 1000:10억원이상, 3000:30억원이상, 5000:50억원이상, 10000:100억원이상 |
+
+---
+
+### 응답
+
+#### Header
+
+| Element   | 한글명      | Type   | Required | Length | Description                |
+|-----------|------------|--------|----------|--------|----------------------------|
+| cont-yn   | 연속조회여부| String | N        | 1      | 다음 데이터 존재시 `Y` 전달    |
+| next-key  | 연속조회키  | String | N        | 50     | 다음 키값 전달                 |
+| api-id    | TR명       | String | Y        | 10     |                            |
+
+#### Body
+
+| Element                                 | 한글명                | Type   | Length | Description        |
+|------------------------------------------|----------------------|--------|--------|--------------------|
+| **ovt_sigpric_flu_rt_rank**              | 시간외단일가등락율순위| LIST   | N      |                    |
+| - rank                                   | 순위                  | String | 20     |                    |
+| - stk_cd                                 | 종목코드              | String | 20     |                    |
+| - stk_nm                                 | 종목명                | String | 20     |                    |
+| - cur_prc                                | 현재가                | String | 20     |                    |
+| - pred_pre_sig                           | 전일대비기호          | String | 20     |                    |
+| - pred_pre                               | 전일대비              | String | 20     |                    |
+| - flu_rt                                 | 등락률                | String | 20     |                    |
+| - sel_tot_req                            | 매도총잔량            | String | 20     |                    |
+| - buy_tot_req                            | 매수총잔량            | String | 20     |                    |
+| - acc_trde_qty                           | 누적거래량            | String | 20     |                    |
+| - acc_trde_prica                         | 누적거래대금          | String | 20     |                    |
+| - tdy_close_pric                         | 당일종가              | String | 20     |                    |
+| - tdy_close_pric_flu_rt                  | 당일종가등락률        | String | 20     |                    |
+```
+
+
+## PYTHON
+import requests
+import json
+
+# 시간외단일가등락율순위요청
+def fn_ka10098(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/rkinfo'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10098', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken' # 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'mrkt_tp': '000', # 시장구분 000:전체,001:코스피,101:코스닥
+		'sort_base': '5', # 정렬기준 1:상승률, 2:상승폭, 3:하락률, 4:하락폭, 5:보합
+		'stk_cnd': '0', # 종목조건 0:전체조회,1:관리종목제외,2:정리매매종목제외,3:우선주제외,4:관리종목우선주제외,5:증100제외,6:증100만보기,7:증40만보기,8:증30만보기,9:증20만보기,12:증50만보기,13:증60만보기,14:ETF제외,15:스팩제외,16:ETF+ETN제외,17:ETN제외
+		'trde_qty_cnd': '0', # 거래량조건 0:전체조회, 10:백주이상,50:5백주이상,100;천주이상, 500:5천주이상, 1000:만주이상, 5000:5만주이상, 10000:10만주이상
+		'crd_cnd': '0', # 신용조건 0:전체조회, 9:신용융자전체, 1:신용융자A군, 2:신용융자B군, 3:신용융자C군, 4:신용융자D군, 8:신용대주, 5:신용한도초과제외
+		'trde_prica': '0', # 거래대금 0:전체조회, 5:5백만원이상,10:1천만원이상, 30:3천만원이상, 50:5천만원이상, 100:1억원이상, 300:3억원이상, 500:5억원이상, 1000:10억원이상, 3000:30억원이상, 5000:50억원이상, 10000:100억원이상
+	}
+
+	# 3. API 실행
+	fn_ka10098(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10098(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+
+
+    ##Example
+
+
+Request
+{
+	"mrkt_tp" : "000",
+	"sort_base" : "5",
+	"stk_cnd" : "0",
+	"trde_qty_cnd" : "0",
+	"crd_cnd" : "0",
+	"trde_prica" : "0"
+}
+Response
+{
+	"ovt_sigpric_flu_rt_rank":
+		[
+			{
+				"rank":"1",
+				"stk_cd":"069500",
+				"stk_nm":"KODEX 200",
+				"cur_prc":"17140",
+				"pred_pre_sig":"3",
+				"pred_pre":"0",
+				"flu_rt":"0.00",
+				"sel_tot_req":"0",
+				"buy_tot_req":"24",
+				"acc_trde_qty":"42",
+				"acc_trde_prica":"1",
+				"tdy_close_pric":"17140",
+				"tdy_close_pric_flu_rt":"-0.26"
+			}
+		],
+	"return_code":0,
+	"return_msg":"정상적으로 처리되었습니다"
+}

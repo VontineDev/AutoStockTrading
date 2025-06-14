@@ -1,0 +1,208 @@
+파일이름 : 017_국내주식 REST 계좌 계좌별주문체결내역상세요청.md
+
+# 국내주식
+
+## REST 계좌
+
+### 기본 정보
+| 항목              | 내용                                                                 |
+|-------------------|----------------------------------------------------------------------|
+| Method            | POST                                                                |
+| 운영 도메인        | https://api.kiwoom.com                                              |
+| 모의투자 도메인    | https://mockapi.kiwoom.com (KRX만 지원 가능)                         |
+| URL               | `/api/dostk/acnt`                                                   |
+| Format            | JSON                                                                |
+| Content-Type      | `application/json;charset=UTF-8`                                    |
+
+### 다른 TR 확인하기
+#### TR명
+- 계좌별주문체결내역상세요청 (kt00007)
+- 일자별종목별실현손익요청_일자 (ka10072)
+- 일자별종목별실현손익요청_기간 (ka10073)
+- 일자별실현손익요청 (ka10074)
+- 미체결요청 (ka10075)
+- 체결요청 (ka10076)
+- 당일실현손익상세요청 (ka10077)
+- 계좌수익률요청 (ka10085)
+- 미체결 분할주문 상세 (ka10088)
+- 당일매매일지요청 (ka10170)
+- 예수금상세현황요청 (kt00001)
+- 일별추정예탁자산현황요청 (kt00002)
+- 추정자산조회요청 (kt00003)
+- 계좌평가현황요청 (kt00004)
+- 체결잔고요청 (kt00005)
+- 계좌별주문체결내역상세요청 (kt00007)
+- 계좌별익일결제예정내역요청 (kt00008)
+- 계좌별주문체결현황요청 (kt00009)
+- 주문인출가능금액요청 (kt00010)
+- 증거금율별주문가능수량조회요청 (kt00011)
+- 신용보증금율별주문가능수량조회요청 (kt00012)
+- 증거금세부내역조회요청 (kt00013)
+- 위탁종합거래내역요청 (kt00015)
+- 일별계좌수익률상세현황요청 (kt00016)
+- 계좌별당일현황요청 (kt00017)
+- 계좌평가잔고내역요청 (kt00018)
+
+---
+
+### 요청
+#### Header
+| 한글명         | type    | Required | Length | Description                          |
+|----------------|---------|----------|--------|--------------------------------------|
+| authorization  | String  | Y        | 1000   | 접근토큰 (예: `Bearer Egicyx...`)     |
+| cont-yn        | String  | N        | 1      | 연속조회여부 (응답 Header 값 사용)     |
+| next-key       | String  | N        | 50     | 연속조회키 (응답 Header 값 사용)       |
+| api-id         | String  | Y        | 10     | TR명                                 |
+
+#### Body
+| 한글명          | type    | Required | Length | Description                          |
+|-----------------|---------|----------|--------|--------------------------------------|
+| ord_dt          | String  | N        | 8      | 주문일자 (YYYYMMDD)                   |
+| qry_tp          | String  | Y        | 1      | 1:주문순, 2:역순, 3:미체결, 4:체결내역만 |
+| stk_bond_tp     | String  | Y        | 1      | 0:전체, 1:주식, 2:채권                |
+| sell_tp         | String  | Y        | 1      | 0:전체, 1:매도, 2:매수                |
+| stk_cd          | String  | N        | 12     | 종목코드 (공백 허용)                   |
+| fr_ord_no       | String  | N        | 7      | 시작주문번호 (공백 허용)               |
+| dmst_stex_tp    | String  | Y        | 6      | %:전체, KRX:한국거래소, NXT:넥스트트레이드, SOR:최선주문집행 |
+
+---
+
+### 응답
+#### Header
+| 한글명   | type    | Required | Length | Description              |
+|----------|---------|----------|--------|--------------------------|
+| cont-yn  | String  | N        | 1      | 연속조회여부 (Y/N)        |
+| next-key | String  | N        | 50     | 연속조회키                |
+| api-id   | String  | Y        | 10     | TR명                     |
+
+#### Body
+| 한글명                       | type    | Required | Length | Description                  |
+|------------------------------|---------|----------|--------|------------------------------|
+| acnt_ord_cntr_prps_dtl       | LIST    | N        | -      | 계좌별주문체결내역상세          |
+| - ord_no                    | String  | N        | 7      | 주문번호                      |
+| - stk_cd                    | String  | N        | 12     | 종목번호                      |
+| - trde_tp                   | String  | N        | 20     | 매매구분                      |
+| - crd_tp                    | String  | N        | 20     | 신용구분                      |
+| - ord_qty                   | String  | N        | 10     | 주문수량                      |
+| - ord_uv                    | String  | N        | 10     | 주문단가                      |
+| - cnfm_qty                  | String  | N        | 10     | 확인수량                      |
+| - acpt_tp                   | String  | N        | 20     | 접수구분                      |
+| - rsrv_tp                   | String  | N        | 20     | 반대여부                      |
+| - ord_tm                    | String  | N        | 8      | 주문시간                      |
+| - ori_ord                   | String  | N        | 7      | 원주문                        |
+| - stk_nm                    | String  | N        | 40     | 종목명                        |
+| - io_tp_nm                  | String  | N        | 20     | 주문구분                      |
+| - loan_dt                   | String  | N        | 8      | 대출일                        |
+| - cntr_qty                  | String  | N        | 10     | 체결수량                      |
+| - cntr_uv                   | String  | N        | 10     | 체결단가                      |
+| - ord_remnq                 | String  | N        | 10     | 주문잔량                      |
+| - comm_ord_tp               | String  | N        | 20     | 통신구분                      |
+| - mdfy_cncl                 | String  | N        | 20     | 정정취소                      |
+| - cnfm_tm                   | String  | N        | 8      | 확인시간                      |
+| - dmst_stex_tp              | String  | N        | 8      | 국내거래소구분                 |
+| - cond_uv                   | String  | N        | 10     | 스톱가                        |
+```
+
+
+## Python
+
+```python
+import requests
+import json
+
+# 계좌별주문체결내역상세요청
+def fn_kt00007(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/acnt'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'kt00007', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken' # 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'ord_dt': '', # 주문일자 YYYYMMDD
+		'qry_tp': '1', # 조회구분 1:주문순, 2:역순, 3:미체결, 4:체결내역만
+		'stk_bond_tp': '0', # 주식채권구분 0:전체, 1:주식, 2:채권
+		'sell_tp': '0', # 매도수구분 0:전체, 1:매도, 2:매수
+		'stk_cd': '005930', # 종목코드 공백허용 (공백일때 전체종목)
+		'fr_ord_no': '', # 시작주문번호 공백허용 (공백일때 전체주문)
+		'dmst_stex_tp': '%', # 국내거래소구분 %:(전체),KRX:한국거래소,NXT:넥스트트레이드,SOR:최선주문집행
+	}
+
+	# 3. API 실행
+	fn_kt00007(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_kt00007(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+```
+
+
+
+## Example
+
+
+Request
+{
+	"ord_dt" : "",
+	"qry_tp" : "1",
+	"stk_bond_tp" : "0",
+	"sell_tp" : "0",
+	"stk_cd" : "005930",
+	"fr_ord_no" : "",
+	"dmst_stex_tp" : "%"
+}
+Response
+{
+	"acnt_ord_cntr_prps_dtl":
+		[
+			{
+				"ord_no":"0000050",
+				"stk_cd":"A069500",
+				"trde_tp":"시장가",
+				"crd_tp":"보통매매",
+				"ord_qty":"0000000001",
+				"ord_uv":"0000000000",
+				"cnfm_qty":"0000000000",
+				"acpt_tp":"접수",
+				"rsrv_tp":"",
+				"ord_tm":"13:05:43",
+				"ori_ord":"0000000",
+				"stk_nm":"KODEX 200",
+				"io_tp_nm":"현금매수",
+				"loan_dt":"",
+				"cntr_qty":"0000000001",
+				"cntr_uv":"0000004900",
+				"ord_remnq":"0000000000",
+				"comm_ord_tp":"영웅문4",
+				"mdfy_cncl":"",
+				"cnfm_tm":"",
+				"dmst_stex_tp":"KRX",
+				"cond_uv":"0000000000"
+			}
+		],
+	"return_code":0,
+	"return_msg":"조회가 완료되었습니다"
+}
+

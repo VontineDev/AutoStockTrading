@@ -1,0 +1,209 @@
+파일이름 : 065_국내주식 REST 시세 일별주가요청.md
+
+```markdown
+## 기본 정보
+※ **ka10086 (일별주가요청)**  
+[주의] 외국인순매수 데이터는 거래소로부터 금액데이터가 제공되지 않고 수량으로만 조회됩니다.  
+
+| Element          | 내용                          |
+|------------------|-----------------------------|
+| Method           | POST                       |
+| 운영 도메인       | https://api.kiwoom.com     |
+| 모의투자 도메인   | https://mockapi.kiwoom.com (KRX만 지원가능) |
+| URL              | /api/dostk/mrkcond         |
+| Format           | JSON                       |
+| Content-Type     | application/json;charset=UTF-8 |
+
+### TR명
+- 일별주가요청 (ka10086)
+- 주식호가요청 (ka10004)
+- 주식일주월시분요청 (ka10005)
+- 주식시분요청 (ka10006)
+- 시세표성정보요청 (ka10007)
+- 신주인수권전체시세요청 (ka10011)
+- 일별기관매매종목요청 (ka10044)
+- 종목별기관매매추이요청 (ka10045)
+- 체결강도추이시간별요청 (ka10046)
+- 체결강도추이일별요청 (ka10047)
+- 장중투자자별매매요청 (ka10063)
+- 장마감후투자자별매매요청 (ka10066)
+- 증권사별종목매매동향요청 (ka10078)
+- 일별주가요청 (ka10086)
+- 시간외단일가요청 (ka10087)
+- 프로그램매매추이요청 시간대별 (ka90005)
+- 프로그램매매차익잔고추이요청 (ka90006)
+- 프로그램매매누적추이요청 (ka90007)
+- 종목시간별프로그램매매추이요청 (ka90008)
+- 프로그램매매추이요청 일자별 (ka90010)
+- 종목일별프로그램매매추이요청 (ka90013)
+
+---
+
+## 요청
+### Header
+| Element          | 한글명       | type   | Required | Length | Description                              |
+|------------------|------------|--------|----------|--------|-----------------------------------------|
+| authorization    | 접근토큰    | String | Y        | 1000   | `Bearer Egicyx...` 형식으로 토큰 지정     |
+| cont-yn          | 연속조회여부 | String | N        | 1      | 응답 Header의 `cont-yn` 값이 Y일 경우 세팅 |
+| next-key         | 연속조회키   | String | N        | 50     | 응답 Header의 `next-key` 값 세팅         |
+| api-id           | TR명        | String | Y        | 10     | 예: ka10086                              |
+
+### Body
+| Element          | 한글명       | type   | Required | Length | Description                              |
+|------------------|------------|--------|----------|--------|-----------------------------------------|
+| stk_cd           | 종목코드    | String | Y        | 20     | 거래소별 코드 (KRX:039490, NXT:039490_NX, SOR:039490_AL) |
+| qry_dt           | 조회일자    | String | Y        | 8      | YYYYMMDD                                |
+| indc_tp          | 표시구분    | String | Y        | 1      | `0`:수량, `1`:금액(백만원)              |
+
+---
+
+## 응답
+### Header
+| Element          | 한글명       | type   | Required | Length | Description                              |
+|------------------|------------|--------|----------|--------|-----------------------------------------|
+| cont-yn          | 연속조회여부 | String | N        | 1      | 다음 데이터 존재 시 `Y` 전달             |
+| next-key         | 연속조회키   | String | N        | 50     | 다음 조회 시 사용할 키값                 |
+| api-id           | TR명        | String | Y        | 10     | 예: ka10086                              |
+
+### Body
+| Element                | 한글명              | type   | Required | Length | Description                              |
+|------------------------|-------------------|--------|----------|--------|-----------------------------------------|
+| daly_stkpc             | 일별주가           | LIST   | N        | -      |                                          |
+| - date                 | 날짜              | String | N        | 20     |                                          |
+| - open_pric            | 시가              | String | N        | 20     |                                          |
+| - high_pric            | 고가              | String | N        | 20     |                                          |
+| - low_pric             | 저가              | String | N        | 20     |                                          |
+| - close_pric           | 종가              | String | N        | 20     |                                          |
+| - pred_rt              | 전일비            | String | N        | 20     |                                          |
+| - flu_rt               | 등락률            | String | N        | 20     |                                          |
+| - trde_qty             | 거래량            | String | N        | 20     |                                          |
+| - amt_mn               | 금액(백만)        | String | N        | 20     |                                          |
+| - crd_rt               | 신용비            | String | N        | 20     |                                          |
+| - ind                  | 개인              | String | N        | 20     |                                          |
+| - orgn                 | 기관              | String | N        | 20     |                                          |
+| - for_qty              | 외인수량          | String | N        | 20     |                                          |
+| - frgn                 | 외국계            | String | N        | 20     |                                          |
+| - prm                  | 프로그램           | String | N        | 20     |                                          |
+| - for_rt               | 외인비            | String | N        | 20     |                                          |
+| - for_poss             | 외인보유          | String | N        | 20     |                                          |
+| - for_wght             | 외인비중          | String | N        | 20     |                                          |
+| - for_netprps          | 외인순매수         | String | N        | 20     | (수량 기준)                               |
+| - orgn_netprps         | 기관순매수         | String | N        | 20     |                                          |
+| - ind_netprps          | 개인순매수         | String | N        | 20     |                                          |
+| - crd_remn_rt          | 신용잔고율         | String | N        | 20     |                                          |
+```
+
+
+## PYTHON
+import requests
+import json
+
+# 일별주가요청
+def fn_ka10086(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/mrkcond'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10086', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken' # 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'stk_cd': '005930', # 종목코드 거래소별 종목코드 (KRX:039490,NXT:039490_NX,SOR:039490_AL)
+		'qry_dt': '20241125', # 조회일자 YYYYMMDD
+		'indc_tp': '0', # 표시구분 0:수량, 1:금액(백만원)
+	}
+
+	# 3. API 실행
+	fn_ka10086(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10086(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+
+    ## Example
+
+
+Request
+{
+	"stk_cd" : "005930",
+	"qry_dt" : "20241125",
+	"indc_tp" : "0"
+}
+Response
+{
+	"daly_stkpc":
+		[
+			{
+				"date":"20241125",
+				"open_pric":"+78800",
+				"high_pric":"+101100",
+				"low_pric":"-54500",
+				"close_pric":"-55000",
+				"pred_rt":"-22800",
+				"flu_rt":"-29.31",
+				"trde_qty":"20278",
+				"amt_mn":"1179",
+				"crd_rt":"0.00",
+				"ind":"--714",
+				"orgn":"+693",
+				"for_qty":"--266783",
+				"frgn":"0",
+				"prm":"0",
+				"for_rt":"+51.56",
+				"for_poss":"+51.56",
+				"for_wght":"+51.56",
+				"for_netprps":"--266783",
+				"orgn_netprps":"+693",
+				"ind_netprps":"--714",
+				"crd_remn_rt":"0.00"
+			},
+			{
+				"date":"20241122",
+				"open_pric":"-54500",
+				"high_pric":"77800",
+				"low_pric":"-54500",
+				"close_pric":"77800",
+				"pred_rt":"0",
+				"flu_rt":"0.00",
+				"trde_qty":"209653",
+				"amt_mn":"11447",
+				"crd_rt":"0.00",
+				"ind":"--196415",
+				"orgn":"+196104",
+				"for_qty":"--2965929",
+				"frgn":"0",
+				"prm":"--6",
+				"for_rt":"+51.56",
+				"for_poss":"+51.56",
+				"for_wght":"+51.56",
+				"for_netprps":"--2965929",
+				"orgn_netprps":"+196104",
+				"ind_netprps":"--196415",
+				"crd_remn_rt":"0.00"
+			}
+		],
+	"return_code":0,
+	"return_msg":"정상적으로 처리되었습니다"
+}

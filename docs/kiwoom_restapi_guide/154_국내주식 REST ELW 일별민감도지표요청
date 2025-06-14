@@ -1,0 +1,229 @@
+파일이름 : 154_국내주식 REST ELW 일별민감도지표요청.md
+# 국내주식  
+## REST  
+### ELW
+
+---
+
+## 기본 정보  
+**Method**  
+POST  
+
+**운영 도메인**  
+https://api.kiwoom.com  
+
+**모의투자 도메인**  
+https://mockapi.kiwoom.com (KRX만 지원가능)  
+
+**URL**  
+/api/dostk/elw  
+
+**Format**  
+JSON  
+
+**Content-Type**  
+application/json;charset=UTF-8  
+
+[다른 TR 확인하기](#)
+
+---
+
+## TR명
+
+| TR명                         | 코드      |
+|------------------------------|-----------|
+| ELW일별민감도지표요청        | ka10048   |
+| ELW일별민감도지표요청        | ka10048   |
+| ELW민감도지표요청            | ka10050   |
+| ELW가격급등락요청            | ka30001   |
+| 거래원별ELW순매매상위요청    | ka30002   |
+| ELWLP보유일별추이요청        | ka30003   |
+| ELW괴리율요청                | ka30004   |
+| ELW조건검색요청              | ka30005   |
+| ELW등락율순위요청            | ka30009   |
+| ELW잔량순위요청              | ka30010   |
+| ELW근접율요청                | ka30011   |
+| ELW종목상세정보요청          | ka30012   |
+
+---
+
+## 요청
+
+### Header
+
+| Element           | 한글명         | type    | Required | Length | Description                                 |
+|-------------------|---------------|---------|----------|--------|---------------------------------------------|
+| authorization     | 접근토큰       | String  | Y        | 1000   | 토큰 지정시 토큰타입("Bearer") 붙혀서 호출예) Bearer Egicyx... |
+| cont-yn           | 연속조회여부   | String  | N        | 1      | 응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅 |
+| next-key          | 연속조회키     | String  | N        | 50     | 응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅 |
+| api-id            | TR명          | String  | Y        | 10     |                                             |
+
+---
+
+### Body
+
+| Element         | 한글명         | type    | Required | Length | Description   |
+|-----------------|---------------|---------|----------|--------|---------------|
+| stk_cd          | 종목코드       | String  | Y        | 6      |               |
+
+---
+
+## 응답
+
+### Header
+
+| Element     | 한글명         | type    | Required | Length | Description                          |
+|-------------|---------------|---------|----------|--------|--------------------------------------|
+| cont-yn     | 연속조회여부   | String  | N        | 1      | 다음 데이터가 있을시 Y값 전달        |
+| next-key    | 연속조회키     | String  | N        | 50     | 다음 데이터가 있을시 다음 키값 전달  |
+| api-id      | TR명          | String  | Y        | 10     |                                      |
+
+---
+
+### Body
+
+| Element                  | 한글명             | type    | Required | Length | Description   |
+|--------------------------|-------------------|---------|----------|--------|---------------|
+| elwdaly_snst_ix          | ELW일별민감도지표  | LIST    | N        |        |               |
+| - dt                     | 일자              | String  | N        | 20     |               |
+| - iv                     | IV                | String  | N        | 20     |               |
+| - delta                  | 델타              | String  | N        | 20     |               |
+| - gam                    | 감마              | String  | N        | 20     |               |
+| - theta                  | 쎄타              | String  | N        | 20     |               |
+| - vega                   | 베가              | String  | N        | 20     |               |
+| - law                    | 로                | String  | N        | 20     |               |
+| - lp                     | LP                | String  | N        | 20     |               |
+
+
+## PYTHON
+import requests
+import json
+
+# ELW일별민감도지표요청
+def fn_ka10048(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/elw'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10048', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken' # 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'stk_cd': '57JBHH', # 종목코드 
+	}
+
+	# 3. API 실행
+	fn_ka10048(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10048(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+
+    ## Example
+
+
+Request
+{
+	"stk_cd" : "57JBHH"
+}
+Response
+{
+	"elwdaly_snst_ix":
+		[
+			{
+				"dt":"000000",
+				"iv":"1901",
+				"delta":"126664",
+				"gam":"5436",
+				"theta":"-5271886",
+				"vega":"41752995",
+				"law":"13982453",
+				"lp":"0"
+			},
+			{
+				"dt":"000000",
+				"iv":"1901",
+				"delta":"126664",
+				"gam":"5436",
+				"theta":"-5271886",
+				"vega":"41752995",
+				"law":"13982453",
+				"lp":"0"
+			},
+			{
+				"dt":"000000",
+				"iv":"1901",
+				"delta":"126664",
+				"gam":"5436",
+				"theta":"-5271886",
+				"vega":"41752995",
+				"law":"13982453",
+				"lp":"0"
+			},
+			{
+				"dt":"000000",
+				"iv":"1901",
+				"delta":"126664",
+				"gam":"5436",
+				"theta":"-5271886",
+				"vega":"41752995",
+				"law":"13982453",
+				"lp":"0"
+			},
+			{
+				"dt":"000000",
+				"iv":"1901",
+				"delta":"126664",
+				"gam":"5436",
+				"theta":"-5271886",
+				"vega":"41752995",
+				"law":"13982453",
+				"lp":"0"
+			},
+			{
+				"dt":"000000",
+				"iv":"1901",
+				"delta":"126664",
+				"gam":"5436",
+				"theta":"-5271886",
+				"vega":"41752995",
+				"law":"13982453",
+				"lp":"0"
+			},
+			{
+				"dt":"000000",
+				"iv":"1901",
+				"delta":"126664",
+				"gam":"5436",
+				"theta":"-5271886",
+				"vega":"41752995",
+				"law":"13982453",
+				"lp":"0"
+			}
+		],
+	"return_code":0,
+	"return_msg":"정상적으로 처리되었습니다"
+}
+

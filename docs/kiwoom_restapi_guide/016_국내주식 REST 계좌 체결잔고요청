@@ -1,0 +1,230 @@
+파일이름 : 016_국내주식 REST 계좌 체결잔고요청.md
+
+## 국내주식
+
+### 기본 정보
+| 항목              | 내용                                                                 |
+|-------------------|----------------------------------------------------------------------|
+| Method            | POST                                                                |
+| 운영 도메인        | https://api.kiwoom.com                                              |
+| 모의투자 도메인    | https://mockapi.kiwoom.com (KRX만 지원 가능)                         |
+| URL               | `/api/dostk/acnt`                                                   |
+| Format            | JSON                                                                |
+| Content-Type      | `application/json;charset=UTF-8`                                    |
+
+### 다른 TR 확인하기
+#### TR명
+- 체결잔고요청 (kt00005)
+- 일자별종목별실현손익요청_일자 (ka10072)
+- 일자별종목별실현손익요청_기간 (ka10073)
+- 일자별실현손익요청 (ka10074)
+- 미체결요청 (ka10075)
+- 체결요청 (ka10076)
+- 당일실현손익상세요청 (ka10077)
+- 계좌수익률요청 (ka10085)
+- 미체결 분할주문 상세 (ka10088)
+- 당일매매일지요청 (ka10170)
+- 예수금상세현황요청 (kt00001)
+- 일별추정예탁자산현황요청 (kt00002)
+- 추정자산조회요청 (kt00003)
+- 계좌평가현황요청 (kt00004)
+- 체결잔고요청 (kt00005)
+- 계좌별주문체결내역상세요청 (kt00007)
+- 계좌별익일결제예정내역요청 (kt00008)
+- 계좌별주문체결현황요청 (kt00009)
+- 주문인출가능금액요청 (kt00010)
+- 증거금율별주문가능수량조회요청 (kt00011)
+- 신용보증금율별주문가능수량조회요청 (kt00012)
+- 증거금세부내역조회요청 (kt00013)
+- 위탁종합거래내역요청 (kt00015)
+- 일별계좌수익률상세현황요청 (kt00016)
+- 계좌별당일현황요청 (kt00017)
+- 계좌평가잔고내역요청 (kt00018)
+
+---
+
+### 요청
+#### Header
+| 한글명         | type    | Required | Length | Description                          |
+|----------------|---------|----------|--------|--------------------------------------|
+| authorization  | String  | Y        | 1000   | 접근토큰 (예: `Bearer Egicyx...`)     |
+| cont-yn        | String  | N        | 1      | 연속조회여부 (응답 Header 값 사용)     |
+| next-key       | String  | N        | 50     | 연속조회키 (응답 Header 값 사용)       |
+| api-id         | String  | Y        | 10     | TR명                                 |
+
+#### Body
+| 한글명          | type    | Required | Length | Description                          |
+|-----------------|---------|----------|--------|--------------------------------------|
+| dmst_stex_tp    | String  | Y        | 6      | KRX:한국거래소, NXT:넥스트트레이드     |
+
+---
+
+### 응답
+#### Header
+| 한글명   | type    | Required | Length | Description              |
+|----------|---------|----------|--------|--------------------------|
+| cont-yn  | String  | N        | 1      | 연속조회여부 (Y/N)        |
+| next-key | String  | N        | 50     | 연속조회키                |
+| api-id   | String  | Y        | 10     | TR명                     |
+
+#### Body
+| 한글명                | type    | Required | Length | Description                  |
+|-----------------------|---------|----------|--------|------------------------------|
+| entr                 | String  | N        | 12     | 예수금                        |
+| entr_d1              | String  | N        | 12     | 예수금D+1                     |
+| entr_d2              | String  | N        | 12     | 예수금D+2                     |
+| pymn_alow_amt        | String  | N        | 12     | 출금가능금액                  |
+| uncl_stk_amt         | String  | N        | 12     | 미수확보금                    |
+| repl_amt             | String  | N        | 12     | 대용금                        |
+| rght_repl_amt        | String  | N        | 12     | 권리대용금                    |
+| ord_alowa            | String  | N        | 12     | 주문가능현금                  |
+| ch_uncla             | String  | N        | 12     | 현금미수금                    |
+| crd_int_npay_gold    | String  | N        | 12     | 신용이자미납금                |
+| etc_loana            | String  | N        | 12     | 기타대여금                    |
+| nrpy_loan            | String  | N        | 12     | 미상환융자금                  |
+| profa_ch             | String  | N        | 12     | 증거금현금                    |
+| repl_profa           | String  | N        | 12     | 증거금대용                    |
+| stk_buy_tot_amt      | String  | N        | 12     | 주식매수총액                  |
+| evlt_amt_tot         | String  | N        | 12     | 평가금액합계                  |
+| tot_pl_tot           | String  | N        | 12     | 총손익합계                    |
+| tot_pl_rt            | String  | N        | 12     | 총손익률                      |
+| tot_re_buy_alowa     | String  | N        | 12     | 총재매수가능금액              |
+| 20ord_alow_amt       | String  | N        | 12     | 20%주문가능금액               |
+| 30ord_alow_amt       | String  | N        | 12     | 30%주문가능금액               |
+| 40ord_alow_amt       | String  | N        | 12     | 40%주문가능금액               |
+| 50ord_alow_amt       | String  | N        | 12     | 50%주문가능금액               |
+| 60ord_alow_amt       | String  | N        | 12     | 60%주문가능금액               |
+| 100ord_alow_amt      | String  | N        | 12     | 100%주문가능금액              |
+| crd_loan_tot         | String  | N        | 12     | 신용융자합계                  |
+| crd_loan_ls_tot      | String  | N        | 12     | 신용융자대주합계              |
+| crd_grnt_rt          | String  | N        | 12     | 신용담보비율                  |
+| dpst_grnt_use_amt_amt| String  | N        | 12     | 예탁담보대출금액              |
+| grnt_loan_amt        | String  | N        | 12     | 매도담보대출금액              |
+| stk_cntr_remn        | LIST    | N        | -      | 종목별체결잔고                |
+| - crd_tp            | String  | N        | 2      | 신용구분                      |
+| - loan_dt           | String  | N        | 8      | 대출일                        |
+| - expr_dt           | String  | N        | 8      | 만기일                        |
+| - stk_cd            | String  | N        | 12     | 종목번호                      |
+| - stk_nm            | String  | N        | 30     | 종목명                        |
+| - setl_remn         | String  | N        | 12     | 결제잔고                      |
+| - cur_qty           | String  | N        | 12     | 현재잔고                      |
+| - cur_prc           | String  | N        | 12     | 현재가                        |
+| - buy_uv            | String  | N        | 12     | 매입단가                      |
+| - pur_amt           | String  | N        | 12     | 매입금액                      |
+| - evlt_amt          | String  | N        | 12     | 평가금액                      |
+| - evltv_prft        | String  | N        | 12     | 평가손익                      |
+| - pl_rt             | String  | N        | 12     | 손익률                        |
+```
+
+
+## Python
+
+```python
+import requests
+import json
+
+# 체결잔고요청
+def fn_kt00005(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/acnt'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'kt00005', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken' # 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'dmst_stex_tp': 'KRX', # 국내거래소구분 KRX:한국거래소,NXT:넥스트트레이드
+	}
+
+	# 3. API 실행
+	fn_kt00005(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_kt00005(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+```
+
+
+
+## Example
+
+
+Request
+{
+	"dmst_stex_tp" : "KRX"
+}
+Response
+{
+	"entr":"000000017534",
+	"entr_d1":"000000017450",
+	"entr_d2":"000000012550",
+	"pymn_alow_amt":"000000085341",
+	"uncl_stk_amt":"000000000000",
+	"repl_amt":"000003915500",
+	"rght_repl_amt":"000000000000",
+	"ord_alowa":"000000085341",
+	"ch_uncla":"000000000000",
+	"crd_int_npay_gold":"000000000000",
+	"etc_loana":"000000000000",
+	"nrpy_loan":"000000000000",
+	"profa_ch":"000000032193",
+	"repl_profa":"000000000000",
+	"stk_buy_tot_amt":"000006122786",
+	"evlt_amt_tot":"000006236342",
+	"tot_pl_tot":"000000113556",
+	"tot_pl_rt":"1.8546",
+	"tot_re_buy_alowa":"000000135970",
+	"20ord_alow_amt":"000000012550",
+	"30ord_alow_amt":"000000012550",
+	"40ord_alow_amt":"000000012550",
+	"50ord_alow_amt":"000000012550",
+	"60ord_alow_amt":"000000012550",
+	"100ord_alow_amt":"000000012550",
+	"crd_loan_tot":"000000000000",
+	"crd_loan_ls_tot":"000000000000",
+	"crd_grnt_rt":"0.00",
+	"dpst_grnt_use_amt_amt":"000000000000",
+	"grnt_loan_amt":"000000000000",
+	"stk_cntr_remn":
+		[
+			{
+				"crd_tp":"00",
+				"loan_dt":"",
+				"expr_dt":"",
+				"stk_cd":"A005930",
+				"stk_nm":"삼성전자",
+				"setl_remn":"000000000003",
+				"cur_qty":"000000000003",
+				"cur_prc":"000000070000",
+				"buy_uv":"000000124500",
+				"pur_amt":"000000373500",
+				"evlt_amt":"000000209542",
+				"evltv_prft":"-00000163958",
+				"pl_rt":"-43.8977"
+			}
+		],
+	"return_code":0,
+	"return_msg":"조회가 완료되었습니다."
+}
+

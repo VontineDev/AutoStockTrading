@@ -1,0 +1,200 @@
+파일이름 : 049_국내주식 REST 순위정보 장중투자자별매매상위요청.md
+```markdown
+## 국내주식 REST 순위정보
+
+### 기본 정보
+| Element         | 내용                                |
+|-----------------|-----------------------------------|
+| Method          | POST                              |
+| 운영 도메인       | https://api.kiwoom.com            |
+| 모의투자 도메인    | https://mockapi.kiwoom.com (KRX만 지원가능) |
+| URL             | `/api/dostk/rkinfo`               |
+| Format          | JSON                              |
+| Content-Type    | `application/json;charset=UTF-8`  |
+
+---
+
+### 다른 TR 확인하기
+**TR명**  
+- 장중투자자별매매상위요청: `ka10065`  
+- 호가잔량상위요청: `ka10020`  
+- 호가잔량급증요청: `ka10021`  
+- 잔량율급증요청: `ka10022`  
+- 거래량급증요청: `ka10023`  
+- 전일대비등락률상위요청: `ka10027`  
+- 예상체결등락률상위요청: `ka10029`  
+- 당일거래량상위요청: `ka10030`  
+- 전일거래량상위요청: `ka10031`  
+- 거래대금상위요청: `ka10032`  
+- 신용비율상위요청: `ka10033`  
+- 외인기간별매매상위요청: `ka10034`  
+- 외인연속순매매상위요청: `ka10035`  
+- 외인한도소진율증가상위: `ka10036`  
+- 외국계창구매매상위요청: `ka10037`  
+- 종목별증권사순위요청: `ka10038`  
+- 증권사별매매상위요청: `ka10039`  
+- 당일주요거래원요청: `ka10040`  
+- 순매수거래원순위요청: `ka10042`  
+- 당일상위이탈원요청: `ka10053`  
+- 동일순매매순위요청: `ka10062`  
+- 대차거래상위10종목요청: `ka10069`  
+- 시간외단일가등락율순위요청: `ka10098`  
+- 외국인기관매매상위요청: `ka90009`  
+
+---
+
+### 요청
+
+#### Header
+| Element           | 한글명       | type   | Required | Length | Description                              |
+|-------------------|-------------|--------|----------|--------|------------------------------------------|
+| authorization     | 접근토큰     | String | Y        | 1000   | 토큰 지정시 `Bearer` 포함 (예: `Bearer Egicyx...`) |
+| cont-yn           | 연속조회여부 | String | N        | 1      | 응답 Header의 `cont-yn`이 `Y`일 경우 설정         |
+| next-key          | 연속조회키   | String | N        | 50     | 응답 Header의 `next-key` 값 세팅              |
+| api-id            | TR명        | String | Y        | 10     |                                          |
+
+#### Body
+| Element      | 한글명  | type   | Required | Length | Description                              |
+|--------------|--------|--------|----------|--------|------------------------------------------|
+| trde_tp      | 매매구분 | String | Y        | 1      | `1`: 순매수, `2`: 순매도                   |
+| mrkt_tp      | 시장구분 | String | Y        | 3      | `000`: 전체, `001`: 코스피, `101`: 코스닥   |
+| orgn_tp      | 기관구분 | String | Y        | 4      | `9000`: 외국인, `9100`: 외국계, `1000`: 금융투자 등 |
+
+---
+
+### 응답
+
+#### Header
+| Element   | 한글명       | type   | Required | Length | Description                |
+|-----------|-------------|--------|----------|--------|----------------------------|
+| cont-yn   | 연속조회여부 | String | N        | 1      | 다음 데이터 존재시 `Y` 전달    |
+| next-key  | 연속조회키   | String | N        | 50     | 다음 키값 전달                 |
+| api-id    | TR명        | String | Y        | 10     |                            |
+
+#### Body
+| Element                  | 한글명                   | type  | Description                              |
+|--------------------------|-------------------------|-------|------------------------------------------|
+| **opmr_invsr_trde_upper** | 장중투자자별매매상위      | LIST  |                                          |
+| - stk_cd                 | 종목코드                | String |                                          |
+| - stk_nm                 | 종목명                  | String |                                          |
+| - sel_qty                | 매도량                  | String |                                          |
+| - buy_qty                | 매수량                  | String |                                          |
+| - netslmt                | 순매도                  | String |                                          |
+```
+
+
+## PYTHON
+import requests
+import json
+
+# 장중투자자별매매상위요청
+def fn_ka10065(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/rkinfo'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10065', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken' # 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'trde_tp': '1', # 매매구분 1:순매수, 2:순매도
+		'mrkt_tp': '000', # 시장구분 000:전체, 001:코스피, 101:코스닥
+		'orgn_tp': '9000', # 기관구분 9000:외국인, 9100:외국계, 1000:금융투자, 3000:투신, 5000:기타금융, 4000:은행, 2000:보험, 6000:연기금, 7000:국가, 7100:기타법인, 9999:기관계
+	}
+
+	# 3. API 실행
+	fn_ka10065(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10065(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+
+
+    ##Example
+
+
+Request
+{
+	"trde_tp" : "1",
+	"mrkt_tp" : "000",
+	"orgn_tp" : "9000"
+}
+Response
+{
+	"opmr_invsr_trde_upper":
+		[
+			{
+				"stk_cd":"005930",
+				"stk_nm":"삼성전자",
+				"sel_qty":"-39420",
+				"buy_qty":"+73452",
+				"netslmt":"+34033"
+			},
+			{
+				"stk_cd":"005930",
+				"stk_nm":"삼성전자",
+				"sel_qty":"-13970",
+				"buy_qty":"+25646",
+				"netslmt":"+11676"
+			},
+			{
+				"stk_cd":"005930",
+				"stk_nm":"삼성전자",
+				"sel_qty":"-10063",
+				"buy_qty":"+21167",
+				"netslmt":"+11104"
+			},
+			{
+				"stk_cd":"005930",
+				"stk_nm":"삼성전자",
+				"sel_qty":"-37542",
+				"buy_qty":"+47604",
+				"netslmt":"+10061"
+			},
+			{
+				"stk_cd":"005930",
+				"stk_nm":"삼성전자",
+				"sel_qty":"-2310",
+				"buy_qty":"+10874",
+				"netslmt":"+8564"
+			},
+			{
+				"stk_cd":"005930",
+				"stk_nm":"삼성전자",
+				"sel_qty":"-24912",
+				"buy_qty":"+33114",
+				"netslmt":"+8203"
+			},
+			{
+				"stk_cd":"005930",
+				"stk_nm":"삼성전자",
+				"sel_qty":"-27306",
+				"buy_qty":"+34853",
+				"netslmt":"+7547"
+			}
+		],
+	"return_code":0,
+	"return_msg":"정상적으로 처리되었습니다"
+}

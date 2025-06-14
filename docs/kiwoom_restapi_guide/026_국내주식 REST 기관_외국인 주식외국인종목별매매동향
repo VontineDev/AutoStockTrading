@@ -1,0 +1,195 @@
+파일이름 : 026_국내주식 REST 기관/외국인 주식외국인종목별매매동향.md
+
+# 국내주식
+
+## REST 기관/외국인
+
+### 기본 정보
+| 항목              | 내용                                                                 |
+|-------------------|----------------------------------------------------------------------|
+| Method            | POST                                                                |
+| 운영 도메인        | https://api.kiwoom.com                                              |
+| 모의투자 도메인    | https://mockapi.kiwoom.com (KRX만 지원 가능)                         |
+| URL               | `/api/dostk/frgnistt`                                               |
+| Format            | JSON                                                                |
+| Content-Type      | `application/json;charset=UTF-8`                                    |
+
+### 다른 TR 확인하기
+#### TR명
+- 주식외국인종목별매매동향 (ka10008)
+- 주식외국인종목별매매동향 (ka10008)
+- 주식기관요청 (ka10009)
+- 기관외국인연속매매현황요청 (ka10131)
+
+---
+
+### 요청
+#### Header
+| 한글명         | type    | Required | Length | Description                          |
+|----------------|---------|----------|--------|--------------------------------------|
+| authorization  | String  | Y        | 1000   | 접근토큰 (예: `Bearer Egicyx...`)     |
+| cont-yn        | String  | N        | 1      | 연속조회여부 (응답 Header 값 사용)     |
+| next-key       | String  | N        | 50     | 연속조회키 (응답 Header 값 사용)       |
+| api-id         | String  | Y        | 10     | TR명                                 |
+
+#### Body
+| 한글명   | type    | Required | Length | Description                          |
+|----------|---------|----------|--------|--------------------------------------|
+| stk_cd   | String  | Y        | 20     | 거래소별 종목코드 (예: KRX:039490, NXT:039490_NX, SOR:039490_AL) |
+
+---
+
+### 응답
+#### Header
+| 한글명   | type    | Required | Length | Description              |
+|----------|---------|----------|--------|--------------------------|
+| cont-yn  | String  | N        | 1      | 연속조회여부 (Y/N)        |
+| next-key | String  | N        | 50     | 연속조회키                |
+| api-id   | String  | Y        | 10     | TR명                     |
+
+#### Body
+| 한글명               | type    | Required | Length | Description                  |
+|----------------------|---------|----------|--------|------------------------------|
+| stk_frgnr           | LIST    | N        | -      | 주식외국인                    |
+| - dt                | String  | N        | 20     | 일자                          |
+| - close_pric        | String  | N        | 20     | 종가                          |
+| - pred_pre          | String  | N        | 20     | 전일대비                      |
+| - trde_qty          | String  | N        | 20     | 거래량                        |
+| - chg_qty           | String  | N        | 20     | 변동수량                      |
+| - poss_stkcnt       | String  | N        | 20     | 보유주식수                    |
+| - wght              | String  | N        | 20     | 비중                          |
+| - gain_pos_stkcnt   | String  | N        | 20     | 취득가능주식수                |
+| - frgnr_limit       | String  | N        | 20     | 외국인한도                    |
+| - frgnr_limit_irds  | String  | N        | 20     | 외국인한도증감                |
+| - limit_exh_rt      | String  | N        | 20     | 한도소진률                    |
+```
+
+
+## Python
+
+```python
+import requests
+import json
+
+# 주식외국인종목별매매동향
+def fn_ka10008(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/frgnistt'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10008', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken' # 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'stk_cd': '005930', # 종목코드 거래소별 종목코드 (KRX:039490,NXT:039490_NX,SOR:039490_AL)
+	}
+
+	# 3. API 실행
+	fn_ka10008(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10008(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+```
+
+
+## Example
+
+
+Request
+{
+	"stk_cd" : "005930"
+}
+Response
+{
+	"stk_frgnr":[
+			{
+				"dt":"20241105",
+				"close_pric":"135300",
+				"pred_pre":"0",
+				"trde_qty":"0",
+				"chg_qty":"0",
+				"poss_stkcnt":"6663509",
+				"wght":"+26.10",
+				"gain_pos_stkcnt":"18863197",
+				"frgnr_limit":"25526706",
+				"frgnr_limit_irds":"0",
+				"limit_exh_rt":"+26.10"
+			},
+			{
+				"dt":"20241101",
+				"close_pric":"65100",
+				"pred_pre":"0",
+				"trde_qty":"0",
+				"chg_qty":"-3441",
+				"poss_stkcnt":"6642402",
+				"wght":"+26.02",
+				"gain_pos_stkcnt":"18884304",
+				"frgnr_limit":"25526706",
+				"frgnr_limit_irds":"0",
+				"limit_exh_rt":"+26.02"
+			},
+			{
+				"dt":"20241031",
+				"close_pric":"65100",
+				"pred_pre":"0",
+				"trde_qty":"0",
+				"chg_qty":"4627",
+				"poss_stkcnt":"6645843",
+				"wght":"+26.03",
+				"gain_pos_stkcnt":"18880863",
+				"frgnr_limit":"25526706",
+				"frgnr_limit_irds":"0",
+				"limit_exh_rt":"+26.03"
+			},
+			{
+				"dt":"20241030",
+				"close_pric":"+65100",
+				"pred_pre":"+100",
+				"trde_qty":"1",
+				"chg_qty":"-10245",
+				"poss_stkcnt":"6641216",
+				"wght":"+26.02",
+				"gain_pos_stkcnt":"18885490",
+				"frgnr_limit":"25526706",
+				"frgnr_limit_irds":"0",
+				"limit_exh_rt":"+26.02"
+			},
+			{
+				"dt":"20241029",
+				"close_pric":"-65000",
+				"pred_pre":"-27300",
+				"trde_qty":"4",
+				"chg_qty":"249",
+				"poss_stkcnt":"6651461",
+				"wght":"+26.06",
+				"gain_pos_stkcnt":"18875245",
+				"frgnr_limit":"25526706",
+				"frgnr_limit_irds":"0",
+				"limit_exh_rt":"+26.06"
+			}
+		],
+    "return_code":0,
+    "return_msg":"정상적으로 처리되었습니다"
+}

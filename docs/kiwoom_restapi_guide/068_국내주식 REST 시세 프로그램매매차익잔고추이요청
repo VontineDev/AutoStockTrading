@@ -1,0 +1,184 @@
+파일이름 : 068_국내주식 REST 시세 프로그램매매차익잔고추이요청.md
+```markdown
+## 기본 정보
+| Element          | 내용                          |
+|------------------|-----------------------------|
+| Method           | POST                       |
+| 운영 도메인       | https://api.kiwoom.com     |
+| 모의투자 도메인   | https://mockapi.kiwoom.com (KRX만 지원가능) |
+| URL              | /api/dostk/mrkcond         |
+| Format           | JSON                       |
+| Content-Type     | application/json;charset=UTF-8 |
+
+### TR명
+- 프로그램매매차익잔고추이요청 (ka90006)
+- 주식호가요청 (ka10004)
+- 주식일주월시분요청 (ka10005)
+- 주식시분요청 (ka10006)
+- 시세표성정보요청 (ka10007)
+- 신주인수권전체시세요청 (ka10011)
+- 일별기관매매종목요청 (ka10044)
+- 종목별기관매매추이요청 (ka10045)
+- 체결강도추이시간별요청 (ka10046)
+- 체결강도추이일별요청 (ka10047)
+- 장중투자자별매매요청 (ka10063)
+- 장마감후투자자별매매요청 (ka10066)
+- 증권사별종목매매동향요청 (ka10078)
+- 일별주가요청 (ka10086)
+- 시간외단일가요청 (ka10087)
+- 프로그램매매추이요청 시간대별 (ka90005)
+- 프로그램매매누적추이요청 (ka90007)
+- 종목시간별프로그램매매추이요청 (ka90008)
+- 프로그램매매추이요청 일자별 (ka90010)
+- 종목일별프로그램매매추이요청 (ka90013)
+
+---
+
+## 요청
+### Header
+| Element          | 한글명       | type   | Required | Length | Description                              |
+|------------------|------------|--------|----------|--------|-----------------------------------------|
+| authorization    | 접근토큰    | String | Y        | 1000   | `Bearer Egicyx...` 형식으로 토큰 지정     |
+| cont-yn          | 연속조회여부 | String | N        | 1      | 응답 Header의 `cont-yn` 값이 Y일 경우 세팅 |
+| next-key         | 연속조회키   | String | N        | 50     | 응답 Header의 `next-key` 값 세팅         |
+| api-id           | TR명        | String | Y        | 10     | 예: ka90006                              |
+
+### Body
+| Element          | 한글명       | type   | Required | Length | Description                              |
+|------------------|------------|--------|----------|--------|-----------------------------------------|
+| date             | 날짜        | String | Y        | 8      | YYYYMMDD                                |
+| stex_tp          | 거래소구분  | String | Y        | 1      | `1`:KRX, `2`:NXT, `3`:통합              |
+
+---
+
+## 응답
+### Header
+| Element          | 한글명       | type   | Required | Length | Description                              |
+|------------------|------------|--------|----------|--------|-----------------------------------------|
+| cont-yn          | 연속조회여부 | String | N        | 1      | 다음 데이터 존재 시 `Y` 전달             |
+| next-key         | 연속조회키   | String | N        | 50     | 다음 조회 시 사용할 키값                 |
+| api-id           | TR명        | String | Y        | 10     | 예: ka90006                              |
+
+### Body
+| Element                     | 한글명                | type   | Required | Length | Description                              |
+|-----------------------------|---------------------|--------|----------|--------|-----------------------------------------|
+| prm_trde_dfrt_remn_trnsn    | 프로그램매매차익잔고추이 | LIST   | N        | -      |                                          |
+| - dt                        | 일자                | String | N        | 20     |                                          |
+| - buy_dfrt_trde_qty         | 매수차익거래수량      | String | N        | 20     |                                          |
+| - buy_dfrt_trde_amt         | 매수차익거래금액      | String | N        | 20     |                                          |
+| - buy_dfrt_trde_irds_amt    | 매수차익거래증감액    | String | N        | 20     |                                          |
+| - sel_dfrt_trde_qty         | 매도차익거래수량      | String | N        | 20     |                                          |
+| - sel_dfrt_trde_amt         | 매도차익거래금액      | String | N        | 20     |                                          |
+| - sel_dfrt_trde_irds_amt    | 매도차익거래증감액    | String | N        | 20     |                                          |
+```
+
+
+## PYTHON
+import requests
+import json
+
+# 프로그램매매차익잔고추이요청
+def fn_ka90006(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/mrkcond'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka90006', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken' # 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'date': '20241125', # 날짜 YYYYMMDD
+		'stex_tp': '1', # 거래소구분 1:KRX, 2:NXT 3.통합
+	}
+
+	# 3. API 실행
+	fn_ka90006(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka90006(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+
+    ## Example
+
+
+Request
+{
+	"date" : "20241125",
+	"stex_tp" : "1"
+}
+Response
+{
+	"prm_trde_dfrt_remn_trnsn":
+		[
+			{
+				"dt":"20241125",
+				"buy_dfrt_trde_qty":"0",
+				"buy_dfrt_trde_amt":"0",
+				"buy_dfrt_trde_irds_amt":"0",
+				"sel_dfrt_trde_qty":"0",
+				"sel_dfrt_trde_amt":"0",
+				"sel_dfrt_trde_irds_amt":"0"
+			},
+			{
+				"dt":"20241122",
+				"buy_dfrt_trde_qty":"0",
+				"buy_dfrt_trde_amt":"0",
+				"buy_dfrt_trde_irds_amt":"-25",
+				"sel_dfrt_trde_qty":"0",
+				"sel_dfrt_trde_amt":"0",
+				"sel_dfrt_trde_irds_amt":"0"
+			},
+			{
+				"dt":"20241121",
+				"buy_dfrt_trde_qty":"0",
+				"buy_dfrt_trde_amt":"25",
+				"buy_dfrt_trde_irds_amt":"25",
+				"sel_dfrt_trde_qty":"0",
+				"sel_dfrt_trde_amt":"0",
+				"sel_dfrt_trde_irds_amt":"0"
+			},
+			{
+				"dt":"20241120",
+				"buy_dfrt_trde_qty":"0",
+				"buy_dfrt_trde_amt":"0",
+				"buy_dfrt_trde_irds_amt":"-48",
+				"sel_dfrt_trde_qty":"0",
+				"sel_dfrt_trde_amt":"0",
+				"sel_dfrt_trde_irds_amt":"0"
+			},
+			{
+				"dt":"20241119",
+				"buy_dfrt_trde_qty":"0",
+				"buy_dfrt_trde_amt":"48",
+				"buy_dfrt_trde_irds_amt":"43",
+				"sel_dfrt_trde_qty":"0",
+				"sel_dfrt_trde_amt":"0",
+				"sel_dfrt_trde_irds_amt":"0"
+			}
+		],
+	"return_code":0,
+	"return_msg":"정상적으로 처리되었습니다"
+}
+

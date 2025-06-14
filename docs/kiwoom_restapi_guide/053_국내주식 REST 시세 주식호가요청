@@ -1,0 +1,232 @@
+파일이름 : 053_국내주식 REST 시세 주식호가요청.md
+
+```markdown
+## 국내주식 REST 시세
+
+### 기본 정보
+
+| 항목             | 내용                                      |
+|------------------|-----------------------------------------|
+| Method           | POST                                    |
+| 운영 도메인      | https://api.kiwoom.com                  |
+| 모의투자 도메인  | https://mockapi.kiwoom.com (KRX만 지원가능) |
+| URL              | `/api/dostk/mrkcond`                    |
+| Format           | JSON                                    |
+| Content-Type     | `application/json;charset=UTF-8`        |
+
+---
+
+### 다른 TR 확인하기
+
+**TR명**  
+- **주식호가요청:** `ka10004`  
+- **주식일주월시분요청:** `ka10005`  
+- **주식시분요청:** `ka10006`  
+- **시세표성정보요청:** `ka10007`  
+- **신주인수권전체시세요청:** `ka10011`  
+- **일별기관매매종목요청:** `ka10044`  
+- **종목별기관매매추이요청:** `ka10045`  
+- **체결강도추이시간별요청:** `ka10046`  
+- **체결강도추이일별요청:** `ka10047`  
+- **장중투자자별매매요청:** `ka10063`  
+- **장마감후투자자별매매요청:** `ka10066`  
+- **증권사별종목매매동향요청:** `ka10078`  
+- **일별주가요청:** `ka10086`  
+- **시간외단일가요청:** `ka10087`  
+- **프로그램매매추이요청 시간대별:** `ka90005`  
+- **프로그램매매차익잔고추이요청:** `ka90006`  
+- **프로그램매매누적추이요청:** `ka90007`  
+- **종목시간별프로그램매매추이요청:** `ka90008`  
+- **프로그램매매추이요청 일자별:** `ka90010`  
+- **종목일별프로그램매매추이요청:** `ka90013`  
+
+---
+
+### 요청
+
+#### Header
+
+| Element         | 한글명      | Type   | Required | Length | Description                              |
+|-----------------|------------|--------|----------|--------|------------------------------------------|
+| authorization   | 접근토큰    | String | Y        | 1000   | 토큰 지정시 `Bearer` 포함 (예: `Bearer Egicyx...`) |
+| cont-yn         | 연속조회여부| String | N        | 1      | 응답 Header의 `cont-yn` 값이 `Y`일 경우 설정      |
+| next-key        | 연속조회키  | String | N        | 50     | 응답 Header의 `next-key` 값 세팅              |
+| api-id          | TR명       | String | Y        | 10     |                                          |
+
+#### Body
+
+| Element   | 한글명    | Type   | Required | Length | Description                              |
+|-----------|----------|--------|----------|--------|------------------------------------------|
+| stk_cd    | 종목코드  | String | Y        | 20     | 거래소별 종목코드 (예: KRX:039490, NXT:039490_NX) |
+
+---
+
+### 응답
+
+#### Header
+
+| Element   | 한글명      | Type   | Required | Length | Description                |
+|-----------|------------|--------|----------|--------|----------------------------|
+| cont-yn   | 연속조회여부| String | N        | 1      | 다음 데이터 존재시 `Y` 전달    |
+| next-key  | 연속조회키  | String | N        | 50     | 다음 키값 전달                 |
+| api-id    | TR명       | String | Y        | 10     |                            |
+
+#### Body
+
+| Element                     | 한글명                   | Type   | Description                      |
+|-----------------------------|-------------------------|--------|----------------------------------|
+| bid_req_base_tm            | 호가잔량기준시간         | String | 호가시간                          |
+| **매도호가 관련 필드**        |                         |        |                                  |
+| sel_10th_pre_req_pre       | 매도10차선잔량대비        | String | 매도호가직전대비10                 |
+| sel_10th_pre_req           | 매도10차선잔량           | String | 매도호가수량10                     |
+| sel_10th_pre_bid           | 매도10차선호가           | String | 매도호가10                        |
+| ... (9~1차선 동일 패턴)       |                         |        |                                  |
+| sel_1th_pre_req_pre        | 매도1차선잔량대비        | String | 매도호가직전대비1                  |
+| sel_fpr_req                | 매도최우선잔량           | String | 매도호가수량1                      |
+| sel_fpr_bid                | 매도최우선호가           | String | 매도호가1                         |
+| **매수호가 관련 필드**        |                         |        |                                  |
+| buy_fpr_bid                | 매수최우선호가           | String | 매수호가1                         |
+| buy_fpr_req                | 매수최우선잔량           | String | 매수호가수량1                      |
+| buy_1th_pre_req_pre        | 매수1차선잔량대비        | String | 매수호가직전대비1                  |
+| ... (2~10차선 동일 패턴)      |                         |        |                                  |
+| **종합 정보**                |                         |        |                                  |
+| tot_sel_req_jub_pre        | 총매도잔량직전대비        | String | 매도호가총잔량직전대비              |
+| tot_sel_req                | 총매도잔량               | String | 매도호가총잔량                     |
+| tot_buy_req                | 총매수잔량               | String | 매수호가총잔량                     |
+| tot_buy_req_jub_pre        | 총매수잔량직전대비        | String | 매수호가총잔량직전대비              |
+| **시간외 호가**               |                         |        |                                  |
+| ovt_sel_req_pre            | 시간외매도잔량대비        | String | 시간외 매도호가 총잔량 직전대비      |
+| ovt_sel_req                | 시간외매도잔량           | String | 시간외 매도호가 총잔량              |
+| ovt_buy_req                | 시간외매수잔량           | String | 시간외 매수호가 총잔량              |
+| ovt_buy_req_pre            | 시간외매수잔량대비        | String | 시간외 매수호가 총잔량 직전대비      |
+```
+
+
+## PYTHON
+import requests
+import json
+
+# 주식호가요청
+def fn_ka10004(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/mrkcond'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10004', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken' # 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'stk_cd': '005930', # 종목코드 거래소별 종목코드 (KRX:039490,NXT:039490_NX,SOR:039490_AL)
+	}
+
+	# 3. API 실행
+	fn_ka10004(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10004(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+
+
+    ## Example
+
+
+Request
+{
+	"stk_cd" : "005930"
+}
+Response
+{
+	"bid_req_base_tm":"162000",
+	"sel_10th_pre_req_pre":"0",
+	"sel_10th_pre_req":"0",
+	"sel_10th_pre_bid":"0",
+	"sel_9th_pre_req_pre":"0",
+	"sel_9th_pre_req":"0",
+	"sel_9th_pre_bid":"0",
+	"sel_8th_pre_req_pre":"0",
+	"sel_8th_pre_req":"0",
+	"sel_8th_pre_bid":"0",
+	"sel_7th_pre_req_pre":"0",
+	"sel_7th_pre_req":"0",
+	"sel_7th_pre_bid":"0",
+	"sel_6th_pre_req_pre":"0",
+	"sel_6th_pre_req":"0",
+	"sel_6th_pre_bid":"0",
+	"sel_5th_pre_req_pre":"0",
+	"sel_5th_pre_req":"0",
+	"sel_5th_pre_bid":"0",
+	"sel_4th_pre_req_pre":"0",
+	"sel_4th_pre_req":"0",
+	"sel_4th_pre_bid":"0",
+	"sel_3th_pre_req_pre":"0",
+	"sel_3th_pre_req":"0",
+	"sel_3th_pre_bid":"0",
+	"sel_2th_pre_req_pre":"0",
+	"sel_2th_pre_req":"0",
+	"sel_2th_pre_bid":"0",
+	"sel_1th_pre_req_pre":"0",
+	"sel_fpr_req":"0",
+	"sel_fpr_bid":"0",
+	"buy_fpr_bid":"0",
+	"buy_fpr_req":"0",
+	"buy_1th_pre_req_pre":"0",
+	"buy_2th_pre_bid":"0",
+	"buy_2th_pre_req":"0",
+	"buy_2th_pre_req_pre":"0",
+	"buy_3th_pre_bid":"0",
+	"buy_3th_pre_req":"0",
+	"buy_3th_pre_req_pre":"0",
+	"buy_4th_pre_bid":"0",
+	"buy_4th_pre_req":"0",
+	"buy_4th_pre_req_pre":"0",
+	"buy_5th_pre_bid":"0",
+	"buy_5th_pre_req":"0",
+	"buy_5th_pre_req_pre":"0",
+	"buy_6th_pre_bid":"0",
+	"buy_6th_pre_req":"0",
+	"buy_6th_pre_req_pre":"0",
+	"buy_7th_pre_bid":"0",
+	"buy_7th_pre_req":"0",
+	"buy_7th_pre_req_pre":"0",
+	"buy_8th_pre_bid":"0",
+	"buy_8th_pre_req":"0",
+	"buy_8th_pre_req_pre":"0",
+	"buy_9th_pre_bid":"0",
+	"buy_9th_pre_req":"0",
+	"buy_9th_pre_req_pre":"0",
+	"buy_10th_pre_bid":"0",
+	"buy_10th_pre_req":"0",
+	"buy_10th_pre_req_pre":"0",
+	"tot_sel_req_jub_pre":"0",
+	"tot_sel_req":"0",
+	"tot_buy_req":"0",
+	"tot_buy_req_jub_pre":"0",
+	"ovt_sel_req_pre":"0",
+	"ovt_sel_req":"0",
+	"ovt_buy_req":"0",
+	"ovt_buy_req_pre":"0",
+	"return_code":0,
+	"return_msg":"정상적으로 처리되었습니다"
+}

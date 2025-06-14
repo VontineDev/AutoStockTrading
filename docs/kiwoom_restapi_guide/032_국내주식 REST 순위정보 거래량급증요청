@@ -1,0 +1,236 @@
+파일이름 : 032_국내주식 REST 순위정보 거래량급증요청.md
+
+```markdown
+# 기본 정보
+
+---
+
+## 기본 정보
+
+- **Method:** POST  
+- **운영 도메인:** https://api.kiwoom.com  
+- **모의투자 도메인:** https://mockapi.kiwoom.com (KRX만 지원가능)  
+- **URL:** /api/dostk/rkinfo  
+- **Format:** JSON  
+- **Content-Type:** application/json;charset=UTF-8  
+- **다른 TR 확인하기:**
+
+  | TR명                      | 코드     |
+  |---------------------------|----------|
+  | 거래량급증요청            | ka10023  |
+  | 호가잔량상위요청          | ka10020  |
+  | 호가잔량급증요청          | ka10021  |
+  | 잔량율급증요청            | ka10022  |
+  | 거래량급증요청            | ka10023  |
+  | 전일대비등락률상위요청    | ka10027  |
+  | 예상체결등락률상위요청    | ka10029  |
+  | 당일거래량상위요청        | ka10030  |
+  | 전일거래량상위요청        | ka10031  |
+  | 거래대금상위요청          | ka10032  |
+  | 신용비율상위요청          | ka10033  |
+  | 외인기간별매매상위요청    | ka10034  |
+  | 외인연속순매매상위요청    | ka10035  |
+  | 외인한도소진율증가상위    | ka10036  |
+  | 외국계창구매매상위요청    | ka10037  |
+  | 종목별증권사순위요청      | ka10038  |
+  | 증권사별매매상위요청      | ka10039  |
+  | 당일주요거래원요청        | ka10040  |
+  | 순매수거래원순위요청      | ka10042  |
+  | 당일상위이탈원요청        | ka10053  |
+  | 동일순매매순위요청        | ka10062  |
+  | 장중투자자별매매상위요청  | ka10065  |
+  | 대차거래상위10종목요청    | ka10069  |
+  | 시간외단일가등락율순위요청| ka10098  |
+  | 외국인기관매매상위요청    | ka90009  |
+
+---
+
+## 요청
+
+### Header
+
+| Element         | 한글명         | type   | Required | Length | Description                                      |
+|-----------------|---------------|--------|----------|--------|--------------------------------------------------|
+| authorization   | 접근토큰       | String | Y        | 1000   | 토큰 지정시 토큰타입("Bearer") 붙혀서 호출예) Bearer Egicyx... |
+| cont-yn         | 연속조회여부   | String | N        | 1      | 응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅 |
+| next-key        | 연속조회키     | String | N        | 50     | 응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅 |
+| api-id          | TR명          | String | Y        | 10     |                                                  |
+
+### Body
+
+| Element      | 한글명      | type   | Required | Length | Description                                                         |
+|--------------|-------------|--------|----------|--------|---------------------------------------------------------------------|
+| mrkt_tp      | 시장구분    | String | Y        | 3      | 000:전체, 001:코스피, 101:코스닥                                    |
+| sort_tp      | 정렬구분    | String | Y        | 1      | 1:급증량, 2:급증률, 3:급감량, 4:급감률                              |
+| tm_tp        | 시간구분    | String | Y        | 1      | 1:분, 2:전일                                                        |
+| trde_qty_tp  | 거래량구분  | String | Y        | 1      | 5:5천주이상, 10:만주이상, 50:5만주이상, 100:10만주이상, 200:20만주이상, 300:30만주이상, 500:50만주이상, 1000:백만주이상 |
+| tm           | 시간        | String | N        | 2      | 분 입력                                                             |
+| stk_cnd      | 종목조건    | String | Y        | 1      | 0:전체조회, 1:관리종목제외, 3:우선주제외, 11:정리매매종목제외, 4:관리종목,우선주제외, 5:증100제외, 6:증100만보기, 13:증60만보기, 12:증50만보기, 7:証40만보기, 8:증30만보기, 9:증20만보기, 17:ETN제외, 14:ETF제외, 18:ETF+ETN제외, 15:스팩제외, 20:ETF+ETN+스팩제외 |
+| pric_tp      | 가격구분    | String | Y        | 1      | 0:전체조회, 2:5만원이상, 5:1만원이상, 6:5천원이상, 8:1천원이상, 9:10만원이상 |
+| stex_tp      | 거래소구분  | String | Y        | 1      | 1:KRX, 2:NXT 3.통합                                                 |
+
+---
+
+## 응답
+
+### Header
+
+| Element   | 한글명         | type   | Required | Length | Description                        |
+|-----------|---------------|--------|----------|--------|------------------------------------|
+| cont-yn   | 연속조회여부   | String | N        | 1      | 다음 데이터가 있을시 Y값 전달      |
+| next-key  | 연속조회키     | String | N        | 50     | 다음 데이터가 있을시 다음 키값 전달 |
+| api-id    | TR명          | String | Y        | 10     |                                    |
+
+### Body
+
+| Element           | 한글명      | type   | Required | Length | Description  |
+|-------------------|-------------|--------|----------|--------|--------------|
+| trde_qty_sdnin    | 거래량급증  | LIST   | N        |        |              |
+| - stk_cd          | 종목코드    | String | N        | 20     |              |
+| - stk_nm          | 종목명      | String | N        | 20     |              |
+| - cur_prc         | 현재가      | String | N        | 20     |              |
+| - pred_pre_sig    | 전일대비기호| String | N        | 20     |              |
+| - pred_pre        | 전일대비    | String | N        | 20     |              |
+| - flu_rt          | 등락률      | String | N        | 20     |              |
+| - prev_trde_qty   | 이전거래량  | String | N        | 20     |              |
+| - now_trde_qty    | 현재거래량  | String | N        | 20     |              |
+| - sdnin_qty       | 급증량      | String | N        | 20     |              |
+| - sdnin_rt        | 급증률      | String | N        | 20     |              |
+```
+
+
+## PYTHON
+import requests
+import json
+
+# 거래량급증요청
+def fn_ka10023(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/rkinfo'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10023', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken' # 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'mrkt_tp': '000', # 시장구분 000:전체, 001:코스피, 101:코스닥
+		'sort_tp': '1', # 정렬구분 1:급증량, 2:급증률, 3:급감량, 4:급감률
+		'tm_tp': '2', # 시간구분 1:분, 2:전일
+		'trde_qty_tp': '5', # 거래량구분 5:5천주이상, 10:만주이상, 50:5만주이상, 100:10만주이상, 200:20만주이상, 300:30만주이상, 500:50만주이상, 1000:백만주이상
+		'tm': '', # 시간 분 입력
+		'stk_cnd': '0', # 종목조건 0:전체조회, 1:관리종목제외, 3:우선주제외, 11:정리매매종목제외, 4:관리종목,우선주제외, 5:증100제외, 6:증100만보기, 13:증60만보기, 12:증50만보기, 7:증40만보기, 8:증30만보기, 9:증20만보기, 17:ETN제외, 14:ETF제외, 18:ETF+ETN제외, 15:스팩제외, 20:ETF+ETN+스팩제외
+		'pric_tp': '0', # 가격구분 0:전체조회, 2:5만원이상, 5:1만원이상, 6:5천원이상, 8:1천원이상, 9:10만원이상
+		'stex_tp': '3', # 거래소구분 1:KRX, 2:NXT 3.통합
+	}
+
+	# 3. API 실행
+	fn_ka10023(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10023(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+
+## Example
+
+
+Request
+{
+	"mrkt_tp" : "000",
+	"sort_tp" : "1",
+	"tm_tp" : "2",
+	"trde_qty_tp" : "5",
+	"tm" : "",
+	"stk_cnd" : "0",
+	"pric_tp" : "0",
+	"stex_tp" : "3"
+}
+Response
+{
+	"trde_qty_sdnin":
+		[
+			{
+				"stk_cd":"005930",
+				"stk_nm":"삼성전자",
+				"cur_prc":"-152000",
+				"pred_pre_sig":"5",
+				"pred_pre":"-100",
+				"flu_rt":"-0.07",
+				"prev_trde_qty":"22532511",
+				"now_trde_qty":"31103523",
+				"sdnin_qty":"+8571012",
+				"sdnin_rt":"+38.04"
+			},
+			{
+				"stk_cd":"005930",
+				"stk_nm":"삼성전자",
+				"cur_prc":"-94400",
+				"pred_pre_sig":"5",
+				"pred_pre":"-100",
+				"flu_rt":"-0.11",
+				"prev_trde_qty":"25027263",
+				"now_trde_qty":"30535372",
+				"sdnin_qty":"+5508109",
+				"sdnin_rt":"+22.01"
+			},
+			{
+				"stk_cd":"005930",
+				"stk_nm":"삼성전자",
+				"cur_prc":"-42900",
+				"pred_pre_sig":"5",
+				"pred_pre":"-150",
+				"flu_rt":"-0.35",
+				"prev_trde_qty":"25717492",
+				"now_trde_qty":"31033221",
+				"sdnin_qty":"+5315729",
+				"sdnin_rt":"+20.67"
+			},
+			{
+				"stk_cd":"005930",
+				"stk_nm":"삼성전자",
+				"cur_prc":"-22350",
+				"pred_pre_sig":"5",
+				"pred_pre":"-100",
+				"flu_rt":"-0.45",
+				"prev_trde_qty":"25548474",
+				"now_trde_qty":"30673438",
+				"sdnin_qty":"+5124964",
+				"sdnin_rt":"+20.06"
+			},
+			{
+				"stk_cd":"005930",
+				"stk_nm":"삼성전자",
+				"cur_prc":"-56400",
+				"pred_pre_sig":"5",
+				"pred_pre":"-300",
+				"flu_rt":"-0.53",
+				"prev_trde_qty":"26185726",
+				"now_trde_qty":"30990416",
+				"sdnin_qty":"+4804690",
+				"sdnin_rt":"+18.35"
+			}
+		],
+	"return_code":0,
+	"return_msg":"정상적으로 처리되었습니다"
+}

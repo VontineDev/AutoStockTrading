@@ -1,0 +1,202 @@
+파일이름 : 147_국내주식 REST 차트 업종분봉조회요청.md
+# 국내주식 REST 차트 API (업종분봉조회요청, ka20005)
+
+## 기본 정보
+
+- **Method:** POST  
+- **운영 도메인:** `https://api.kiwoom.com`  
+- **모의투자 도메인:** `https://mockapi.kiwoom.com` (KRX만 지원가능)  
+- **URL:** `/api/dostk/chart`  
+- **Format:** JSON  
+- **Content-Type:** `application/json;charset=UTF-8`  
+- **다른 TR 확인하기**  
+
+## TR명 리스트
+
+| TR명                        | TR 코드   |
+|-----------------------------|-----------|
+| 업종분봉조회요청             | ka20005   |
+| 종목별투자자기관별차트요청   | ka10060   |
+| 장중투자자별매매차트요청     | ka10064   |
+| 주식틱차트조회요청           | ka10079   |
+| 주식분봉차트조회요청         | ka10080   |
+| 주식일봉차트조회요청         | ka10081   |
+| 주식주봉차트조회요청         | ka10082   |
+| 주식월봉차트조회요청         | ka10083   |
+| 주식년봉차트조회요청         | ka10094   |
+| 업종틱차트조회요청           | ka20004   |
+| 업종분봉조회요청             | ka20005   |
+| 업종일봉조회요청             | ka20006   |
+| 업종주봉조회요청             | ka20007   |
+| 업종월봉조회요청             | ka20008   |
+| 업종년봉조회요청             | ka20019   |
+
+---
+
+## 요청
+
+### Header
+
+| Element         | 한글명       | type   | Required | Length | Description                                      |
+|-----------------|--------------|--------|----------|--------|--------------------------------------------------|
+| authorization   | 접근토큰     | String | Y        | 1000   | 토큰 지정시 토큰타입("Bearer") 붙혀서 호출 (예: Bearer Egicyx...) |
+| cont-yn         | 연속조회여부 | String | N        | 1      | 응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅 |
+| next-key        | 연속조회키   | String | N        | 50     | 응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅 |
+| api-id          | TR명         | String | Y        | 10     |                                                  |
+
+### Body
+
+| Element      | 한글명     | type   | Required | Length | Description                                                              |
+|--------------|------------|--------|----------|--------|--------------------------------------------------------------------------|
+| inds_cd      | 업종코드   | String | Y        | 3      | **001**:종합(KOSPI), **002**:대형주, **003**:중형주, **004**:소형주**101**:종합(KOSDAQ), **201**:KOSPI200, **302**:KOSTAR, **701**:KRX100 (※ 기타 업종코드 참고) |
+| tic_scope    | 틱범위     | String | Y        | 2      | **1**:1틱, **3**:3틱, **5**:5틱, **10**:10틱, **30**:30틱               |
+
+---
+
+## 응답
+
+### Header
+
+| Element   | 한글명       | type   | Required | Length | Description                        |
+|-----------|--------------|--------|----------|--------|------------------------------------|
+| cont-yn   | 연속조회여부 | String | N        | 1      | 다음 데이터가 있을시 `Y`값 전달      |
+| next-key  | 연속조회키   | String | N        | 50     | 다음 데이터가 있을시 다음 키값 전달 |
+| api-id    | TR명         | String | Y        | 10     |                                    |
+
+### Body
+
+| Element                  | 한글명             | type   | Required | Length | Description                      |
+|--------------------------|--------------------|--------|----------|--------|----------------------------------|
+| inds_cd                  | 업종코드           | String | N        | 20     |                                  |
+| inds_min_pole_qry        | 업종분봉조회       | LIST   | N        |        |                                  |
+
+#### inds_min_pole_qry 내부 항목
+
+| Element             | 한글명         | type    | Required | Length | Description |
+|---------------------|----------------|---------|----------|--------|-------------|
+| cur_prc             | 현재가         | String  | N        | 20     |             |
+| trde_qty            | 거래량         | String  | N        | 20     |             |
+| cntr_tm             | 체결시간       | String  | N        | 20     |             |
+| open_pric           | 시가           | String  | N        | 20     |             |
+| high_pric           | 고가           | String  | N        | 20     |             |
+| low_pric            | 저가           | String  | N        | 20     |             |
+| bic_inds_tp         | 대업종구분     | String  | N        | 20     |             |
+| sm_inds_tp          | 소업종구분     | String  | N        | 20     |             |
+| stk_infr            | 종목정보       | String  | N        | 20     |             |
+| pred_close_pric     | 전일종가       | String  | N        | 20     |             |
+
+--- 
+
+## PYTHON
+import requests
+import json
+
+# 업종분봉조회요청
+def fn_ka20005(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/chart'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka20005', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken' # 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'inds_cd': '001', # 업종코드 001:종합(KOSPI), 002:대형주, 003:중형주, 004:소형주 101:종합(KOSDAQ), 201:KOSPI200, 302:KOSTAR, 701: KRX100 나머지 ※ 업종코드 참고
+		'tic_scope': '5', # 틱범위 1:1틱, 3:3틱, 5:5틱, 10:10틱, 30:30틱
+	}
+
+	# 3. API 실행
+	fn_ka20005(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka20005(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+
+    ## Example
+
+
+Request
+{
+	"inds_cd" : "001",
+	"tic_scope" : "5"
+}
+Response
+{
+	"inds_cd":"001",
+	"inds_min_pole_qry":
+		[
+			{
+				"cur_prc":"-239417",
+				"trde_qty":"2",
+				"cntr_tm":"20241122144500",
+				"open_pric":"+239252",
+				"high_pric":"+239417",
+				"low_pric":"+239250",
+				"bic_inds_tp":"",
+				"sm_inds_tp":"",
+				"stk_infr":"",
+				"pred_close_pric":""
+			},
+			{
+				"cur_prc":"-239326",
+				"trde_qty":"1",
+				"cntr_tm":"20241122144000",
+				"open_pric":"+239329",
+				"high_pric":"+239329",
+				"low_pric":"+239326",
+				"bic_inds_tp":"",
+				"sm_inds_tp":"",
+				"stk_infr":"",
+				"pred_close_pric":""
+			},
+			{
+				"cur_prc":"-239116",
+				"trde_qty":"5",
+				"cntr_tm":"20241122143500",
+				"open_pric":"+239405",
+				"high_pric":"+239405",
+				"low_pric":"+239111",
+				"bic_inds_tp":"",
+				"sm_inds_tp":"",
+				"stk_infr":"",
+				"pred_close_pric":""
+			},
+			{
+				"cur_prc":"-238846",
+				"trde_qty":"112",
+				"cntr_tm":"20241122143000",
+				"open_pric":"+239449",
+				"high_pric":"+239449",
+				"low_pric":"+238846",
+				"bic_inds_tp":"",
+				"sm_inds_tp":"",
+				"stk_infr":"",
+				"pred_close_pric":""
+			}
+		],
+	"return_code":0,
+	"return_msg":"정상적으로 처리되었습니다"
+}
+

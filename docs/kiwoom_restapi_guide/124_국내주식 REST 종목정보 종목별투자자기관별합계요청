@@ -1,0 +1,198 @@
+파일이름 : 124_국내주식 REST 종목정보 종목별투자자기관별합계요청.md
+**국내주식**  
+**REST**  
+**종목정보**  
+
+## 기본 정보  
+
+| 항목             | 내용                                             |  
+|------------------|--------------------------------------------------|  
+| Method           | POST                                             |  
+| 운영 도메인      | https://api.kiwoom.com                           |  
+| 모의투자 도메인  | https://mockapi.kiwoom.com (KRX만 지원가능)      |  
+| URL              | /api/dostk/stkinfo                               |  
+| Format           | JSON                                             |  
+| Content-Type     | application/json;charset=UTF-8                   |  
+
+[다른 TR 확인하기]  
+
+## TR명  
+
+| TR명                            | 코드     |  
+|---------------------------------|----------|  
+| 종목별투자자기관별합계요청      | ka10061  |  
+| 주식기본정보요청                | ka10001  |  
+| 주식거래원요청                  | ka10002  |  
+| 체결정보요청                    | ka10003  |  
+| 신용매매동향요청                | ka10013  |  
+| 일별거래상세요청                | ka10015  |  
+| 신고저가요청                    | ka10016  |  
+| 상하한가요청                    | ka10017  |  
+| 고저가근접요청                  | ka10018  |  
+| 가격급등락요청                  | ka10019  |  
+| 거래량갱신요청                  | ka10024  |  
+| 매물대집중요청                  | ka10025  |  
+| 고저PER요청                     | ka10026  |  
+| 시가대비등락률요청              | ka10028  |  
+| 거래원매물대분석요청            | ka10043  |  
+| 거래원순간거래량요청            | ka10052  |  
+| 변동성완화장치발동종목요청      | ka10054  |  
+| 당일전일체결량요청              | ka10055  |  
+| 투자자별일별매매종목요청        | ka10058  |  
+| 종목별투자자기관별요청          | ka10059  |  
+| 종목별투자자기관별합계요청      | ka10061  |  
+| 당일전일체결요청                | ka10084  |  
+| 관심종목정보요청                | ka10095  |  
+| 종목정보 리스트                 | ka10099  |  
+| 종목정보 조회                   | ka10100  |  
+| 업종코드 리스트                 | ka10101  |  
+| 회원사 리스트                   | ka10102  |  
+| 프로그램순매수상위50요청        | ka90003  |  
+| 종목별프로그램매매현황요청      | ka90004  |  
+| 대차거래내역요청                | ka90012  |  
+
+---
+
+## 요청  
+
+### Header  
+
+| Element          | 한글명         | type     | Required | Length | Description                                        |  
+|------------------|---------------|----------|----------|--------|----------------------------------------------------|  
+| authorization    | 접근토큰       | String   | Y        | 1000   | 토큰 지정시 토큰타입("Bearer") 붙혀서 호출예) Bearer Egicyx... |  
+| cont-yn          | 연속조회여부   | String   | N        | 1      | 응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅 |  
+| next-key         | 연속조회키     | String   | N        | 50     | 응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅 |  
+| api-id           | TR명           | String   | Y        | 10     |                                                    |  
+
+### Body  
+
+| Element          | 한글명         | type     | Required | Length | Description                                           |  
+|------------------|---------------|----------|----------|--------|-------------------------------------------------------|  
+| stk_cd           | 종목코드       | String   | Y        | 20     | 거래소별 종목코드(KRX:039490,NXT:039490_NX,SOR:039490_AL) |  
+| strt_dt          | 시작일자       | String   | Y        | 8      | YYYYMMDD                                              |  
+| end_dt           | 종료일자       | String   | Y        | 8      | YYYYMMDD                                              |  
+| amt_qty_tp       | 금액수량구분   | String   | Y        | 1      | 1:금액, 2:수량                                       |  
+| trde_tp          | 매매구분       | String   | Y        | 1      | 0:순매수, 1:매수, 2:매도                             |  
+| unit_tp          | 단위구분       | String   | Y        | 4      | 1000:천주, 1:단주                                     |  
+
+---
+
+## 응답  
+
+### Header  
+
+| Element          | 한글명         | type     | Required | Length | Description                                 |  
+|------------------|---------------|----------|----------|--------|---------------------------------------------|  
+| cont-yn          | 연속조회여부   | String   | N        | 1      | 다음 데이터가 있을시 Y값 전달               |  
+| next-key         | 연속조회키     | String   | N        | 50     | 다음 데이터가 있을시 다음 키값 전달         |  
+| api-id           | TR명           | String   | Y        | 10     |                                             |  
+
+### Body  
+
+| Element                  | 한글명           | type     | Required | Length | Description             |  
+|--------------------------|------------------|----------|----------|--------|-------------------------|  
+| stk_invsr_orgn_tot       | 종목별투자자기관별합계 | LIST    | N        |        |                         |  
+| - ind_invsr              | 개인투자자       | String   | N        | 20     |                         |  
+| - frgnr_invsr            | 외국인투자자     | String   | N        | 20     |                         |  
+| - orgn                   | 기관계           | String   | N        | 20     |                         |  
+| - fnnc_invt              | 금융투자         | String   | N        | 20     |                         |  
+| - insrnc                 | 보험             | String   | N        | 20     |                         |  
+| - invtrt                 | 투신             | String   | N        | 20     |                         |  
+| - etc_fnnc               | 기타금융         | String   | N        | 20     |                         |  
+| - bank                   | 은행             | String   | N        | 20     |                         |  
+| - penfnd_etc             | 연기금등         | String   | N        | 20     |                         |  
+| - samo_fund              | 사모펀드         | String   | N        | 20     |                         |  
+| - natn                   | 국가             | String   | N        | 20     |                         |  
+| - etc_corp               | 기타법인         | String   | N        | 20     |                         |  
+| - natfor                 | 내외국인         | String   | N        | 20     |                         |  
+
+---
+
+## PYTHON
+import requests
+import json
+
+# 종목별투자자기관별합계요청
+def fn_ka10061(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/stkinfo'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10061', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken' # 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'stk_cd': '005930', # 종목코드 거래소별 종목코드 (KRX:039490,NXT:039490_NX,SOR:039490_AL)
+		'strt_dt': '20241007', # 시작일자 YYYYMMDD
+		'end_dt': '20241107', # 종료일자 YYYYMMDD
+		'amt_qty_tp': '1', # 금액수량구분 1:금액, 2:수량
+		'trde_tp': '0', # 매매구분 0:순매수, 1:매수, 2:매도
+		'unit_tp': '1000', # 단위구분 1000:천주, 1:단주
+	}
+
+	# 3. API 실행
+	fn_ka10061(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10061(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+
+    ## Example
+
+
+Request
+{
+	"stk_cd" : "005930",
+	"strt_dt" : "20241007",
+	"end_dt" : "20241107",
+	"amt_qty_tp" : "1",
+	"trde_tp" : "0",
+	"unit_tp" : "1000"
+}
+Response
+{
+	"stk_invsr_orgn_tot":
+		[
+			{
+				"ind_invsr":"--28837",
+				"frgnr_invsr":"--40142",
+				"orgn":"+64891",
+				"fnnc_invt":"+72584",
+				"insrnc":"--9071",
+				"invtrt":"--7790",
+				"etc_fnnc":"+35307",
+				"bank":"+526",
+				"penfnd_etc":"--22783",
+				"samo_fund":"--3881",
+				"natn":"0",
+				"etc_corp":"+1974",
+				"natfor":"+2114"
+			}
+		],
+	"return_code":0,
+	"return_msg":"정상적으로 처리되었습니다"
+}
+
+

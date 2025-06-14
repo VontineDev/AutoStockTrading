@@ -1,0 +1,202 @@
+파일이름 : 028_국내주식 REST 기관/외국인 기관외국인연속매매현황요청.md
+# 국내주식
+
+## REST 기관/외국인
+
+### 기본 정보
+| 항목              | 내용                                                                 |
+|-------------------|----------------------------------------------------------------------|
+| Method            | POST                                                                |
+| 운영 도메인        | https://api.kiwoom.com                                              |
+| 모의투자 도메인    | https://mockapi.kiwoom.com (KRX만 지원 가능)                         |
+| URL               | `/api/dostk/frgnistt`                                               |
+| Format            | JSON                                                                |
+| Content-Type      | `application/json;charset=UTF-8`                                    |
+
+### 다른 TR 확인하기
+#### TR명
+- 기관외국인연속매매현황요청 (ka10131)
+- 주식외국인종목별매매동향 (ka10008)
+- 주식기관요청 (ka10009)
+- 기관외국인연속매매현황요청 (ka10131)
+
+---
+
+### 요청
+#### Header
+| 한글명         | type    | Required | Length | Description                          |
+|----------------|---------|----------|--------|--------------------------------------|
+| authorization  | String  | Y        | 1000   | 접근토큰 (예: `Bearer Egicyx...`)     |
+| cont-yn        | String  | N        | 1      | 연속조회여부 (응답 Header 값 사용)     |
+| next-key       | String  | N        | 50     | 연속조회키 (응답 Header 값 사용)       |
+| api-id         | String  | Y        | 10     | TR명                                 |
+
+#### Body
+| 한글명          | type    | Required | Length | Description                          |
+|-----------------|---------|----------|--------|--------------------------------------|
+| dt              | String  | Y        | 3      | 1:최근일, 3:3일, 5:5일, 10:10일, 20:20일, 120:120일, 0:시작일자/종료일자로 조회 |
+| strt_dt         | String  | N        | 8      | 시작일자 (YYYYMMDD)                   |
+| end_dt          | String  | N        | 8      | 종료일자 (YYYYMMDD)                   |
+| mrkt_tp         | String  | Y        | 3      | 001:코스피, 101:코스닥                |
+| netslmt_tp      | String  | Y        | 1      | 2:순매수(고정값)                      |
+| stk_inds_tp     | String  | Y        | 1      | 0:종목(주식),1:업종                   |
+| amt_qty_tp      | String  | Y        | 1      | 0:금액, 1:수량                       |
+| stex_tp         | String  | Y        | 1      | 1:KRX, 2:NXT, 3:통합                 |
+
+---
+
+### 응답
+#### Header
+| 한글명   | type    | Required | Length | Description              |
+|----------|---------|----------|--------|--------------------------|
+| cont-yn  | String  | N        | 1      | 연속조회여부 (Y/N)        |
+| next-key | String  | N        | 50     | 연속조회키                |
+| api-id   | String  | Y        | 10     | TR명                     |
+
+#### Body
+| 한글명                       | type    | Required | Length | Description                  |
+|------------------------------|---------|----------|--------|------------------------------|
+| orgn_frgnr_cont_trde_prst   | LIST    | N        | -      | 기관외국인연속매매현황        |
+| - rank                      | String  | N        | -      | 순위                         |
+| - stk_cd                    | String  | N        | 6      | 종목코드                     |
+| - stk_nm                    | String  | N        | 20     | 종목명                       |
+| - prid_stkpc_flu_rt         | String  | N        | -      | 기간중주가등락률             |
+| - orgn_nettrde_amt          | String  | N        | -      | 기관순매매금액               |
+| - orgn_nettrde_qty          | String  | N        | -      | 기관순매매량                 |
+| - orgn_cont_netprps_dys     | String  | N        | -      | 기관계연속순매수일수         |
+| - orgn_cont_netprps_qty     | String  | N        | -      | 기관계연속순매수량           |
+| - orgn_cont_netprps_amt     | String  | N        | -      | 기관계연속순매수금액         |
+| - frgnr_nettrde_qty         | String  | N        | -      | 외국인순매매량               |
+| - frgnr_nettrde_amt         | String  | N        | -      | 외국인순매매액               |
+| - frgnr_cont_netprps_dys    | String  | N        | -      | 외국인연속순매수일수         |
+| - frgnr_cont_netprps_qty    | String  | N        | -      | 외국인연속순매수량           |
+| - frgnr_cont_netprps_amt    | String  | N        | -      | 외국인연속순매수금액         |
+| - nettrde_qty               | String  | N        | -      | 순매매량                     |
+| - nettrde_amt               | String  | N        | -      | 순매매액                     |
+| - tot_cont_netprps_dys      | String  | N        | -      | 합계연속순매수일수           |
+| - tot_cont_nettrde_qty      | String  | N        | -      | 합계연속순매매수량           |
+| - tot_cont_netprps_amt      | String  | N        | -      | 합계연속순매수금액           |
+```
+
+
+## Python
+
+```python
+import requests
+import json
+
+# 기관외국인연속매매현황요청
+def fn_ka10131(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/frgnistt'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10131', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken' # 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'dt': '1', # 기간 1:최근일, 3:3일, 5:5일, 10:10일, 20:20일, 120:120일, 0:시작일자/종료일자로 조회
+		'strt_dt': '', # 시작일자 YYYYMMDD
+		'end_dt': '', # 종료일자 YYYYMMDD
+		'mrkt_tp': '001', # 장구분 001:코스피, 101:코스닥
+		'netslmt_tp': '2', # 순매도수구분 2:순매수(고정값)
+		'stk_inds_tp': '0', # 종목업종구분 0:종목(주식),1:업종
+		'amt_qty_tp': '0', # 금액수량구분 0:금액, 1:수량
+		'stex_tp': '1', # 거래소구분 1:KRX, 2:NXT, 3:통합
+	}
+
+	# 3. API 실행
+	fn_ka10131(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10131(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+```
+
+
+
+## Example
+
+
+Request
+{
+	"dt" : "1",
+	"strt_dt" : "",
+	"end_dt" : "",
+	"mrkt_tp" : "001",
+	"netslmt_tp" : "2",
+	"stk_inds_tp" : "0",
+	"amt_qty_tp" : "0",
+	"stex_tp" : "1"
+}
+Response
+{
+	"orgn_frgnr_cont_trde_prst":
+		[
+			{
+				"rank":"1",
+				"stk_cd":"005930",
+				"stk_nm":"삼성전자",
+				"prid_stkpc_flu_rt":"-5.80",
+				"orgn_nettrde_amt":"+48",
+				"orgn_nettrde_qty":"+173",
+				"orgn_cont_netprps_dys":"+1",
+				"orgn_cont_netprps_qty":"+173",
+				"orgn_cont_netprps_amt":"+48",
+				"frgnr_nettrde_qty":"+0",
+				"frgnr_nettrde_amt":"+0",
+				"frgnr_cont_netprps_dys":"+1",
+				"frgnr_cont_netprps_qty":"+1",
+				"frgnr_cont_netprps_amt":"+0",
+				"nettrde_qty":"+173",
+				"nettrde_amt":"+48",
+				"tot_cont_netprps_dys":"+2",
+				"tot_cont_nettrde_qty":"+174",
+				"tot_cont_netprps_amt":"+48"
+			},
+			{
+				"rank":"2",
+				"stk_cd":"005930",
+				"stk_nm":"삼성전자",
+				"prid_stkpc_flu_rt":"-4.21",
+				"orgn_nettrde_amt":"+41",
+				"orgn_nettrde_qty":"+159",
+				"orgn_cont_netprps_dys":"+1",
+				"orgn_cont_netprps_qty":"+159",
+				"orgn_cont_netprps_amt":"+41",
+				"frgnr_nettrde_qty":"+0",
+				"frgnr_nettrde_amt":"+0",
+				"frgnr_cont_netprps_dys":"+1",
+				"frgnr_cont_netprps_qty":"+1",
+				"frgnr_cont_netprps_amt":"+0",
+				"nettrde_qty":"+159",
+				"nettrde_amt":"+41",
+				"tot_cont_netprps_dys":"+2",
+				"tot_cont_nettrde_qty":"+160",
+				"tot_cont_netprps_amt":"+42"
+			}
+		],
+	"return_code":0,
+	"return_msg":"정상적으로 처리되었습니다"
+}

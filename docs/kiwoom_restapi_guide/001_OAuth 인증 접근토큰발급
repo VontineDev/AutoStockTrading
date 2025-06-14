@@ -1,0 +1,113 @@
+파일 이름: 001_OAuth REST 접근토큰발급.md
+
+---
+
+# OAuth 인증
+
+## REST  
+### 접근토큰발급
+
+---
+
+### 기본 정보
+
+| 구분              | 내용                                                        |
+|-------------------|------------------------------------------------------------|
+| Method            | POST                                                       |
+| 운영 도메인        | https://api.kiwoom.com                                     |
+| 모의투자 도메인    | https://mockapi.kiwoom.com (KRX만 지원가능)                 |
+| URL               | /oauth2/token                                              |
+| Format            | JSON                                                       |
+| Content-Type      | application/json;charset=UTF-8                             |
+
+---
+
+### TR 정보
+
+| TR명          | 설명            |
+|---------------|----------------|
+| au10001       | 접근토큰 발급   |
+
+---
+
+### 요청 (Request)
+
+#### Body
+
+| Element      | 한글명   | type   | Required | Length | Description                      |
+|--------------|----------|--------|----------|--------|----------------------------------|
+| grant_type   | grant_type | String | Y        |        | client_credentials 입력           |
+| appkey       | 앱키      | String | Y        |        |                                  |
+| secretkey    | 시크릿키   | String | Y        |        |                                  |
+
+---
+
+### 응답 (Response)
+
+#### Body
+
+| Element     | 한글명   | type   | Required | Length | Description         |
+|-------------|----------|--------|----------|--------|---------------------|
+| expires_dt  | 만료일   | String | Y        |        |                     |
+| token_type  | 토큰타입 | String | Y        |        |                     |
+| token       | 접근토큰 | String | Y        |        |                     |
+
+
+## Python
+
+```python
+import requests
+import json
+
+# 접근토큰 발급
+def fn_au10001(data):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/oauth2/token'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 요청 데이터
+	params = {
+		'grant_type': 'client_credentials',  # grant_type
+		'appkey': 'AxserEsdcredca.....',  # 앱키
+		'secretkey': 'SEefdcwcforehDre2fdvc....',  # 시크릿키
+	}
+
+	# 2. API 실행
+	fn_au10001(data=params)
+```
+
+
+## Example
+
+
+Request
+{
+	"grant_type": "client_credentials",
+	"appkey": "AxserEsdcredca.....",
+	"secretkey": "SEefdcwcforehDre2fdvc...."
+}
+Response
+{
+	"expires_dt":"20241107083713",
+	"token_type":"bearer",
+	"token":"WQJCwyqInphKnR3bSRtB9NE1lv..."
+	"return_code":0,
+	"return_msg":"정상적으로 처리되었습니다"
+}

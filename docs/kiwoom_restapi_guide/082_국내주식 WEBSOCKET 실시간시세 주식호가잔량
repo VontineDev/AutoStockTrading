@@ -1,0 +1,414 @@
+파일이름 : 082_국내주식 WEBSOCKET 실시간시세 주식호가잔량.md
+# 국내주식  
+## WEBSOCKET 실시간시세 (주식호가잔량)
+
+### 기본 정보
+
+- **Method:** POST  
+- **운영 도메인:** `wss://api.kiwoom.com:10000`  
+- **모의투자 도메인:** `wss://mockapi.kiwoom.com:10000` (KRX만 지원가능)  
+- **URL:** `/api/dostk/websocket`  
+- **Format:** JSON  
+- **Content-Type:** `application/json;charset=UTF-8`  
+- **다른 TR 확인하기:**  
+  - 주식호가잔량: 0D  
+  - 주문체결: 00  
+  - 잔고: 04  
+  - 주식기세: 0A  
+  - 주식체결: 0B  
+  - 주식우선호가: 0C  
+  - 주식호가잔량: 0D  
+  - 주식시간외호가: 0E  
+  - 주식당일거래원: 0F  
+  - ETF NAV: 0G  
+  - 주식예상체결: 0H  
+  - 업종지수: 0J  
+  - 업종등락: 0U  
+  - 주식종목정보: 0g  
+  - ELW 이론가: 0m  
+  - 장시작시간: 0s  
+  - ELW 지표: 0u  
+  - 종목프로그램매매: 0w  
+  - VI발동/해제: 1h  
+
+---
+
+## 요청
+
+### Body  
+| Element   | 한글명           | type    | Required | Length | Description                                                                 |
+|-----------|-----------------|---------|----------|--------|-----------------------------------------------------------------------------|
+| trnm      | 서비스명         | String  | Y        | 10     | `REG`: 등록, `REMOVE`: 해지                                                  |
+| grp_no    | 그룹번호         | String  | Y        | 4      |                                                                             |
+| refresh   | 기존등록유지여부 | String  | Y        | 1      | **등록(REG)시:**`0`: 기존유지안함, `1`: 기존유지(Default)**해지(REMOVE)시:** 값 불필요 |
+| data      | 실시간 등록 리스트 | LIST    |          |        |                                                                             |
+| - item    | 실시간 등록 요소  | String[] | N       | 100    | 거래소별 종목코드 (예: `KRX:039490`, `NXT:039490_NX`, `SOR:039490_AL`)       |
+| - type    | 실시간 항목      | String[] | Y       | 2      | TR 명(`0A`, `0B`, ...)                                                      |
+
+---
+
+## 응답
+
+### Body  
+| Element       | 한글명             | type    | Required | Length | Description                                  |
+|---------------|-------------------|---------|----------|--------|----------------------------------------------|
+| return_code   | 결과코드           | int     | N        |        | `0`: 정상, `1`: 오류 (등록/해지 요청시에만 전송) |
+| return_msg    | 결과메시지         | String  | N        |        | (등록/해지 요청시에만 전송)                  |
+| trnm          | 서비스명           | String  | N        |        | 요청값 반환 (실시간 수신시 `REAL`)            |
+| data          | 실시간 등록리스트  | LIST    | N        |        |                                              |
+| - type        | 실시간항목         | String  | N        |        | TR 명(`0A`, `0B`, ...)                       |
+| - name        | 실시간 항목명      | String  | N        |        |                                              |
+| - item        | 실시간 등록 요소   | String  | N        |        | 종목코드                                     |
+| - values      | 실시간 값 리스트   | LIST    | N        |        | **호가 관련 필드**                           |
+| - - 21        | 호가시간           | String  | N        |        |                                              |
+| - - 41~50     | 매도호가1~10       | String  | N        |        |                                              |
+| - - 61~70     | 매도호가수량1~10   | String  | N        |        |                                              |
+| - - 81~90     | 매도호가직전대비1~10 | String | N        |        |                                              |
+| - - 51~60     | 매수호가1~10       | String  | N        |        |                                              |
+| - - 71~80     | 매수호가수량1~10   | String  | N        |        |                                              |
+| - - 91~100    | 매수호가직전대비1~10 | String | N        |        |                                              |
+| - - 121       | 매도호가총잔량      | String  | N        |        |                                              |
+| - - 122       | 매도호가총잔량직전대비 | String | N        |        |                                              |
+| - - 125       | 매수호가총잔량      | String  | N        |        |                                              |
+| - - 126       | 매수호가총잔량직전대비 | String | N        |        |                                              |
+| - - 23        | 예상체결가         | String  | N        |        |                                              |
+| - - 24        | 예상체결수량       | String  | N        |        |                                              |
+| **KRX/NXT 전용 필드**                          |                    |         |          |        |                                              |
+| - - 6044~6065 | KRX 매도/매수호가잔량 | String | N        |        |                                              |
+| - - 6066~6087 | NXT 매도/매수호가잔량 | String | N        |        |                                              |
+| **중간가 관련 필드**                           |                    |         |          |        |                                              |
+| - - 6100~6115 | 중간가 총잔량/대비정보 | String | N        |        |                                              |  
+
+---
+
+### 호가잔량 상세 구조  
+#### **매도호가 (1~10)**  
+| 코드 | 설명                | 예시 값 |
+|------|---------------------|---------|
+| 41   | 매도호가1           | 50,000  |
+| 61   | 매도호가수량1       | 1,200   |
+| 81   | 매도호가직전대비1   | +50     |
+
+#### **매수호가 (1~10)**  
+| 코드 | 설명                | 예시 값 |
+|------|---------------------|---------|
+| 51   | 매수호가1           | 49,950  |
+| 71   | 매수호가수량1       | 2,300   |
+| 91   | 매수호가직전대비1   | -30     |
+
+
+## PYTHON
+import asyncio 
+import websockets
+import json
+
+# socket 정보
+# SOCKET_URL = 'wss://mockapi.kiwoom.com:10000/api/dostk/websocket'  # 모의투자 접속 URL
+SOCKET_URL = 'wss://api.kiwoom.com:10000/api/dostk/websocket'  # 접속 URL
+ACCESS_TOKEN = '사용자 AccessToken'  # 고객 Access Token
+
+class WebSocketClient:
+	def __init__(self, uri):
+		self.uri = uri
+		self.websocket = None
+		self.connected = False
+		self.keep_running = True
+
+	# WebSocket 서버에 연결합니다.
+	async def connect(self):
+		try:
+			self.websocket = await websockets.connect(self.uri)
+			self.connected = True
+			print("서버와 연결을 시도 중입니다.")
+
+			# 로그인 패킷
+			param = {
+				'trnm': 'LOGIN',
+				'token': ACCESS_TOKEN
+			}
+
+			print('실시간 시세 서버로 로그인 패킷을 전송합니다.')
+			# 웹소켓 연결 시 로그인 정보 전달
+			await self.send_message(message=param)
+
+		except Exception as e:
+			print(f'Connection error: {e}')
+			self.connected = False
+
+	# 서버에 메시지를 보냅니다. 연결이 없다면 자동으로 연결합니다.
+	async def send_message(self, message):
+		if not self.connected:
+			await self.connect()  # 연결이 끊어졌다면 재연결
+		if self.connected:
+			# message가 문자열이 아니면 JSON으로 직렬화
+			if not isinstance(message, str):
+				message = json.dumps(message)
+
+		await self.websocket.send(message)
+		print(f'Message sent: {message}')
+
+	# 서버에서 오는 메시지를 수신하여 출력합니다.
+	async def receive_messages(self):
+		while self.keep_running:
+			try:
+				# 서버로부터 수신한 메시지를 JSON 형식으로 파싱
+				response = json.loads(await self.websocket.recv())
+
+				# 메시지 유형이 LOGIN일 경우 로그인 시도 결과 체크
+				if response.get('trnm') == 'LOGIN':
+					if response.get('return_code') != 0:
+						print('로그인 실패하였습니다. : ', response.get('return_msg'))
+						await self.disconnect()
+					else:
+						print('로그인 성공하였습니다.')
+
+				# 메시지 유형이 PING일 경우 수신값 그대로 송신
+				elif response.get('trnm') == 'PING':
+					await self.send_message(response)
+
+				if response.get('trnm') != 'PING':
+					print(f'실시간 시세 서버 응답 수신: {response}')
+
+			except websockets.ConnectionClosed:
+				print('Connection closed by the server')
+				self.connected = False
+				await self.websocket.close()
+
+	# WebSocket 실행
+	async def run(self):
+		await self.connect()
+		await self.receive_messages()
+
+	# WebSocket 연결 종료
+	async def disconnect(self):
+		self.keep_running = False
+		if self.connected and self.websocket:
+			await self.websocket.close()
+			self.connected = False
+			print('Disconnected from WebSocket server')
+
+async def main():
+	# WebSocketClient 전역 변수 선언
+	websocket_client = WebSocketClient(SOCKET_URL)
+
+	# WebSocket 클라이언트를 백그라운드에서 실행합니다.
+	receive_task = asyncio.create_task(websocket_client.run())
+
+	# 실시간 항목 등록
+	await asyncio.sleep(1)
+	await websocket_client.send_message({ 
+		'trnm': 'REG', # 서비스명
+		'grp_no': '1', # 그룹번호
+		'refresh': '1', # 기존등록유지여부
+		'data': [{ # 실시간 등록 리스트
+			'item': ['005930'], # 실시간 등록 요소
+			'type': ['0D'], # 실시간 항목
+		}]
+	})
+
+	# 수신 작업이 종료될 때까지 대기
+	await receive_task
+
+# asyncio로 프로그램을 실행합니다.
+if __name__ == '__main__':
+	asyncio.run(main())
+
+
+    ## Example
+
+
+Request
+{
+	"trnm" : "REG",
+	"grp_no" : "1",
+	"refresh" : "1",
+	"data" : [{
+		" item" : [ "005930" ],
+		" type" : [ "0D" ]
+	}]
+}
+Response
+#요청
+{
+	'trnm': 'REG',
+	'return_code': 0,
+	'return_msg': ''
+}
+
+#실시간 수신
+{
+	'trnm': 'REAL',
+	'data': [
+		{
+			'type': '0D',
+			'name': '주식호가잔량',
+			'item': '005930',
+			'values': {
+				'21': '165207',
+				'41': '-20800',
+				'61': '82',
+				'81': '0',
+				'51': '-20700',
+				'71': '23847',
+				'91': '0',
+				'42': '+20900',
+				'62': '393',
+				'82': '0',
+				'52': '-20650',
+				'72': '834748',
+				'92': '0',
+				'43': '+21000',
+				'63': '674739',
+				'83': '0',
+				'53': '-20600',
+				'73': '2145799',
+				'93': '0',
+				'44': '+21050',
+				'64': '2055055',
+				'84': '0',
+				'54': '-20550',
+				'74': '2134689',
+				'94': '0',
+				'45': '+21100',
+				'65': '1998461',
+				'85': '0',
+				'55': '-20500',
+				'75': '1982298',
+				'95': '0',
+				'46': '+21150',
+				'66': '1932347',
+				'86': '0',
+				'56': '-20450',
+				'76': '1853788',
+				'96': '0',
+				'47': '+21200',
+				'67': '1723333',
+				'87': '0',
+				'57': '-20400',
+				'77': '1687992',
+				'97': '0',
+				'48': '+21250',
+				'68': '1621835',
+				'88': '0',
+				'58': '-20350',
+				'78': '1467869',
+				'98': '0',
+				'49': '+21300',
+				'69': '1373291',
+				'89': '0',
+				'59': '-20300',
+				'79': '1259995',
+				'99': '0',
+				'50': '+21350',
+				'70': '1242991',
+				'90': '0',
+				'60': '-20250',
+				'80': '1062405',
+				'100': '0',
+				'121': '12622527',
+				'122': '-1036021',
+				'125': '14453430',
+				'126': '+1062126',
+				'23': '20850',
+				'24': '332941',
+				'128': '+1830903',
+				'129': '114.51',
+				'138': '-1830903',
+				'139': '87.33',
+				'200': '0',
+				'201': '0.00',
+				'238': '3',
+				'291': '0',
+				'292': '0',
+				'293': '3',
+				'294': '0',
+				'295': '0.00',
+				'621': '0',
+				'631': '0',
+				'622': '0',
+				'632': '0',
+				'623': '0',
+				'633': '0',
+				'624': '0',
+				'634': '0',
+				'625': '0',
+				'635': '0',
+				'626': '0',
+				'636': '0',
+				'627': '0',
+				'637': '0',
+				'628': '0',
+				'638': '0',
+				'629': '0',
+				'639': '0',
+				'630': '0',
+				'640': '0',
+				'13': '30379650',
+				'299': '-1.06',
+				'215': '',
+				'216': '',
+				'6044':'0',
+				'6045':'0',
+				'6046':'0',
+				'6047':'0',
+				'6048':'0',
+				'6049':'0',
+				'6050':'0',
+				'6051':'0',
+				'6052':'0',
+				'6053':'0',
+				'6054':'0',
+				'6055':'0',
+				'6056':'0',
+				'6057':'0',
+				'6058':'0',
+				'6059':'0',
+				'6060':'0',
+				'6061':'0',
+				'6062':'0',
+				'6063':'0',
+				'6064':'0',
+				'6065':'0',
+				'6066':'0',
+				'6067':'0',
+				'6068':'0',
+				'6069':'0',
+				'6070':'0',
+				'6071':'0',
+				'6072':'0',
+				'6073':'0',
+				'6074':'0',
+				'6075':'0',
+				'6076':'0',
+				'6077':'0',
+				'6078':'0',
+				'6079':'0',
+				'6080':'0',
+				'6081':'0',
+				'6082':'0',
+				'6083':'0',
+				'6084':'0',
+				'6085':'0',
+				'6086':'0',
+				'6087':'0',
+				'6100':'0',
+				'6101':'0',
+				'6102':'0',
+				'6103':'0',
+				'6104':'0',
+				'6105':'0',
+				'6106':'0',
+				'6107':'0',
+				'6108':'0',
+				'6109':'0',
+				'6110':'0',
+				'6111':'0',
+				'6112':'0',
+				'6113':'0',
+				'6114':'0',
+				'6115':'0'
+			}
+		}
+	]
+}
+

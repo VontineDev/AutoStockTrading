@@ -1,0 +1,211 @@
+파일이름 : 018_국내주식 REST 계좌 주문인출가능금액요청.md
+
+# 국내주식
+
+## REST 계좌
+
+### 기본 정보
+| 항목              | 내용                                                                 |
+|-------------------|----------------------------------------------------------------------|
+| Method            | POST                                                                |
+| 운영 도메인        | https://api.kiwoom.com                                              |
+| 모의투자 도메인    | https://mockapi.kiwoom.com (KRX만 지원 가능)                         |
+| URL               | `/api/dostk/acnt`                                                   |
+| Format            | JSON                                                                |
+| Content-Type      | `application/json;charset=UTF-8`                                    |
+
+### 다른 TR 확인하기
+#### TR명
+- 주문인출가능금액요청 (kt00010)
+- 일자별종목별실현손익요청_일자 (ka10072)
+- 일자별종목별실현손익요청_기간 (ka10073)
+- 일자별실현손익요청 (ka10074)
+- 미체결요청 (ka10075)
+- 체결요청 (ka10076)
+- 당일실현손익상세요청 (ka10077)
+- 계좌수익률요청 (ka10085)
+- 미체결 분할주문 상세 (ka10088)
+- 당일매매일지요청 (ka10170)
+- 예수금상세현황요청 (kt00001)
+- 일별추정예탁자산현황요청 (kt00002)
+- 추정자산조회요청 (kt00003)
+- 계좌평가현황요청 (kt00004)
+- 체결잔고요청 (kt00005)
+- 계좌별주문체결내역상세요청 (kt00007)
+- 계좌별익일결제예정내역요청 (kt00008)
+- 계좌별주문체결현황요청 (kt00009)
+- 주문인출가능금액요청 (kt00010)
+- 증거금율별주문가능수량조회요청 (kt00011)
+- 신용보증금율별주문가능수량조회요청 (kt00012)
+- 증거금세부내역조회요청 (kt00013)
+- 위탁종합거래내역요청 (kt00015)
+- 일별계좌수익률상세현황요청 (kt00016)
+- 계좌별당일현황요청 (kt00017)
+- 계좌평가잔고내역요청 (kt00018)
+
+---
+
+### 요청
+#### Header
+| 한글명         | type    | Required | Length | Description                          |
+|----------------|---------|----------|--------|--------------------------------------|
+| authorization  | String  | Y        | 1000   | 접근토큰 (예: `Bearer Egicyx...`)     |
+| cont-yn        | String  | N        | 1      | 연속조회여부 (응답 Header 값 사용)     |
+| next-key       | String  | N        | 50     | 연속조회키 (응답 Header 값 사용)       |
+| api-id         | String  | Y        | 10     | TR명                                 |
+
+#### Body
+| 한글명          | type    | Required | Length | Description                          |
+|-----------------|---------|----------|--------|--------------------------------------|
+| io_amt          | String  | N        | 12     | 입출금액                             |
+| stk_cd          | String  | Y        | 12     | 종목번호                             |
+| trde_tp         | String  | Y        | 1      | 1:매도, 2:매수                       |
+| trde_qty        | String  | N        | 10     | 매매수량                             |
+| uv              | String  | Y        | 10     | 매수가격                             |
+| exp_buy_unp     | String  | N        | 10     | 예상매수단가                         |
+
+---
+
+### 응답
+#### Header
+| 한글명   | type    | Required | Length | Description              |
+|----------|---------|----------|--------|--------------------------|
+| cont-yn  | String  | N        | 1      | 연속조회여부 (Y/N)        |
+| next-key | String  | N        | 50     | 연속조회키                |
+| api-id   | String  | Y        | 10     | TR명                     |
+
+#### Body
+| 한글명                       | type    | Required | Length | Description                  |
+|------------------------------|---------|----------|--------|------------------------------|
+| profa_20ord_alow_amt        | String  | N        | 12     | 증거금20%주문가능금액         |
+| profa_20ord_alowq           | String  | N        | 10     | 증거금20%주문가능수량         |
+| profa_30ord_alow_amt        | String  | N        | 12     | 증거금30%주문가능금액         |
+| profa_30ord_alowq           | String  | N        | 10     | 증거금30%주문가능수량         |
+| profa_40ord_alow_amt        | String  | N        | 12     | 증거금40%주문가능금액         |
+| profa_40ord_alowq           | String  | N        | 10     | 증거금40%주문가능수량         |
+| profa_50ord_alow_amt        | String  | N        | 12     | 증거금50%주문가능금액         |
+| profa_50ord_alowq           | String  | N        | 10     | 증거금50%주문가능수량         |
+| profa_60ord_alow_amt        | String  | N        | 12     | 증거금60%주문가능금액         |
+| profa_60ord_alowq           | String  | N        | 10     | 증거금60%주문가능수량         |
+| profa_rdex_60ord_alow_amt   | String  | N        | 12     | 증거금감면60%주문가능금       |
+| profa_rdex_60ord_alowq      | String  | N        | 10     | 증거금감면60%주문가능수       |
+| profa_100ord_alow_amt       | String  | N        | 12     | 증거금100%주문가능금액        |
+| profa_100ord_alowq          | String  | N        | 10     | 증거금100%주문가능수량        |
+| pred_reu_alowa              | String  | N        | 12     | 전일재사용가능금액            |
+| tdy_reu_alowa               | String  | N        | 12     | 금일재사용가능금액            |
+| entr                        | String  | N        | 12     | 예수금                        |
+| repl_amt                    | String  | N        | 12     | 대용금                        |
+| uncla                       | String  | N        | 12     | 미수금                        |
+| ord_pos_repl                | String  | N        | 12     | 주문가능대용                   |
+| ord_alowa                   | String  | N        | 12     | 주문가능현금                   |
+| wthd_alowa                  | String  | N        | 12     | 인출가능금액                   |
+| nxdy_wthd_alowa             | String  | N        | 12     | 익일인출가능금액               |
+| pur_amt                     | String  | N        | 12     | 매입금액                      |
+| cmsn                       | String  | N        | 12     | 수수료                        |
+| pur_exct_amt               | String  | N        | 12     | 매입정산금                    |
+| d2entra                    | String  | N        | 12     | D2추정예수금                   |
+| profa_rdex_aplc_tp         | String  | N        | 1      | 0:일반,1:60%감면              |
+```
+
+
+## Python
+
+```python
+import requests
+import json
+
+# 주문인출가능금액요청
+def fn_kt00010(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/acnt'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'kt00010', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken' # 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'io_amt': '', # 입출금액 
+		'stk_cd': '005930', # 종목번호 
+		'trde_tp': '2', # 매매구분 1:매도, 2:매수
+		'trde_qty': '', # 매매수량 
+		'uv': '267000', # 매수가격 
+		'exp_buy_unp': '', # 예상매수단가 
+	}
+
+	# 3. API 실행
+	fn_kt00010(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_kt00010(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+```
+
+
+
+## Example
+
+
+Request
+{
+	"io_amt" : "",
+	"stk_cd" : "005930",
+	"trde_tp" : "2",
+	"trde_qty" : "",
+	"uv" : "267000",
+	"exp_buy_unp" : ""
+}
+Response
+{
+	"profa_20ord_alow_amt":"000000012550",
+	"profa_20ord_alowq":"0000000000",
+	"profa_30ord_alow_amt":"000000012550",
+	"profa_30ord_alowq":"0000000000",
+	"profa_40ord_alow_amt":"000000012550",
+	"profa_40ord_alowq":"0000000000",
+	"profa_50ord_alow_amt":"000000012550",
+	"profa_50ord_alowq":"0000000000",
+	"profa_60ord_alow_amt":"000000012550",
+	"profa_60ord_alowq":"0000000000",
+	"profa_rdex_60ord_alow_amt":"000000012550",
+	"profa_rdex_60ord_alowq":"0000000000",
+	"profa_100ord_alow_amt":"000000012550",
+	"profa_100ord_alowq":"0000000000",
+	"pred_reu_alowa":"000000027194",
+	"tdy_reu_alowa":"000000000000",
+	"entr":"000000017534",
+	"repl_amt":"000003915500",
+	"uncla":"000000000000",
+	"ord_pos_repl":"000003915500",
+	"ord_alowa":"000000085341",
+	"wthd_alowa":"000000085341",
+	"nxdy_wthd_alowa":"000000012550",
+	"pur_amt":"000000000000",
+	"cmsn":"000000000000",
+	"pur_exct_amt":"000000000000",
+	"d2entra":"000000012550",
+	"profa_rdex_aplc_tp":"0",
+	"return_code":0,
+	"return_msg":"주문/인출가능금액 시뮬레이션 조회완료하였습니다."
+}
+
