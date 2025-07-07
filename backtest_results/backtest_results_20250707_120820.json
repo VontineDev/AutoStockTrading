@@ -1,0 +1,858 @@
+{
+  "macd": {
+    "results": {
+      "005930": {
+        "success": true,
+        "total_return": -0.01051573175355466,
+        "sharpe_ratio": -0.89104564848728,
+        "max_drawdown": 0.01497620000000007,
+        "win_rate": 0.25,
+        "total_trades": 8,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "000660": {
+        "success": true,
+        "total_return": 0.04550020000000054,
+        "sharpe_ratio": 3.312602881186356,
+        "max_drawdown": 0.012623122237139484,
+        "win_rate": 0.6428571428571429,
+        "total_trades": 14,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "373220": {
+        "success": true,
+        "total_return": -0.00583540000000014,
+        "sharpe_ratio": -0.9397102798886836,
+        "max_drawdown": 0.01359620000000007,
+        "win_rate": 0.25,
+        "total_trades": 4,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "105560": {
+        "success": true,
+        "total_return": -0.038403200000000304,
+        "sharpe_ratio": -3.739586336008328,
+        "max_drawdown": 0.04559066581388911,
+        "win_rate": 0.14285714285714285,
+        "total_trades": 14,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "005380": {
+        "success": true,
+        "total_return": 0.00784620000000007,
+        "sharpe_ratio": 0.7839488053663655,
+        "max_drawdown": 0.014420408366031342,
+        "win_rate": 0.4444444444444444,
+        "total_trades": 9,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "005935": {
+        "success": true,
+        "total_return": -0.007215400000000256,
+        "sharpe_ratio": -0.8665113581613286,
+        "max_drawdown": 0.013554514446272006,
+        "win_rate": 0.2857142857142857,
+        "total_trades": 7,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "035420": {
+        "success": true,
+        "total_return": 0.021212399999999906,
+        "sharpe_ratio": 2.2984938118910727,
+        "max_drawdown": 0.008650227467937862,
+        "win_rate": 0.6666666666666666,
+        "total_trades": 6,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "068270": {
+        "success": true,
+        "total_return": -0.018741599999999976,
+        "sharpe_ratio": -3.8361401266273556,
+        "max_drawdown": 0.018511599999999975,
+        "win_rate": 0.0,
+        "total_trades": 6,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "000270": {
+        "success": true,
+        "total_return": -0.0027599999999998836,
+        "sharpe_ratio": -0.3383848536737181,
+        "max_drawdown": 0.010213881302685664,
+        "win_rate": 0.3333333333333333,
+        "total_trades": 6,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "034020": {
+        "success": true,
+        "total_return": -0.0620602000000003,
+        "sharpe_ratio": -4.917969582905862,
+        "max_drawdown": 0.0649358961449959,
+        "win_rate": 0.13636363636363635,
+        "total_trades": 22,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "055550": {
+        "success": true,
+        "total_return": 0.00339079999999993,
+        "sharpe_ratio": 0.33738898853556537,
+        "max_drawdown": 0.014483512533185682,
+        "win_rate": 0.4,
+        "total_trades": 10,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "035720": {
+        "success": true,
+        "total_return": -0.04731400000000012,
+        "sharpe_ratio": -4.372883853887902,
+        "max_drawdown": 0.04731400000000012,
+        "win_rate": 0.125,
+        "total_trades": 16,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "005490": {
+        "success": true,
+        "total_return": -0.045014000000000116,
+        "sharpe_ratio": -6.1714627081562385,
+        "max_drawdown": 0.044784000000000115,
+        "win_rate": 0.0,
+        "total_trades": 11,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "011200": {
+        "success": true,
+        "total_return": -0.029492400000000373,
+        "sharpe_ratio": -3.0045859639636494,
+        "max_drawdown": 0.037023200000000304,
+        "win_rate": 0.16666666666666666,
+        "total_trades": 12,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "086790": {
+        "success": true,
+        "total_return": 0.046880199999999955,
+        "sharpe_ratio": 3.6961403960355983,
+        "max_drawdown": 0.004548387998639408,
+        "win_rate": 0.7272727272727273,
+        "total_trades": 11,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "015760": {
+        "success": true,
+        "total_return": -0.025037000000000115,
+        "sharpe_ratio": -2.6395018535331074,
+        "max_drawdown": 0.03232437162218779,
+        "win_rate": 0.18181818181818182,
+        "total_trades": 11,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "042660": {
+        "success": true,
+        "total_return": -0.011670800000000047,
+        "sharpe_ratio": -1.3580823476969268,
+        "max_drawdown": 0.026335741594401895,
+        "win_rate": 0.25,
+        "total_trades": 8,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "009540": {
+        "success": true,
+        "total_return": -0.015810799999999813,
+        "sharpe_ratio": -1.1848857817736878,
+        "max_drawdown": 0.02972240000000014,
+        "win_rate": 0.29411764705882354,
+        "total_trades": 17,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "064350": {
+        "success": true,
+        "total_return": -0.0545294000000006,
+        "sharpe_ratio": -3.980188812175939,
+        "max_drawdown": 0.06229020000000065,
+        "win_rate": 0.17391304347826086,
+        "total_trades": 23,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "051910": {
+        "success": true,
+        "total_return": -0.03256780000000028,
+        "sharpe_ratio": -3.8648205254878807,
+        "max_drawdown": 0.03256780000000028,
+        "win_rate": 0.1,
+        "total_trades": 10,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      }
+    },
+    "performance_stats": {
+      "total_symbols": 20,
+      "successful_backtests": 20,
+      "failed_backtests": 0,
+      "total_time": 2.4140737056732178,
+      "avg_time_per_symbol": 0.12070368528366089,
+      "cache_hits": 0
+    },
+    "total_time": 2.5191283226013184,
+    "success_rate": 100.0
+  },
+  "rsi": {
+    "results": {
+      "005930": {
+        "success": true,
+        "total_return": 0,
+        "sharpe_ratio": 0,
+        "max_drawdown": 0,
+        "win_rate": 0,
+        "total_trades": 0,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "000660": {
+        "success": true,
+        "total_return": 0,
+        "sharpe_ratio": 0,
+        "max_drawdown": 0,
+        "win_rate": 0,
+        "total_trades": 0,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "373220": {
+        "success": true,
+        "total_return": 0,
+        "sharpe_ratio": 0,
+        "max_drawdown": 0,
+        "win_rate": 0,
+        "total_trades": 0,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "105560": {
+        "success": true,
+        "total_return": 0,
+        "sharpe_ratio": 0,
+        "max_drawdown": 0,
+        "win_rate": 0,
+        "total_trades": 0,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "005380": {
+        "success": true,
+        "total_return": 0,
+        "sharpe_ratio": 0,
+        "max_drawdown": 0,
+        "win_rate": 0,
+        "total_trades": 0,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "005935": {
+        "success": true,
+        "total_return": 0,
+        "sharpe_ratio": 0,
+        "max_drawdown": 0,
+        "win_rate": 0,
+        "total_trades": 0,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "035420": {
+        "success": true,
+        "total_return": 0,
+        "sharpe_ratio": 0,
+        "max_drawdown": 0,
+        "win_rate": 0,
+        "total_trades": 0,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "068270": {
+        "success": true,
+        "total_return": 0,
+        "sharpe_ratio": 0,
+        "max_drawdown": 0,
+        "win_rate": 0,
+        "total_trades": 0,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "000270": {
+        "success": true,
+        "total_return": 0,
+        "sharpe_ratio": 0,
+        "max_drawdown": 0,
+        "win_rate": 0,
+        "total_trades": 0,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "034020": {
+        "success": true,
+        "total_return": 0,
+        "sharpe_ratio": 0,
+        "max_drawdown": 0,
+        "win_rate": 0,
+        "total_trades": 0,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "055550": {
+        "success": true,
+        "total_return": 0,
+        "sharpe_ratio": 0,
+        "max_drawdown": 0,
+        "win_rate": 0,
+        "total_trades": 0,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "035720": {
+        "success": true,
+        "total_return": 0,
+        "sharpe_ratio": 0,
+        "max_drawdown": 0,
+        "win_rate": 0,
+        "total_trades": 0,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "005490": {
+        "success": true,
+        "total_return": 0,
+        "sharpe_ratio": 0,
+        "max_drawdown": 0,
+        "win_rate": 0,
+        "total_trades": 0,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "011200": {
+        "success": true,
+        "total_return": 0,
+        "sharpe_ratio": 0,
+        "max_drawdown": 0,
+        "win_rate": 0,
+        "total_trades": 0,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "086790": {
+        "success": true,
+        "total_return": 0,
+        "sharpe_ratio": 0,
+        "max_drawdown": 0,
+        "win_rate": 0,
+        "total_trades": 0,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "015760": {
+        "success": true,
+        "total_return": 0,
+        "sharpe_ratio": 0,
+        "max_drawdown": 0,
+        "win_rate": 0,
+        "total_trades": 0,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "042660": {
+        "success": true,
+        "total_return": 0,
+        "sharpe_ratio": 0,
+        "max_drawdown": 0,
+        "win_rate": 0,
+        "total_trades": 0,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "009540": {
+        "success": true,
+        "total_return": 0.007530800000000047,
+        "sharpe_ratio": 1.731694065123394,
+        "max_drawdown": 0.00023,
+        "win_rate": 1.0,
+        "total_trades": 1,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "064350": {
+        "success": true,
+        "total_return": 0,
+        "sharpe_ratio": 0,
+        "max_drawdown": 0,
+        "win_rate": 0,
+        "total_trades": 0,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "051910": {
+        "success": true,
+        "total_return": 0,
+        "sharpe_ratio": 0,
+        "max_drawdown": 0,
+        "win_rate": 0,
+        "total_trades": 0,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      }
+    },
+    "performance_stats": {
+      "total_symbols": 20,
+      "successful_backtests": 20,
+      "failed_backtests": 0,
+      "total_time": 2.4140737056732178,
+      "avg_time_per_symbol": 0.12070368528366089,
+      "cache_hits": 0
+    },
+    "total_time": 2.31638240814209,
+    "success_rate": 100.0
+  },
+  "bollinger": {
+    "results": {
+      "005930": {
+        "success": true,
+        "total_return": 0.015547872368420824,
+        "sharpe_ratio": 1.761023868419597,
+        "max_drawdown": 0.004685400000000024,
+        "win_rate": 0.6,
+        "total_trades": 5,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "000660": {
+        "success": true,
+        "total_return": 0.012239315403423039,
+        "sharpe_ratio": 1.7523786985916436,
+        "max_drawdown": 0.00023,
+        "win_rate": 1.0,
+        "total_trades": 1,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "373220": {
+        "success": true,
+        "total_return": 0.007014387755102013,
+        "sharpe_ratio": 1.727766953406892,
+        "max_drawdown": 0.00023,
+        "win_rate": 1.0,
+        "total_trades": 1,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "105560": {
+        "success": true,
+        "total_return": 0.016021016020494747,
+        "sharpe_ratio": 2.2536206963231735,
+        "max_drawdown": 0.00023,
+        "win_rate": 1.0,
+        "total_trades": 2,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "005380": {
+        "success": true,
+        "total_return": 0.011255241772151784,
+        "sharpe_ratio": 1.6461457259759797,
+        "max_drawdown": 0.004685400000000024,
+        "win_rate": 0.6666666666666666,
+        "total_trades": 3,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "005935": {
+        "success": true,
+        "total_return": 0.013004740521518048,
+        "sharpe_ratio": 1.3773419408091376,
+        "max_drawdown": 0.011645255938428424,
+        "win_rate": 0.6,
+        "total_trades": 5,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "035420": {
+        "success": true,
+        "total_return": -0.004151669797924696,
+        "sharpe_ratio": -1.7345967139719058,
+        "max_drawdown": 0.004685400000000024,
+        "win_rate": 0.5,
+        "total_trades": 2,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "068270": {
+        "success": true,
+        "total_return": -0.008910800000000047,
+        "sharpe_ratio": -2.680053582364315,
+        "max_drawdown": 0.008910800000000047,
+        "win_rate": 0.0,
+        "total_trades": 2,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "000270": {
+        "success": true,
+        "total_return": 0.0031396049950049494,
+        "sharpe_ratio": 0.7618789554459973,
+        "max_drawdown": 0.004643364286452524,
+        "win_rate": 0.3333333333333333,
+        "total_trades": 3,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "034020": {
+        "success": true,
+        "total_return": -0.008910800000000047,
+        "sharpe_ratio": -2.54194913917146,
+        "max_drawdown": 0.008910800000000047,
+        "win_rate": 0.0,
+        "total_trades": 2,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "055550": {
+        "success": true,
+        "total_return": 0.016621726742301602,
+        "sharpe_ratio": 2.243131914894211,
+        "max_drawdown": 0.004615877499454243,
+        "win_rate": 0.75,
+        "total_trades": 4,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "035720": {
+        "success": true,
+        "total_return": 0.003075399999999907,
+        "sharpe_ratio": 0.636909044471839,
+        "max_drawdown": 0.004455400000000023,
+        "win_rate": 0.5,
+        "total_trades": 2,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "005490": {
+        "success": true,
+        "total_return": -0.027531480000000098,
+        "sharpe_ratio": -4.632152850084015,
+        "max_drawdown": 0.027531480000000098,
+        "win_rate": 0.0,
+        "total_trades": 6,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "011200": {
+        "success": true,
+        "total_return": -0.0058354000000000236,
+        "sharpe_ratio": -0.9499505580055037,
+        "max_drawdown": 0.013266294191701207,
+        "win_rate": 0.25,
+        "total_trades": 4,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "086790": {
+        "success": true,
+        "total_return": 0.01238235714285716,
+        "sharpe_ratio": 1.7527634423030038,
+        "max_drawdown": 0.00023,
+        "win_rate": 1.0,
+        "total_trades": 1,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "015760": {
+        "success": true,
+        "total_return": -0.004921579510022304,
+        "sharpe_ratio": -1.1485855664488271,
+        "max_drawdown": 0.004921579510022304,
+        "win_rate": 0.3333333333333333,
+        "total_trades": 3,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "042660": {
+        "success": true,
+        "total_return": -0.010290800000000046,
+        "sharpe_ratio": -1.5950000895059249,
+        "max_drawdown": 0.017688392255601607,
+        "win_rate": 0.2,
+        "total_trades": 5,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "009540": {
+        "success": true,
+        "total_return": 0.015061600000000093,
+        "sharpe_ratio": 2.541937293529706,
+        "max_drawdown": 0,
+        "win_rate": 1.0,
+        "total_trades": 2,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "064350": {
+        "success": true,
+        "total_return": -0.004455400000000023,
+        "sharpe_ratio": -1.7860216733627616,
+        "max_drawdown": 0.004455400000000023,
+        "win_rate": 0.0,
+        "total_trades": 1,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "051910": {
+        "success": true,
+        "total_return": -0.01336620000000007,
+        "sharpe_ratio": -3.2453538786939378,
+        "max_drawdown": 0.01336620000000007,
+        "win_rate": 0.0,
+        "total_trades": 3,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      }
+    },
+    "performance_stats": {
+      "total_symbols": 20,
+      "successful_backtests": 20,
+      "failed_backtests": 0,
+      "total_time": 2.4140737056732178,
+      "avg_time_per_symbol": 0.12070368528366089,
+      "cache_hits": 0
+    },
+    "total_time": 2.4803237915039062,
+    "success_rate": 100.0
+  },
+  "ma": {
+    "results": {
+      "005930": {
+        "success": true,
+        "total_return": 0.003075399999999907,
+        "sharpe_ratio": 0.6150699554770729,
+        "max_drawdown": 0.004685400000000024,
+        "win_rate": 0.5,
+        "total_trades": 2,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "000660": {
+        "success": true,
+        "total_return": 0.010606200000000069,
+        "sharpe_ratio": 1.6068890363863042,
+        "max_drawdown": 0.004389290265733649,
+        "win_rate": 0.6666666666666666,
+        "total_trades": 3,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "373220": {
+        "success": true,
+        "total_return": -0.0058354000000000236,
+        "sharpe_ratio": -0.9500206355599176,
+        "max_drawdown": 0.013266294191701207,
+        "win_rate": 0.25,
+        "total_trades": 4,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "105560": {
+        "success": true,
+        "total_return": -0.0027600000000001165,
+        "sharpe_ratio": -0.33338319642761255,
+        "max_drawdown": 0.009112774573078002,
+        "win_rate": 0.3333333333333333,
+        "total_trades": 6,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "005380": {
+        "success": true,
+        "total_return": -0.0013800000000001164,
+        "sharpe_ratio": -0.23571799120257889,
+        "max_drawdown": 0.004685400000000024,
+        "win_rate": 0.3333333333333333,
+        "total_trades": 3,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "005935": {
+        "success": true,
+        "total_return": -0.010290800000000046,
+        "sharpe_ratio": -1.5648689630726507,
+        "max_drawdown": 0.018051600000000095,
+        "win_rate": 0.2,
+        "total_trades": 5,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "035420": {
+        "success": true,
+        "total_return": -0.004455400000000023,
+        "sharpe_ratio": -1.7860216733627616,
+        "max_drawdown": 0.004455400000000023,
+        "win_rate": 0.0,
+        "total_trades": 1,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "068270": {
+        "success": true,
+        "total_return": 0.0030754000000000233,
+        "sharpe_ratio": 0.6255386034760714,
+        "max_drawdown": 0.004422098063900402,
+        "win_rate": 0.5,
+        "total_trades": 2,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "000270": {
+        "success": true,
+        "total_return": -0.01336620000000007,
+        "sharpe_ratio": -3.1878957409569115,
+        "max_drawdown": 0.01336620000000007,
+        "win_rate": 0.0,
+        "total_trades": 3,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "034020": {
+        "success": true,
+        "total_return": 0.007530800000000047,
+        "sharpe_ratio": 1.7316940651233939,
+        "max_drawdown": 0.00023,
+        "win_rate": 1.0,
+        "total_trades": 1,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "055550": {
+        "success": true,
+        "total_return": 0.018137,
+        "sharpe_ratio": 2.303216943579886,
+        "max_drawdown": 0.004615877499454243,
+        "win_rate": 0.75,
+        "total_trades": 4,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "035720": {
+        "success": true,
+        "total_return": -0.004455399999999907,
+        "sharpe_ratio": -1.7860216733627616,
+        "max_drawdown": 0.004455399999999907,
+        "win_rate": 0.0,
+        "total_trades": 1,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "005490": {
+        "success": true,
+        "total_return": -0.01336620000000007,
+        "sharpe_ratio": -3.1873995214209456,
+        "max_drawdown": 0.01336620000000007,
+        "win_rate": 0.0,
+        "total_trades": 3,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "011200": {
+        "success": true,
+        "total_return": 0.0016953999999999069,
+        "sharpe_ratio": 0.2380199650759991,
+        "max_drawdown": 0.009140800000000046,
+        "win_rate": 0.4,
+        "total_trades": 5,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "086790": {
+        "success": true,
+        "total_return": 0.007530800000000047,
+        "sharpe_ratio": 1.7316940651233939,
+        "max_drawdown": 0.00023,
+        "win_rate": 1.0,
+        "total_trades": 1,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "015760": {
+        "success": true,
+        "total_return": -0.010290800000000162,
+        "sharpe_ratio": -1.5570093728800831,
+        "max_drawdown": 0.013325219619582008,
+        "win_rate": 0.2,
+        "total_trades": 5,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "042660": {
+        "success": true,
+        "total_return": -0.01336620000000007,
+        "sharpe_ratio": -3.1873995214209456,
+        "max_drawdown": 0.01336620000000007,
+        "win_rate": 0.0,
+        "total_trades": 3,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "009540": {
+        "success": true,
+        "total_return": -0.004455400000000023,
+        "sharpe_ratio": -1.7860216733627616,
+        "max_drawdown": 0.004455400000000023,
+        "win_rate": 0.0,
+        "total_trades": 1,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "064350": {
+        "success": true,
+        "total_return": 0.010606199999999953,
+        "sharpe_ratio": 1.6398899890386924,
+        "max_drawdown": 0.004455400000000023,
+        "win_rate": 0.6666666666666666,
+        "total_trades": 3,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      },
+      "051910": {
+        "success": true,
+        "total_return": -0.008910800000000047,
+        "sharpe_ratio": -2.6085854432954534,
+        "max_drawdown": 0.008910800000000047,
+        "win_rate": 0.0,
+        "total_trades": 2,
+        "final_portfolio_value": 0,
+        "data_points": 86
+      }
+    },
+    "performance_stats": {
+      "total_symbols": 20,
+      "successful_backtests": 20,
+      "failed_backtests": 0,
+      "total_time": 2.4140737056732178,
+      "avg_time_per_symbol": 0.12070368528366089,
+      "cache_hits": 0
+    },
+    "total_time": 2.4140737056732178,
+    "success_rate": 100.0
+  }
+}

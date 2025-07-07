@@ -1,6 +1,37 @@
-streamlit
-requests
-pandas
-numpy
-plotly
-python-dotenv 
+# 웹 UI 및 기본 프레임워크
+streamlit>=1.28.0
+requests>=2.31.0
+
+# 데이터 분석 및 처리
+pandas>=2.1.0
+numpy>=1.24.0
+
+# 기술적 분석
+TA-Lib>=0.4.25
+pykrx>=1.0.51
+
+# 시각화
+plotly>=5.17.0
+
+# 환경 관리
+python-dotenv>=1.0.0
+PyYAML>=6.0  # YAML 설정 파일 지원
+
+# 데이터베이스
+# sqlite3 - Python 내장 모듈 (별도 설치 불필요)
+
+# 테스트
+pytest>=7.4.0
+
+# 네트워킹 (실시간 데이터용)
+websockets>=11.0.0
+
+# 수학/통계 (백테스팅용)
+scipy>=1.11.0
+
+# 로깅 및 유틸리티
+tqdm>=4.66.0  # 진행률 표시
+loguru>=0.7.0  # 향상된 로깅
+
+# 시스템 리소스 모니터링 (성능 최적화용)
+psutil>=7.0.0  # CPU, 메모리 모니터링

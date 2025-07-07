@@ -1,28 +1,30 @@
 # 🚀 키움 API 알고리즘 매매 프로그램
 
 > **2주 완성 목표의 1인 개발 프로젝트**  
-> Python 3.13 + Streamlit + 키움 REST API를 활용한 웹 기반 자동매매 시스템
+> Python 3.13 + TA-Lib + Streamlit을 활용한 스윙 트레이딩 자동매매 시스템
 
 ## 📋 프로젝트 개요
 
-키움증권의 차세대 REST API를 활용하여 웹 기반 알고리즘 매매 프로그램을 개발합니다. 별도 프로그램 설치 없이 브라우저에서 실시간 시세 확인, 매매 전략 설정, 포트폴리오 관리가 가능한 올인원 솔루션을 제공합니다.
+100만원 규모의 스윙 트레이딩을 위한 자동매매 프로그램입니다. TA-Lib 기반의 검증된 기술적 분석 지표를 활용하여 복잡한 지표 구현 없이도 효과적인 매매 전략을 구현할 수 있습니다. pykrx를 통한 데이터 수집과 키움 API를 통한 실제 매매를 결합한 실용적인 솔루션입니다.
 
 ### 🎯 주요 특징
 
+- **TA-Lib 기반**: 검증된 95% 이상의 기술적 지표 활용
+- **스윙 트레이딩**: 일봉/시간봉 기반의 중단기 매매 전략
 - **웹 기반**: Windows/Mac/Linux 모든 운영체제 지원
-- **REST API**: JSON 기반의 간단한 데이터 처리
-- **실시간 모니터링**: 웹소켓을 통한 실시간 시세 및 체결 정보
-- **다양한 전략**: 이동평균, 볼린저 밴드, RSI 등 기술적 지표 활용
-- **백테스팅**: 과거 데이터를 통한 전략 검증 및 최적화
+- **하이브리드 데이터**: pykrx(과거 데이터) + 키움 API(실시간)
+- **매개변수 최적화**: 백테스팅을 통한 지표 파라미터 자동 최적화
 - **직관적 UI**: Streamlit 기반의 사용자 친화적 인터페이스
 
 ## 🛠️ 기술 스택
 
 ### 핵심 기술
-- **Python 3.13**: 최신 안정 버전 (2024.10 릴리즈)
-- **키움 REST API**: 차세대 웹 기반 API (2025.3 출시)
+- **Python 3.13**: 최신 안정 버전
+- **TA-Lib**: 150+ 기술적 분석 지표 라이브러리
+- **pykrx**: 국내 주식 데이터 수집 (충분한 과거 데이터)
+- **키움 REST API**: 실시간 데이터 및 주문 처리
 - **Streamlit**: 빠른 웹 UI 개발 프레임워크
-- **SQLite**: 매매 이력 및 설정 데이터 저장
+- **SQLite**: OHLCV 데이터 및 매매 이력 저장
 
 ### 데이터 분석 및 시각화
 - **pandas**: 데이터 분석 및 처리
@@ -53,30 +55,47 @@ AutoStockTrading/
 │   │   ├── 📄 kiwoom_client.py     # REST API 클라이언트
 │   │   ├── 📄 auth.py              # OAuth 인증
 │   │   └── 📄 websocket_client.py  # 실시간 데이터
-│   ├── 📁 strategies/              # 매매 전략
+│   ├── 📁 strategies/              # 매매 전략 (TA-Lib 기반)
 │   │   ├── 📄 __init__.py
-│   │   ├── 📄 moving_average.py    # 이동평균 전략
-│   │   ├── 📄 bollinger_band.py    # 볼린저 밴드
-│   │   └── 📄 rsi_strategy.py      # RSI 전략
+│   │   ├── 📄 base_strategy.py     # 전략 기본 클래스
+│   │   ├── 📄 moving_average_strategy.py # 이동평균 전략
+│   │   ├── 📄 bollinger_band_strategy.py # 볼린저 밴드 전략
+│   │   ├── 📄 rsi_strategy.py      # RSI 전략
+│   │   └── 📄 macd_strategy.py     # MACD 전략
 │   ├── 📁 data/                    # 데이터 처리
 │   │   ├── 📄 __init__.py
-│   │   ├── 📄 collector.py         # 데이터 수집
+│   │   ├── 📄 collector.py         # pykrx 데이터 수집
 │   │   ├── 📄 processor.py         # 데이터 전처리
-│   │   └── 📄 database.py          # SQLite 관리
+│   │   ├── 📄 database.py          # SQLite 관리
+│   │   ├── 📄 indicators.py        # TA-Lib 지표 계산
+│   │   ├── 📄 indicator.py         # 지표 헬퍼 유틸리티
+│   │   ├── 📄 stock_filter.py      # 종목 필터링 시스템
+│   │   ├── 📄 trading_calendar.py  # 거래일 관리
+│   │   └── 📄 stock_data_manager.py # 주식 데이터 관리
 │   ├── 📁 trading/                 # 매매 관련
 │   │   ├── 📄 __init__.py
 │   │   ├── 📄 order_manager.py     # 주문 관리
 │   │   ├── 📄 portfolio.py         # 포트폴리오 관리
-│   │   └── 📄 risk_manager.py      # 위험 관리
+│   │   ├── 📄 risk_manager.py      # 위험 관리
+│   │   ├── 📄 backtest.py          # 백테스팅 엔진
+│   │   ├── 📄 parallel_backtest.py # 병렬 백테스팅 엔진
+│   │   ├── 📄 cache_manager.py     # 백테스팅 캐시 시스템
+│   │   ├── 📄 batch_optimizer.py   # 배치 처리 최적화
+│   │   └── 📄 optimized_backtest.py # 통합 최적화 백테스팅
 │   └── 📁 ui/                      # Streamlit UI
 │       ├── 📄 __init__.py
 │       ├── 📄 dashboard.py         # 메인 대시보드
 │       ├── 📄 components.py        # UI 컴포넌트
-│       └── 📄 charts.py            # 차트 및 시각화
+│       ├── 📄 charts.py            # 차트 및 시각화
+│       └── 📄 optimization.py      # 매개변수 최적화 UI
 ├── 📁 tests/                       # 테스트 코드
 ├── 📁 data/                        # 데이터 파일
-├── 📁 docs/                        # 문서
+├── 📁 docs/                        # 문서 (TA-Lib 가이드 포함)
 ├── 📁 scripts/                     # 유틸리티 스크립트
+│   ├── 📄 setup.py                 # 초기 설정
+│   ├── 📄 backup.py                # 데이터 백업
+│   ├── 📄 data_update.py           # 데이터 업데이트
+│   └── 📄 parameter_optimization.py # 매개변수 최적화
 └── 📁 streamlit_app/               # Streamlit 앱
 ```
 
@@ -84,8 +103,9 @@ AutoStockTrading/
 
 ### 필수 요구사항
 - Python 3.13 이상
-- 키움증권 계좌 (모의투자 계좌 포함)
-- 키움 REST API 개발자 계정
+- TA-Lib 라이브러리 (Windows: whl 파일 설치 필요)
+- 키움증권 계좌 (실제 매매용, 모의투자 계좌도 가능)
+- 키움 REST API 개발자 계정 (선택사항)
 
 ### 설치 과정
 
@@ -104,135 +124,221 @@ AutoStockTrading/
    source venv/bin/activate
    ```
 
-3. **필수 패키지 설치**
+3. **TA-Lib 설치 (Windows)**
+   ```bash
+   # Windows용 whl 파일 다운로드 후 설치
+   pip install TA_Lib-0.4.25-cp313-cp313-win_amd64.whl
+   ```
+
+4. **필수 패키지 설치**
    ```bash
    pip install -r requirements.txt
    ```
 
-4. **환경변수 설정**
+5. **환경변수 설정**
    ```bash
-   # .env 파일 생성 및 API 키 설정
+   # .env 파일 생성 및 API 키 설정 (선택사항)
    cp .env.example .env
-   # .env 파일에 키움 API 키와 시크릿 입력
+   # .env 파일에 키움 API 키와 시크릿 입력 (실시간 데이터용)
    ```
 
-5. **Streamlit 앱 실행**
+6. **Streamlit 앱 실행**
    ```bash
    streamlit run streamlit_app/app.py
    ```
 
 ## 📊 주요 기능
 
-### 1. 실시간 모니터링
+### 1. 데이터 수집 및 저장
+- **pykrx 기반**: 충분한 과거 OHLCV 데이터 수집
+- **자동 업데이트**: 일정 주기로 최신 데이터 자동 수집
+- **SQLite 저장**: 경량화된 로컬 데이터베이스
+- **데이터 검증**: 결측치 처리 및 이상치 탐지
+
+### 2. TA-Lib 기술적 분석
+- **추세 지표**: SMA, EMA, MACD, ADX, Parabolic SAR, 볼린저 밴드
+- **모멘텀 지표**: RSI, Stochastic, Williams %R, ROC, CCI, MFI
+- **변동성 지표**: ATR, 볼린저 밴드, Donchian Channel
+- **거래량 지표**: OBV, A/D Line, ADOSC
+- **패턴 인식**: 150+ 캔들스틱 패턴 자동 감지
+
+### 3. 매개변수 최적화
+- **백테스팅 기반**: 과거 데이터를 통한 최적 파라미터 탐색
+- **그리드 서치**: 지표별 최적 기간 및 임계값 자동 탐색
+- **성과 지표**: 수익률, 샤프 비율, 최대 낙폭 기반 평가
+- **오버피팅 방지**: 아웃오브샘플 테스트로 검증
+
+### 4. 스윙 트레이딩 전략
+- **권장 설정**: 스윙 트레이딩에 최적화된 기본 파라미터
+- **다중 시간프레임**: 일봉 위주, 시간봉 보조 활용
+- **리스크 관리**: 100만원 규모에 적합한 포지션 사이징
+- **분산투자**: 상관관계 낮은 종목 조합
+
+### 5. 실시간 모니터링
 - 실시간 시세 차트 (Plotly 인터랙티브 차트)
 - 포트폴리오 현황 대시보드
 - 매매 신호 실시간 알림
 - 체결 내역 모니터링
 
-### 2. 매매 전략
-- **이동평균**: 단기/장기 이동평균 교차 전략
-- **볼린저 밴드**: 표준편차 기반 매매 신호
-- **RSI**: 과매수/과매도 구간 활용
-- **커스텀 전략**: 사용자 정의 전략 개발 가능
-
-### 3. 위험 관리
-- 손절/익절 자동 설정
-- 포지션 사이즈 관리
-- 최대 손실 한도 설정
-- 일일 매매 한도 관리
-
-### 4. 백테스팅
-- 과거 데이터 기반 전략 검증
-- 수익률, 최대 낙폭, 샤프 비율 계산
-- 파라미터 최적화
-- 성과 분석 리포트
-
 ## 📈 개발 로드맵
 
-### 1주차: 기반 구축 및 API 연동
-- **1일**: 환경 설정 & 키움 API 설치
-- **2일**: API 연결 테스트
-- **3일**: 데이터 수집 모듈
-- **4일**: 기본 알고리즘 구현
-- **5일**: 주문 관리 시스템
-- **6-7일**: 백테스팅 & 검증
+### 1주차: 데이터 기반 구축 및 TA-Lib 구현
+- **1일**: 환경 설정 & TA-Lib 설치
+- **2일**: pykrx 데이터 수집 모듈 구현
+- **3일**: SQLite 데이터베이스 구축
+- **4일**: TA-Lib 기본 지표 구현
+- **5일**: 백테스팅 시스템 개발
+- **6-7일**: 매개변수 최적화 시스템
 
-### 2주차: UI 개발 및 최종 완성
+### 2주차: UI 개발 및 실전 연동
 - **8일**: Streamlit UI 기본 구조
-- **9일**: 거래 관리 UI
-- **10일**: 전략 설정 UI
-- **11일**: 모니터링 & 알림
+- **9일**: 전략 설정 및 백테스팅 UI
+- **10일**: 실시간 모니터링 UI
+- **11일**: 키움 API 실전 연동 (선택)
 - **12일**: 최적화 & 테스트
-- **13-14일**: 실전 배포 & 런칭
+- **13-14일**: 실전 검증 & 런칭
 
-## 🔧 코딩 규칙
+## 💡 TA-Lib 활용 예시
 
-### 네이밍 컨벤션
-- **클래스**: PascalCase (예: `KiwoomApiClient`, `TradingStrategy`)
-- **함수/변수**: snake_case (예: `get_stock_price`, `current_price`)
-- **상수**: UPPER_SNAKE_CASE (예: `MAX_RETRY_COUNT`, `API_TIMEOUT`)
-- **파일명**: snake_case (예: `kiwoom_client.py`, `trading_strategy.py`)
-
-### 필수 사항
-- 모든 함수에 타입 힌트 적용
-- API 키 하드코딩 절대 금지 (환경변수 사용)
-- 모든 API 호출에 예외 처리 및 재시도 로직
-- logging 모듈 사용 (print 금지)
-- 테스트 커버리지 80% 이상 목표
-
-## 🛡️ 보안 가이드
-
-### API 키 관리
+### 기본 지표 구현
 ```python
-import os
-from dotenv import load_dotenv
+import talib
+import pandas as pd
 
-load_dotenv()
-
-API_KEY = os.getenv('KIWOOM_API_KEY')
-API_SECRET = os.getenv('KIWOOM_API_SECRET')
+def calculate_indicators(df: pd.DataFrame) -> pd.DataFrame:
+    """OHLCV 데이터로 모든 주요 지표 계산"""
+    
+    # 추세 지표
+    df['SMA_20'] = talib.SMA(df['close'], timeperiod=20)
+    df['EMA_12'] = talib.EMA(df['close'], timeperiod=12)
+    df['MACD'], df['MACD_signal'], df['MACD_hist'] = talib.MACD(
+        df['close'], fastperiod=12, slowperiod=26, signalperiod=9
+    )
+    
+    # 모멘텀 지표
+    df['RSI'] = talib.RSI(df['close'], timeperiod=14)
+    df['STOCH_K'], df['STOCH_D'] = talib.STOCH(
+        df['high'], df['low'], df['close'], 
+        fastk_period=14, slowk_period=3, slowd_period=3
+    )
+    
+    # 변동성 지표
+    df['ATR'] = talib.ATR(df['high'], df['low'], df['close'], timeperiod=14)
+    df['BB_upper'], df['BB_middle'], df['BB_lower'] = talib.BBANDS(
+        df['close'], timeperiod=20, nbdevup=2, nbdevdn=2
+    )
+    
+    return df
 ```
 
-### 환경변수 설정 (.env)
-```env
-KIWOOM_API_KEY=your_api_key_here
-KIWOOM_API_SECRET=your_api_secret_here
-ACCOUNT_NUMBER=your_account_number_here
+### 매개변수 최적화
+```python
+def optimize_rsi_strategy(data: pd.DataFrame) -> dict:
+    """RSI 전략 매개변수 최적화"""
+    
+    best_params = {'period': 14, 'oversold': 30, 'overbought': 70}
+    best_return = 0
+    
+    for period in range(7, 30):
+        for oversold in range(20, 40, 5):
+            for overbought in range(60, 80, 5):
+                rsi = talib.RSI(data['close'], timeperiod=period)
+                returns = backtest_rsi_strategy(data, rsi, oversold, overbought)
+                
+                if returns > best_return:
+                    best_return = returns
+                    best_params = {
+                        'period': period,
+                        'oversold': oversold, 
+                        'overbought': overbought
+                    }
+    
+    return best_params
 ```
 
-## 📝 사용법
-
-### 기본 실행
-```bash
-# Streamlit 앱 실행
-streamlit run streamlit_app/app.py
-
-# 브라우저에서 http://localhost:8501 접속
+### 스윙 트레이딩 권장 설정
+```python
+# 스윙 트레이딩 최적화 파라미터
+SWING_TRADING_PARAMS = {
+    'RSI': {'period': 14, 'oversold': 30, 'overbought': 70},
+    'MACD': {'fast': 12, 'slow': 26, 'signal': 9},
+    'BB': {'period': 20, 'deviation': 2.0},
+    'STOCH': {'k_period': 14, 'd_period': 3},
+    'ATR': {'period': 14}
+}
 ```
 
-### 매매 전략 설정
-1. 사이드바에서 전략 선택
-2. 파라미터 조정 (이동평균 기간, RSI 임계값 등)
-3. 백테스팅으로 성과 확인
-4. 자동매매 활성화
+## 📚 데이터 및 지표 가이드
 
-### 모니터링
-- 실시간 차트에서 매매 신호 확인
-- 포트폴리오 현황 실시간 업데이트
-- 로그 창에서 매매 내역 모니터링
+### OHLCV 데이터로 사용 가능한 지표 (95% 이상)
+- **추세 분석**: 이동평균선, MACD, ADX, Parabolic SAR
+- **모멘텀 분석**: RSI, Stochastic, Williams %R, CCI
+- **변동성 분석**: 볼린저 밴드, ATR, Donchian Channel
+- **거래량 분석**: OBV, A/D Line, Money Flow Index
+- **패턴 인식**: 150+ 캔들스틱 패턴
 
-## 🧪 테스트
+### 데이터 수집 전략
+```python
+from pykrx import stock
+import pandas as pd
 
-```bash
-# 단위 테스트 실행
-python -m pytest tests/
-
-# 특정 모듈 테스트
-python -m pytest tests/test_api.py
-
-# 커버리지 확인
-python -m pytest --cov=src tests/
+def collect_stock_data(symbol: str, start_date: str, end_date: str) -> pd.DataFrame:
+    """pykrx를 통한 종목별 OHLCV 데이터 수집"""
+    
+    df = stock.get_market_ohlcv(start_date, end_date, symbol)
+    df.columns = ['open', 'high', 'low', 'close', 'volume']
+    df['symbol'] = symbol
+    df.reset_index(inplace=True)
+    df.rename(columns={'날짜': 'date'}, inplace=True)
+    
+    return df
 ```
+
+### SQLite 데이터베이스 스키마
+```sql
+CREATE TABLE stock_data (
+    symbol TEXT,
+    date TEXT,
+    open REAL,
+    high REAL,
+    low REAL,
+    close REAL,
+    volume INTEGER,
+    PRIMARY KEY (symbol, date)
+);
+
+CREATE TABLE indicators (
+    symbol TEXT,
+    date TEXT,
+    rsi REAL,
+    macd REAL,
+    bb_upper REAL,
+    bb_lower REAL,
+    atr REAL,
+    PRIMARY KEY (symbol, date)
+);
+```
+
+## ⚠️ 스윙 트레이딩 주의사항
+
+### 리스크 관리
+- **100만원 규모**: 분산투자 3-5 종목 권장
+- **손절매**: 2-3% 손실 시 자동 손절
+- **포지션 사이징**: 종목당 최대 20-30만원
+- **상관관계**: 서로 다른 섹터 종목 선택
+
+### 백테스팅 중요성
+- **충분한 데이터**: 최소 200-500일 과거 데이터 필요
+- **아웃오브샘플**: 전체 데이터의 20-30%는 검증용으로 분리
+- **과적합 방지**: 너무 복잡한 전략보다 단순한 전략 선호
+- **실전 검증**: 소액으로 실전 테스트 후 본격 투자
+
+### 개발 우선순위
+1. **데이터 수집**: pykrx 기반 OHLCV 데이터 수집 시스템
+2. **TA-Lib 지표**: 기본 기술적 분석 지표 구현
+3. **백테스팅**: 과거 데이터 기반 성과 검증 시스템
+4. **매개변수 최적화**: 그리드 서치 기반 파라미터 최적화
+5. **실전 연동**: 키움 API 연동 (선택사항)
 
 ## 📚 문서
 
@@ -256,9 +362,10 @@ python -m pytest --cov=src tests/
 ## ⚠️ 면책 조항
 
 - 이 프로그램은 교육 및 연구 목적으로 개발되었습니다.
-- 실제 투자에 사용하기 전 충분한 검증과 테스트를 수행하세요.
+- **100만원 규모 스윙 트레이딩**에 최적화되었으며, 대규모 투자에는 부적합할 수 있습니다.
+- TA-Lib 지표는 검증된 라이브러리이지만, 시장 상황에 따라 성과가 달라질 수 있습니다.
+- 실제 투자 전 충분한 백테스팅과 소액 실전 테스트를 권장합니다.
 - 투자 손실에 대한 책임은 사용자에게 있습니다.
-- 키움증권 API 이용약관을 준수해주세요.
 
 ## 🙋‍♂️ 문의
 
@@ -276,3 +383,5 @@ python -m pytest --cov=src tests/
   <strong>🚀 2주 만에 완성하는 알고리즘 매매 시스템 🚀</strong><br>
   Made with ❤️ by AI-Human Collaboration
 </div>
+
+**프로젝트 업데이트**: 2024년 7월 TA-Lib 기반 스윙 트레이딩 시스템으로 구조 개편 완료

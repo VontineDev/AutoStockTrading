@@ -1,250 +1,358 @@
 # 키움 API 알고리즘 매매 프로그램 개발 규칙
 
 ## 프로젝트 개요
-- Python 3.13 기반 키움 REST API 활용
+- Python 3.13 기반 TA-Lib 활용 스윙 트레이딩
+- pykrx를 통한 데이터 수집 + 키움 API 실시간 연동
 - Streamlit을 이용한 웹 UI 개발  
 - 2주 완성 목표의 1인 개발 프로젝트
+- 100만원 규모 스윙 트레이딩에 최적화
 - SQLite 데이터베이스 사용
-- pandas, numpy, plotly 활용
+- pandas, numpy, plotly, TA-Lib 활용
 
-## 필수 라이브러리
-- streamlit: 웹 UI 개발
-- requests: REST API 호출
-- pandas, numpy: 데이터 분석
-- plotly: 차트 시각화
-- python-dotenv: 환경변수 관리
-- sqlite3: 데이터베이스
+## 코드 품질 원칙 (Code Quality Principles)
 
-## 코딩 스타일 규칙
+### 가독성 우선 (Readability First)
+- **명확한 네이밍**: 의미 있는 변수명, 함수명, 클래스명 사용
+  - 클래스: PascalCase (예: `KiwoomApiClient`, `TradingStrategy`)
+  - 함수/변수: snake_case (예: `get_stock_price`, `current_price`)
+  - 상수: UPPER_SNAKE_CASE (예: `MAX_RETRY_COUNT`, `API_TIMEOUT`)
+  - 파일명: snake_case (예: `kiwoom_client.py`, `trading_strategy.py`)
+- **주석과 문서화**: 복잡한 로직과 비즈니스 규칙에 명확한 주석 추가
+- **일관된 코딩 스타일**: 프로젝트 전반에 걸쳐 일관성 유지
 
-### 네이밍 컨벤션
-- 클래스: PascalCase (예: KiwoomApiClient, TradingStrategy)
-- 함수/변수: snake_case (예: get_stock_price, current_price)
-- 상수: UPPER_SNAKE_CASE (예: MAX_RETRY_COUNT, API_TIMEOUT)
-- 파일명: snake_case (예: kiwoom_client.py, trading_strategy.py)
+### 간결성과 명확성 (Simplicity & Clarity)
+- **KISS 원칙**: Keep It Simple, Stupid - 불필요한 복잡성 제거
+- **DRY 원칙**: Don't Repeat Yourself - 중복 코드 제거 및 재사용 가능한 함수/클래스 설계
+- **단일 책임 원칙**: 하나의 함수/클래스는 하나의 명확한 책임만 가짐
 
 ### 타입 힌트 필수
-- 모든 함수 매개변수와 반환값에 타입 힌트 적용
-- from typing import Dict, List, Optional, Union 활용
-- pandas DataFrame은 pd.DataFrame으로 명시
+```python
+from typing import Dict, List, Optional, Union, Tuple
+import pandas as pd
 
-### 디렉토리 구조 준수
-```
-AutoStockTrading/
-├── 📄 index.html                   # 프로젝트 로드맵맵
-├── 📄 README.md                    # 프로젝트 설명
-├── 📄 requirements.txt             # Python 패키지 목록
-├── 📄 .env                         # 환경변수 (API 키 등)
-├── 📄 .gitignore                   # Git 제외 파일 목록
-├── 📄 config.yaml                  # 설정 파일
-│
-├── 📁 src/                         # 메인 소스 코드
-│   ├── 📄 main.py                  # 프로그램 진입점
-│   ├── 📁 api/                     # 키움 API 관련
-│   │   ├── 📄 __init__.py
-│   │   ├── 📄 kiwoom_client.py     # REST API 클라이언트
-│   │   ├── 📄 auth.py              # OAuth 인증
-│   │   └── 📄 websocket_client.py  # 실시간 데이터
-│   │
-│   ├── 📁 strategies/              # 매매 전략
-│   │   ├── 📄 __init__.py
-│   │   ├── 📄 moving_average.py    # 이동평균 전략
-│   │   ├── 📄 bollinger_band.py    # 볼린저 밴드
-│   │   └── 📄 rsi_strategy.py      # RSI 전략
-│   │
-│   ├── 📁 data/                    # 데이터 처리
-│   │   ├── 📄 __init__.py
-│   │   ├── 📄 collector.py         # 데이터 수집
-│   │   ├── 📄 processor.py         # 데이터 전처리
-│   │   └── 📄 database.py          # SQLite 관리
-│   │
-│   ├── 📁 trading/                 # 매매 관련
-│   │   ├── 📄 __init__.py
-│   │   ├── 📄 order_manager.py     # 주문 관리
-│   │   ├── 📄 portfolio.py         # 포트폴리오 관리
-│   │   └── 📄 risk_manager.py      # 위험 관리
-│   │
-│   └── 📁 ui/                      # Streamlit UI
-│       ├── 📄 __init__.py
-│       ├── 📄 dashboard.py         # 메인 대시보드
-│       ├── 📄 components.py        # UI 컴포넌트
-│       └── 📄 charts.py            # 차트 및 시각화
-│
-├── 📁 tests/                       # 테스트 코드
-│   ├── 📄 test_api.py
-│   ├── 📄 test_strategies.py
-│   └── 📄 test_trading.py
-│
-├── 📁 data/                        # 데이터 파일
-│   ├── 📄 trading.db               # SQLite 데이터베이스
-│   ├── 📁 historical/              # 과거 데이터
-│   └── 📁 logs/                    # 로그 파일
-│
-├── 📁 docs/                        # 문서
-│   ├── 📄 api_guide.md            # API 사용법
-│   ├── 📄 strategy_guide.md       # 전략 설명
-│   └── 📄 deployment.md           # 배포 가이드
-│
-├── 📁 scripts/                     # 유틸리티 스크립트
-│   ├── 📄 setup.py                # 초기 설정
-│   ├── 📄 backup.py               # 데이터 백업
-│   └── 📄 github_notion_sync.py   # 🎯 GitHub-Notion 연동
-│
-└── 📁 streamlit_app/               # Streamlit 앱
-    ├── 📄 app.py                   # Streamlit 메인
-    ├── 📄 pages/                   # 페이지별 UI
-    └── 📄 static/                  # 정적 파일
+def calculate_rsi(prices: pd.Series, period: int = 14) -> pd.Series:
+    """RSI 계산 함수"""
+    pass
+
+def get_stock_data(symbol: str, start_date: str) -> Optional[pd.DataFrame]:
+    """주식 데이터 조회"""
+    pass
 ```
 
-## 보안 및 환경 관리
+## 설계 원칙 (Design Principles)
 
-### API 키 관리 (절대 준수)
-- API 키/시크릿 하드코딩 절대 금지
-- 반드시 환경변수(.env) 또는 os.getenv() 사용
-- .env 파일은 .gitignore에 포함
-- 예시: API_KEY = os.getenv('KIWOOM_API_KEY')
+### SOLID 원칙 적용
+- **Single Responsibility**: 각 클래스는 하나의 명확한 책임
+- **Open/Closed**: 확장에는 열려있고 수정에는 닫혀있는 설계
+- **Liskov Substitution**: 상속 관계에서 기본 클래스 대체 가능
+- **Interface Segregation**: 최소한의 인터페이스 분리
+- **Dependency Inversion**: 추상화에 의존, 구체 구현에 의존하지 않음
 
-### 민감한 정보 보호
-- 계좌번호, 비밀번호 등 하드코딩 금지
-- 설정 파일과 환경변수 분리
-- .env.example 파일로 필요한 환경변수 가이드 제공
+### 모듈화와 계층 구조
+```python
+# 예시: 전략 기본 클래스
+from abc import ABC, abstractmethod
 
-## 에러 처리 및 로깅
+class BaseStrategy(ABC):
+    @abstractmethod
+    def generate_signals(self, data: pd.DataFrame) -> pd.Series:
+        """매매 신호 생성"""
+        pass
+    
+    @abstractmethod
+    def calculate_position_size(self, signal: int, portfolio_value: float) -> float:
+        """포지션 크기 계산"""
+        pass
+```
 
-### 예외 처리 필수
-- 모든 API 호출에 try-except 블록 사용
-- 특정 예외 타입별로 구체적인 처리
-- requests.exceptions.RequestException 활용
-- 재시도 로직 구현 (최대 3회)
+## 성능 최적화 원칙 (Performance Principles)
 
-### 로깅 시스템
-- print() 사용 금지, logging 모듈 사용
-- 로깅 레벨 구분: DEBUG, INFO, WARNING, ERROR, CRITICAL
-- 파일과 콘솔 동시 출력
-- 로그 파일은 logs/ 디렉토리에 저장
+### 효율적인 자료구조와 알고리즘
+- **pandas 최적화**: vectorized 연산 사용, apply() 대신 내장 함수 활용
+- **TA-Lib 활용**: 복잡한 기술적 지표는 직접 구현하지 말고 TA-Lib 사용
+- **메모리 관리**: 대용량 데이터 처리 시 청크 단위 처리 및 메모리 해제
 
-### 로깅 예시
+### 캐싱과 최적화
+```python
+from functools import lru_cache
+import sqlite3
+
+@lru_cache(maxsize=128)
+def get_stock_info(symbol: str) -> Dict:
+    """종목 정보 캐싱"""
+    pass
+
+# 데이터베이스 연결 풀링
+class DatabaseManager:
+    def __init__(self):
+        self.connection_pool = {}
+```
+
+## TA-Lib 기반 개발 원칙
+
+### 지표 구현 우선순위
+1. **직접 구현 금지**: 복잡한 기술적 지표는 TA-Lib 사용
+2. **OHLCV 데이터**: 95% 이상의 지표가 OHLCV로 계산 가능
+3. **검증된 라이브러리**: TA-Lib은 업계 표준 기술적 분석 도구
+4. **매개변수 최적화**: 백테스팅을 통한 지표 파라미터 튜닝
+
+### 주요 TA-Lib 지표 카테고리
+- **추세 지표**: SMA, EMA, MACD, ADX, Parabolic SAR, 볼린저 밴드
+- **모멘텀 지표**: RSI, Stochastic, Williams %R, ROC, CCI, MFI
+- **변동성 지표**: ATR, 볼린저 밴드, Donchian Channel
+- **거래량 지표**: OBV, A/D Line, ADOSC
+- **패턴 인식**: 150+ 캔들스틱 패턴
+
+### 스윙 트레이딩 권장 설정
+```python
+# 표준 매개변수 (스윙 트레이딩용)
+SWING_PARAMS = {
+    'RSI': {'period': 14, 'oversold': 30, 'overbought': 70},
+    'MACD': {'fast': 12, 'slow': 26, 'signal': 9},
+    'BB': {'period': 20, 'deviation': 2.0},
+    'STOCH': {'k_period': 14, 'd_period': 3},
+    'ATR': {'period': 14}
+}
+```
+
+## 보안 및 환경 관리 (Security Principles)
+
+### API 키 및 민감정보 관리 (절대 준수)
+```python
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# 올바른 방법
+API_KEY = os.getenv('KIWOOM_API_KEY')
+ACCOUNT_NUMBER = os.getenv('TRADING_ACCOUNT')
+
+# 금지: 하드코딩
+# API_KEY = "your_api_key_here"  # 절대 금지!
+```
+
+### 입력 검증과 최소 권한
+- **모든 사용자 입력 검증**: 종목 코드, 날짜, 수량 등 유효성 검사
+- **SQL 인젝션 방지**: 매개변수화된 쿼리 사용
+- **환경변수 분리**: .env 파일 사용, .gitignore에 포함
+
+## 에러 처리 및 로깅 원칙 (Error Handling)
+
+### 체계적인 예외 처리
 ```python
 import logging
+import requests
+from typing import Optional
 
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('logs/trading.log'),
-        logging.StreamHandler()
-    ]
-)
-```
-
-## API 호출 규칙
-
-### REST API 호출 패턴
-- requests 라이브러리 사용
-- timeout 설정 필수 (기본 30초)
-- JSON 응답 처리
-- HTTP 상태 코드 확인
-- Rate limiting 고려
-
-### 재시도 로직 구현
-```python
-def api_call_with_retry(func, max_retries: int = 3):
+def fetch_stock_data(symbol: str) -> Optional[pd.DataFrame]:
+    """주식 데이터 조회 with 에러 처리"""
+    max_retries = 3
+    
     for attempt in range(max_retries):
         try:
-            return func()
-        except RequestException as e:
-            logging.warning(f"API 호출 실패 (시도 {attempt + 1}/{max_retries}): {e}")
-            if attempt == max_retries - 1:
-                raise
+            # API 호출
+            response = requests.get(f"/api/stocks/{symbol}", timeout=10)
+            response.raise_for_status()
+            return pd.DataFrame(response.json())
+            
+        except requests.exceptions.ConnectionError as e:
+            logging.warning(f"연결 오류 (시도 {attempt + 1}/{max_retries}): {e}")
+        except requests.exceptions.Timeout as e:
+            logging.warning(f"타임아웃 (시도 {attempt + 1}/{max_retries}): {e}")
+        except requests.exceptions.RequestException as e:
+            logging.error(f"API 오류: {e}")
+            break
+        except Exception as e:
+            logging.error(f"예상치 못한 오류: {e}")
+            break
+    
+    return None
 ```
 
-## 데이터 처리 규칙
+### 로깅 시스템 설정
+```python
+import logging
+from datetime import datetime
 
-### pandas 활용
-- DataFrame 컬럼명은 snake_case
-- 시계열 데이터는 datetime 인덱스 사용
-- 메모리 효율을 위한 dtype 최적화
-- 대용량 데이터는 청크 단위 처리
+# 로깅 설정
+def setup_logging():
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        handlers=[
+            logging.FileHandler(f'logs/trading_{datetime.now().strftime("%Y%m%d")}.log', encoding='utf-8'),
+            logging.StreamHandler()
+        ]
+    )
 
-### SQLite 데이터베이스
-- 테이블명과 컬럼명은 snake_case
-- PRIMARY KEY 설정
-- DATETIME 필드는 CURRENT_TIMESTAMP 기본값
-- 인덱스 설정으로 조회 성능 최적화
+# print() 사용 금지, logging 사용
+logger = logging.getLogger(__name__)
+logger.info("프로그램 시작")
+logger.warning("경고 메시지")
+logger.error("오류 발생")
+```
 
-## Streamlit UI 규칙
+## 테스트 원칙 (Testing Principles)
 
-### 컴포넌트 구성
-- 사이드바 활용으로 설정 패널 분리
-- st.session_state로 상태 관리
-- 실시간 데이터는 st.empty()와 while 루프 활용
-- 차트는 plotly 사용
+### 단위 테스트 작성
+```python
+import unittest
+import pandas as pd
+from src.strategies.rsi_strategy import RSIStrategy
 
-### 페이지 구조
-- 메인 대시보드: 포트폴리오 현황
-- 전략 설정: 알고리즘 파라미터 조정
-- 매매 이력: 거래 내역 테이블
-- 로그 모니터링: 실시간 로그 표시
+class TestRSIStrategy(unittest.TestCase):
+    def setUp(self):
+        self.strategy = RSIStrategy()
+        self.sample_data = pd.DataFrame({
+            'close': [100, 102, 101, 103, 105, 104, 106]
+        })
+    
+    def test_rsi_calculation(self):
+        """RSI 계산 테스트"""
+        signals = self.strategy.generate_signals(self.sample_data)
+        self.assertIsInstance(signals, pd.Series)
+        self.assertEqual(len(signals), len(self.sample_data))
+    
+    def test_boundary_conditions(self):
+        """경계값 테스트"""
+        # 빈 데이터
+        empty_data = pd.DataFrame()
+        with self.assertRaises(ValueError):
+            self.strategy.generate_signals(empty_data)
+```
 
-## 매매 전략 개발
+### 백테스팅 검증
+- **아웃오브샘플 테스트**: 전체 데이터의 20-30% 검증용으로 분리
+- **과적합 방지**: 단순한 전략 선호, 매개변수 과도한 최적화 금지
+- **성과 지표**: 수익률, 샤프 비율, 최대 낙폭(MDD) 종합 평가
 
-### 전략 클래스 구조
-- 추상 베이스 클래스 상속
-- buy_signal(), sell_signal() 메서드 구현
-- 파라미터는 __init__에서 설정
-- 백테스팅 지원을 위한 인터페이스 통일
+## 데이터 처리 원칙
 
-### 기술적 지표 계산
-- 이동평균: pandas.rolling() 활용
-- 볼린저 밴드: 표준편차 계산
-- RSI: 상승/하락 폭 기반 계산
-- 모든 지표는 NaN 처리 포함
+### pykrx 기반 데이터 수집
+```python
+import pykrx.stock as stock
+from datetime import datetime, timedelta
 
-## 테스트 및 검증
+def collect_stock_data(symbol: str, days: int = 500) -> pd.DataFrame:
+    """pykrx를 이용한 주식 데이터 수집"""
+    end_date = datetime.now().strftime('%Y%m%d')
+    start_date = (datetime.now() - timedelta(days=days)).strftime('%Y%m%d')
+    
+    try:
+        data = stock.get_market_ohlcv_by_date(start_date, end_date, symbol)
+        return data
+    except Exception as e:
+        logging.error(f"데이터 수집 실패 {symbol}: {e}")
+        return pd.DataFrame()
+```
 
-### 단위 테스트
-- pytest 프레임워크 사용
-- 각 함수별 테스트 케이스 작성
-- Mock 객체로 API 호출 시뮬레이션
-- 테스트 커버리지 80% 이상 목표
+### 데이터베이스 구조
+```sql
+-- 주식 데이터 테이블
+CREATE TABLE stock_data (
+    symbol TEXT NOT NULL,
+    date TEXT NOT NULL,
+    open REAL,
+    high REAL,
+    low REAL,
+    close REAL,
+    volume INTEGER,
+    PRIMARY KEY (symbol, date)
+);
 
-### 백테스팅
-- 과거 데이터로 전략 성과 검증
-- 수익률, 최대 낙폭, 샤프 비율 계산
-- 파라미터 최적화 기능
-- 결과 시각화
+-- 지표 데이터 테이블
+CREATE TABLE indicators (
+    symbol TEXT NOT NULL,
+    date TEXT NOT NULL,
+    rsi REAL,
+    macd REAL,
+    macd_signal REAL,
+    bb_upper REAL,
+    bb_middle REAL,
+    bb_lower REAL,
+    atr REAL,
+    PRIMARY KEY (symbol, date)
+);
+```
 
-## 성능 최적화
+## 필수 라이브러리 및 의존성
+```python
+# requirements.txt 필수 항목
+streamlit>=1.28.0          # 웹 UI 개발
+TA-Lib>=0.4.25            # 기술적 분석 지표
+pykrx>=1.3.0              # 국내 주식 데이터 수집
+pandas>=2.0.0             # 데이터 분석
+numpy>=1.24.0             # 수치 계산
+plotly>=5.15.0            # 차트 시각화
+python-dotenv>=1.0.0      # 환경변수 관리
+requests>=2.31.0          # HTTP 요청
+scipy>=1.11.0             # 수학/통계 계산
+sqlite3                   # 데이터베이스 (Python 내장)
+```
 
-### 메모리 관리
-- 불필요한 DataFrame 복사 방지
-- del 키워드로 메모리 해제
-- 대용량 데이터는 제너레이터 활용
+## 스윙 트레이딩 리스크 관리
 
-### API 호출 최적화
-- 배치 처리로 호출 횟수 최소화
-- 캐싱으로 중복 호출 방지
-- 비동기 처리 (asyncio) 고려
+### 100만원 규모 포트폴리오 관리
+```python
+class RiskManager:
+    def __init__(self, total_capital: float = 1_000_000):
+        self.total_capital = total_capital
+        self.max_stocks = 5  # 최대 5종목 분산투자
+        self.max_position_size = 0.25  # 종목당 최대 25%
+        self.stop_loss_percent = 0.03  # 3% 손절매
+    
+    def calculate_position_size(self, stock_price: float) -> int:
+        """안전한 포지션 크기 계산"""
+        max_investment = self.total_capital * self.max_position_size
+        return int(max_investment // stock_price)
+    
+    def check_stop_loss(self, entry_price: float, current_price: float) -> bool:
+        """손절매 체크"""
+        loss_percent = (entry_price - current_price) / entry_price
+        return loss_percent >= self.stop_loss_percent
+```
+
+## 개발 환경 관리
+
+### 가상환경 필수 사용
+```powershell
+# Windows 환경 설정
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+
+# 가상환경 활성화 확인
+python --version
+pip list
+```
+
+### 프로젝트 구조 (핵심 디렉토리만)
+```
+AutoStockTrading/
+├── src/
+│   ├── api/              # 키움 API 관련
+│   ├── strategies/       # 매매 전략
+│   ├── data/            # 데이터 처리
+│   ├── trading/         # 매매 및 백테스팅
+│   └── ui/              # Streamlit UI
+├── tests/               # 테스트 코드
+├── data/                # 데이터 파일
+├── logs/                # 로그 파일
+├── scripts/             # 유틸리티 스크립트
+└── streamlit_app/       # Streamlit 앱
+```
 
 ## 개발 우선순위
-1. 환경 설정 및 API 연동 (1-2일)
-2. 기본 데이터 수집 및 저장 (3일)
-3. 매매 전략 구현 (4-5일)
-4. Streamlit UI 개발 (8-10일)
-5. 백테스팅 및 최적화 (6-7일, 11-12일)
-6. 실전 테스트 및 배포 (13-14일)
 
-## 금지사항
-- API 키/시크릿 하드코딩
-- print() 사용 (logging 사용)
-- 예외 처리 없는 API 호출
-- 타입 힌트 누락
-- 전역 변수 남용
-- 매직 넘버 사용 (상수로 정의)
+### 1주차: 데이터 기반 구축
+1. **데이터 수집**: pykrx 기반 OHLCV 데이터 수집 시스템
+2. **TA-Lib 지표**: 기본 기술적 분석 지표 구현
+3. **백테스팅**: 과거 데이터 기반 성과 검증 시스템
+4. **매개변수 최적화**: 그리드 서치 기반 파라미터 최적화
 
-## 코드 품질
-- 함수는 단일 책임 원칙 준수
-- 클래스는 응집도 높게 설계
-- 의존성 주입 패턴 활용
-- 설정과 로직 분리
-- 문서화 주석 포함
+### 2주차: UI 및 실전 연동
+5. **Streamlit UI**: 전략 설정 및 백테스팅 인터페이스
+6. **실시간 연동**: 키움 API 연동 (선택사항)
+7. **리스크 관리**: 100만원 규모에 적합한 포지션 관리
+8. **최종 검증**: 소액 실전 테스트

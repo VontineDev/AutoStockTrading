@@ -1,0 +1,5 @@
+﻿strategy,total_return_mean,total_return_median,total_return_std,total_return_max,total_return_min,win_rate_mean,win_rate_median,win_rate_std,win_rate_max,win_rate_min,sharpe_ratio_mean,sharpe_ratio_median,sharpe_ratio_std,sharpe_ratio_max,sharpe_ratio_min,total_trades_sum,total_trades_mean,symbol_count
+BOLLINGER,0.4568,0.2712,1.1254,7.0559,-2.2737,51.1378,50.0,33.7368,100.0,0.0,0.4651,1.1262,2.5465,5.0818,-6.2115,1260,2.9032,434
+MA,-0.1496,-0.3538,1.091,14.596,-3.7436,34.0706,0.0,41.0985,100.0,0.0,-1.0695,-2.542,2.3871,3.6418,-5.2933,576,1.5442,373
+MACD,-0.0596,-0.0478,1.0151,3.4137,-3.9752,45.9536,40.0,34.8751,100.0,0.0,-0.4428,-0.2105,2.6924,4.5148,-6.6154,1245,2.7303,456
+RSI,0.7762,0.7531,1.2953,5.8167,-2.2277,71.8039,100.0,43.7482,100.0,0.0,0.733,2.542,2.6313,3.5832,-6.214,104,1.2235,85

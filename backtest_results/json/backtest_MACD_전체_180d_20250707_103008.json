@@ -1,0 +1,3874 @@
+{
+  "results": {
+    "095570": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "006840": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "027410": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "282330": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "138930": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001460": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001465": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001040": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "079160": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "00104K": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "016610": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000990": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001530": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000210": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000215": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "375500": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "37550L": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "37550K": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "007340": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004840": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "155660": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "069730": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "017860": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "092780": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "017940": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "365550": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "383220": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "007700": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "114090": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "078930": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000120": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "011150": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "011155": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001045": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "097950": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "097955": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000480": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000590": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "012030": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005830": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "006360": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001250": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "007070": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "078935": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "499790": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "012630": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "039570": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "089470": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "294870": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "009540": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "267250": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "267270": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "443060": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "071970": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "010620": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "322000": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "042670": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "267260": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "329180": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "097230": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "014790": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003580": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "204320": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "060980": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "011200": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "035000": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002460": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "487570": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "298050": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "015360": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "175330": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "234080": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001060": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001067": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001065": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "096760": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "105560": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "415640": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "432320": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002380": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "344820": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "009070": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "092220": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003620": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "016380": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001390": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001940": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "025000": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "092230": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000040": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "044450": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "030200": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "033780": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "058850": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "058860": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "093050": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003550": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "034220": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "051900": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "051905": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "079550": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "006260": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "010120": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000680": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "229640": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "108320": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001120": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "108670": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "108675": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "383800": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "38380K": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "023150": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "035420": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "181710": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "400760": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005940": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005945": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "338100": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "034310": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "030190": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "064400": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "373220": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003555": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "032640": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "011070": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "066570": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "066575": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "037560": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "051910": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "051915": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "008260": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004250": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004255": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "456040": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "010060": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "178920": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001340": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005490": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "010950": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "010955": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "034120": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003080": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005090": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001380": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004060": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001770": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002360": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "009160": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "033530": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "123700": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "025530": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "034730": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "011790": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "018670": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001740": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "006120": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "006125": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "210980": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "395400": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "302440": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "326030": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "402340": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "361610": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "100090": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "03473K": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "096770": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "096775": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "475150": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001510": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001515": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "285130": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "28513K": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "017670": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000660": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003570": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "064960": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "100840": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "036530": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005610": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "465770": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "077970": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002820": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "084870": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002710": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "069260": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "007980": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002900": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "024070": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "037270": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "139130": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000500": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000860": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "035250": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "011420": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002100": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "009450": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "267290": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "012320": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000050": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "214390": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "012610": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "009140": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "013580": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "012200": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "012205": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002140": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "010130": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002240": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "009290": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "017040": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "017900": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "037710": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "030610": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "339770": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "007690": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002720": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "083420": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "014530": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "014280": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "014285": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "008870": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002990": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002995": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "011780": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "011785": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "214330": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001210": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "073240": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "092440": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000270": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "024110": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "013700": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004540": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004545": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001260": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "008350": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "008355": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004270": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003920": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003925": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "025860": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005720": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005725": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002350": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002355": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "092790": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "251270": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "090350": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "090355": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000320": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000325": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "006280": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005250": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005257": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004370": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "072710": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "058730": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "030210": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "023590": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "145210": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "483650": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "019680": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "019685": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "006370": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "008060": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "00806K": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "353200": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "35320K": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000490": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005750": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "006570": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001680": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001685": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "084690": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "084695": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "128820": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "117580": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "016710": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003540": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003547": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "024890": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002880": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "012800": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "015230": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001070": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "006650": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001440": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "084010": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001790": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001795": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001130": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003490": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003495": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005880": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003830": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "016090": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "069460": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "475560": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "192080": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "012510": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003545": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "009190": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "014160": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "047040": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003090": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "069620": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000430": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "006340": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "006345": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003220": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004830": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004835": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "145720": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002150": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "460850": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "460860": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001230": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "023450": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004140": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "007590": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005960": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005965": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "026960": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "102260": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000640": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "170900": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "028100": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001520": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001527": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "084670": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "082640": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001525": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "008970": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "049770": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "018500": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "006040": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "030720": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "014820": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "014825": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "111380": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "163560": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004890": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002690": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000020": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000150": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000157": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "454910": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "241560": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "034020": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000155": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "336260": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "33626K": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "33626L": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "016740": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "192650": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "024090": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003160": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "092200": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "377190": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "013570": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "024900": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "210540": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "032350": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "089860": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "330590": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000400": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "023530": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "020150": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "280360": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "286940": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "088980": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "094800": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "138040": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "090370": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "118000": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "017180": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "009900": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "012690": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005360": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "070960": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "009680": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "009580": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "009200": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "033920": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "008420": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "007120": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "396690": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "357250": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "085620": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "006800": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004000": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004990": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "00499K": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005300": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005305": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "011170": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "071840": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "027740": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "357430": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001080": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "00680K": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "006805": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "081660": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002840": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "268280": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "107590": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "134380": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003650": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "377740": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003610": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002070": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "100220": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "090460": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005180": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003960": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "008040": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "007160": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "014710": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "006090": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "062040": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "035150": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "007210": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002760": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003850": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000890": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003000": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001270": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001275": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "026940": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "011390": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "028050": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "448730": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "006400": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "006405": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "006660": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "028260": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "02826K": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "207940": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "032830": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "018260": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "009150": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "009155": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005930": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005935": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001360": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "010140": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "016360": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "068290": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "029780": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000810": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000815": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "006110": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "145990": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "145995": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003230": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002170": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "272550": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000070": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000075": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003720": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002810": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005680": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "023000": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002450": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004440": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000520": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "009770": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005500": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004690": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "010960": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004450": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "009470": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "011230": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001820": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000390": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001290": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "041650": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "075180": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "007540": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "248170": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "007860": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "200880": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "017390": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "031210": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004410": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004415": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "021050": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "008490": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "136490": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "014910": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "014915": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004980": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004985": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "011300": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000180": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002420": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004360": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004365": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004490": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001430": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "306200": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003030": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "019440": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "058650": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "013000": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "021820": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "067830": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "075580": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "068270": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "336370": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "016590": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "029530": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004970": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "011930": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005390": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004170": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "035510": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "031430": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "031440": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "006880": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "33637K": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "33637L": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "248070": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004430": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "017550": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "126720": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "053210": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "026890": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "134790": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "462870": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005800": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001720": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "009270": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002700": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002870": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "019170": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "019175": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "481850": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "404990": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "293940": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "055550": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004080": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004770": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "403550": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004920": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "112610": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "480370": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "308170": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "008700": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "090430": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "122900": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "010780": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "031820": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "139990": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "009320": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001780": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "018250": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "161000": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "011090": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "137310": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "090435": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002790": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "00279K": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002795": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002030": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "183190": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002310": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "012170": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "267850": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "020560": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005850": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "010580": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "012750": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "023960": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "298690": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "078520": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "015260": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "007460": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003060": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "244920": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "278470": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "450080": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "019490": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "036570": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "085310": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "900140": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "066970": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "097520": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "484870": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "014440": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "111770": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "009970": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003520": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000670": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "006740": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "012280": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "012160": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "007310": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002630": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "271560": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001800": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005320": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "011690": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "316140": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "006980": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "017370": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "105840": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "010400": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "049800": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "016880": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "095720": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005820": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "008600": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "033270": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "014830": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "446070": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000910": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "047400": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "011330": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "077500": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002920": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000700": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003470": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003475": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "072130": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000220": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000225": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000227": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001200": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000100": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000105": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003460": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003465": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "008730": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "008250": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "025820": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "214320": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "088260": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "139480": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "457190": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "007660": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005950": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "015020": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "102460": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "084680": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "350520": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "334890": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000760": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "014990": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "101140": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "006490": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "023800": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "034590": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "129260": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "023810": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "249420": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000230": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "013360": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003120": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003200": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "007110": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "007570": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "007575": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "008500": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "081000": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "020760": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "103590": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "271940": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "015860": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "226320": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "317400": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "033240": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000950": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "079900": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "348950": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "194370": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "025620": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "030000": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "271980": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001560": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002620": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "006220": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "089590": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004910": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004700": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001550": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "462520": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "120030": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "018470": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002600": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "185750": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "063160": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001630": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "109070": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "044380": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "013890": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "013870": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "071320": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "088790": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003780": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "010640": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "100250": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "051630": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "272450": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "011000": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002780": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002787": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002785": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "009310": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000650": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "033250": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "035720": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "323410": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "377300": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001620": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "029460": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "281820": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "381970": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "145270": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "417310": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "357120": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "007815": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "007810": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "00781K": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003690": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "192820": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "044820": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005070": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005420": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "071950": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002020": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "138490": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003070": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003075": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "450140": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "45014K": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002025": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "120110": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "120115": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "021240": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "036420": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "024720": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "192400": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "284740": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "264900": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "26490K": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005740": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005745": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "259960": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "020120": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "039490": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "014580": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "015890": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "006890": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003240": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "011280": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004100": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004105": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "009410": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "009415": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001420": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "055490": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "078000": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "214420": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "019180": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "363280": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "36328K": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "091810": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004870": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "034230": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005690": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "036580": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004720": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "028670": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "010820": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "016800": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001020": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "090080": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "010770": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "022100": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "058430": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "047050": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003670": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "017810": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "103140": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005810": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "950210": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "009810": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "086790": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "293480": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "039130": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "352820": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "071090": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000080": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000087": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000140": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000145": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "152550": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "036460": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005430": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "071050": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "071055": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "010040": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "025540": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "010100": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004090": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002200": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002960": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000240": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "123890": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "015760": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "006200": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "027970": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "023350": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "025890": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000970": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "104700": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "017960": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "161890": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "161390": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "034830": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "007280": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "047810": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "123690": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003350": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "011500": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002390": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "053690": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "042700": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "008930": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "128940": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "009240": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "020000": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003680": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "105630": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "069640": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "016450": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "010420": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "009180": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "213500": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "014680": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004710": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004150": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "025750": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004960": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "011700": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001750": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001755": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "018880": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "009420": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "014130": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "300720": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002220": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "006390": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003300": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "051600": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "052690": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "130660": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "002320": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003480": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "180640": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "18064K": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "009460": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "372910": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000880": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "00088K": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "452260": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "45226K": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "451800": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "489790": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "088350": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000370": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "009830": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "009835": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "272210": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "012450": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "082740": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "042660": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000885": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003530": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003535": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "195870": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "101530": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "143210": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000720": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000725": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "453340": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "086280": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "064350": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "079430": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "012330": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "069960": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004560": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004310": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "017800": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "307950": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "011210": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004020": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005440": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005380": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005387": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005389": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005385": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001500": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "011760": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "227840": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "126560": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "001450": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "057050": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "093240": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003010": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "111110": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "008770": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "008775": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "378850": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "241590": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "006060": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "013520": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "010690": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "133820": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "010660": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000850": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "016580": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "032560": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "004800": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "094280": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "298040": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "298020": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "093370": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005870": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "079980": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "005010": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000540": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "000545": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    },
+    "003280": {
+      "success": false,
+      "error": "청크 처리 실패: BacktestConfig.__init__() got an unexpected keyword argument 'commission'"
+    }
+  },
+  "performance_analysis": {
+    "total_symbols": 935,
+    "successful_symbols": 0,
+    "failed_symbols": 935,
+    "success_rate": 0.0,
+    "total_time": 50.3646194934845,
+    "avg_time_per_symbol": 0.0538659032015877,
+    "symbols_per_second": 18.564619556412172,
+    "parallel_stats": {
+      "total_symbols": 935,
+      "successful_backtests": 0,
+      "failed_backtests": 935,
+      "total_time": 2.227370262145996,
+      "avg_time_per_symbol": 0,
+      "cache_hits": 0
+    },
+    "cache_stats": {
+      "cache_hits": 0,
+      "cache_misses": 935,
+      "cache_saves": 0,
+      "cache_cleanups": 0,
+      "memory_cache_hits": 0,
+      "db_cache_hits": 0,
+      "total_requests": 935,
+      "total_cached_items": 0,
+      "total_cache_size_mb": 0.0,
+      "avg_access_count": 0,
+      "memory_cache_items": 0,
+      "strategy_breakdown": {},
+      "hit_rate": 0.0,
+      "miss_rate": 100.0
+    },
+    "batch_stats": {
+      "batch_optimizer": {
+        "total_batches": 19,
+        "total_items": 935,
+        "total_time": 45.00217342376709,
+        "avg_items_per_second": 20.77677429477654,
+        "avg_batch_time": 2.3685354433561625,
+        "memory_optimizations": 0,
+        "batch_size_changes": 2
+      },
+      "data_loader": {
+        "cache_hits": 0,
+        "cache_misses": 0,
+        "data_loads": 0,
+        "cache_size_mb": 0.0
+      },
+      "memory_monitor": {
+        "peak_memory_mb": 140.4140625,
+        "current_memory_mb": 140.4140625,
+        "gc_count": 0,
+        "memory_warnings": 0,
+        "memory_exceeded_count": 0
+      },
+      "current_batch_size": 42,
+      "cache_size_mb": 0.0,
+      "memory_usage_mb": 140.4140625
+    }
+  },
+  "optimization_stats": {
+    "optimization_enabled": {
+      "parallel_processing": true,
+      "caching": true,
+      "batch_optimization": true
+    },
+    "total_runs": 1,
+    "total_symbols": 935,
+    "total_time": 50.3646194934845,
+    "cache_efficiency": 0.0,
+    "parallel_efficiency": 0,
+    "memory_efficiency": 100,
+    "avg_symbols_per_run": 935.0,
+    "avg_time_per_run": 50.3646194934845,
+    "avg_time_per_symbol": 0.0538659032015877,
+    "cache_detailed": {
+      "cache_hits": 0,
+      "cache_misses": 935,
+      "cache_saves": 0,
+      "cache_cleanups": 0,
+      "memory_cache_hits": 0,
+      "db_cache_hits": 0,
+      "total_requests": 935,
+      "total_cached_items": 0,
+      "total_cache_size_mb": 0.0,
+      "avg_access_count": 0,
+      "memory_cache_items": 0,
+      "strategy_breakdown": {},
+      "hit_rate": 0.0,
+      "miss_rate": 100.0
+    },
+    "parallel_detailed": {
+      "total_symbols": 935,
+      "successful_backtests": 0,
+      "failed_backtests": 935,
+      "total_time": 2.227370262145996,
+      "avg_time_per_symbol": 0,
+      "cache_hits": 0,
+      "success_rate": 0.0,
+      "failure_rate": 100.0
+    },
+    "batch_detailed": {
+      "batch_optimizer": {
+        "total_batches": 19,
+        "total_items": 935,
+        "total_time": 45.00217342376709,
+        "avg_items_per_second": 20.77677429477654,
+        "avg_batch_time": 2.3685354433561625,
+        "memory_optimizations": 0,
+        "batch_size_changes": 2
+      },
+      "data_loader": {
+        "cache_hits": 0,
+        "cache_misses": 0,
+        "data_loads": 0,
+        "cache_size_mb": 0.0
+      },
+      "memory_monitor": {
+        "peak_memory_mb": 140.4140625,
+        "current_memory_mb": 140.4140625,
+        "gc_count": 0,
+        "memory_warnings": 0,
+        "memory_exceeded_count": 0
+      },
+      "current_batch_size": 42,
+      "cache_size_mb": 0.0,
+      "memory_usage_mb": 140.4140625
+    }
+  },
+  "total_time": 50.3646194934845
+}

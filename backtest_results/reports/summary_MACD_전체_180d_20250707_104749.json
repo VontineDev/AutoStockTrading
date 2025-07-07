@@ -1,0 +1,116 @@
+{
+  "meta": {
+    "strategy": "MACD",
+    "scope": "전체",
+    "period_days": 180,
+    "total_symbols": 935,
+    "successful_symbols": 935,
+    "success_rate": 100.0,
+    "execution_time_seconds": 128.30547308921814,
+    "timestamp": "20250707_104749"
+  },
+  "performance_statistics": {
+    "returns": {
+      "mean": 0.0,
+      "median": 0.0,
+      "std": 0.0,
+      "min": "0",
+      "max": "0",
+      "positive_count": 0,
+      "negative_count": 0
+    },
+    "sharpe_ratios": {
+      "mean": 0.0,
+      "median": 0.0,
+      "std": 0.0,
+      "min": "0",
+      "max": "0"
+    },
+    "max_drawdowns": {
+      "mean": 0.0,
+      "median": 0.0,
+      "std": 0.0,
+      "min": "0",
+      "max": "0"
+    },
+    "win_rates": {
+      "mean": 0.0,
+      "median": 0.0,
+      "std": 0.0,
+      "min": "0",
+      "max": "0"
+    }
+  },
+  "optimization_performance": {
+    "total_symbols": 935,
+    "successful_symbols": 935,
+    "failed_symbols": 0,
+    "success_rate": 100.0,
+    "total_time": 126.74675273895264,
+    "avg_time_per_symbol": 0.13555802431973543,
+    "symbols_per_second": 7.376914830518176,
+    "backtest_stats": {
+      "avg_return": 0.0,
+      "median_return": 0.0,
+      "std_return": 0.0,
+      "best_return": 0,
+      "worst_return": 0,
+      "avg_sharpe": 0.0,
+      "positive_returns": 0,
+      "negative_returns": 0
+    },
+    "parallel_stats": {
+      "total_symbols": 880,
+      "successful_backtests": 880,
+      "failed_backtests": 0,
+      "total_time": 66.63288164138794,
+      "avg_time_per_symbol": 0.07571918368339539,
+      "cache_hits": 0
+    },
+    "cache_stats": {
+      "cache_hits": 55,
+      "cache_misses": 880,
+      "cache_saves": 880,
+      "cache_cleanups": 0,
+      "memory_cache_hits": 0,
+      "db_cache_hits": 55,
+      "total_requests": 935,
+      "total_cached_items": 1815,
+      "total_cache_size_mb": 0.2700176239013672,
+      "avg_access_count": 0.030303030303030304,
+      "memory_cache_items": 935,
+      "strategy_breakdown": {
+        "MACDStrategy": 1815
+      },
+      "hit_rate": 5.88235294117647,
+      "miss_rate": 94.11764705882352
+    },
+    "batch_stats": {
+      "batch_optimizer": {
+        "total_batches": 19,
+        "total_items": 935,
+        "total_time": 46.581480741500854,
+        "avg_items_per_second": 20.07235461639115,
+        "avg_batch_time": 2.451656881131624,
+        "memory_optimizations": 0,
+        "batch_size_changes": 4
+      },
+      "data_loader": {
+        "cache_hits": 0,
+        "cache_misses": 0,
+        "data_loads": 0,
+        "cache_size_mb": 0.0
+      },
+      "memory_monitor": {
+        "peak_memory_mb": 143.01953125,
+        "current_memory_mb": 143.01953125,
+        "gc_count": 0,
+        "memory_warnings": 0,
+        "memory_exceeded_count": 0
+      },
+      "current_batch_size": 42,
+      "cache_size_mb": 0.0,
+      "memory_usage_mb": 142.9765625
+    }
+  }
+}

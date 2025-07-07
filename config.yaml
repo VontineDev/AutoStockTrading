@@ -1,5 +1,367 @@
-# config.yaml 예시
-app_name: AutoStockTrading
-log_level: INFO
-db_path: ./data/trading.db
-api_base_url: https://openapi.kiwoom.com 
+# TA-Lib 스윙 트레이딩 자동매매 시스템 설정
+# 100만원 규모 스윙 트레이딩에 최적화된 설정
+
+# 프로젝트 기본 정보
+project:
+  name: "TA-Lib 스윙 트레이딩"
+  version: "1.0.0"
+  description: "pykrx + TA-Lib 기반 100만원 규모 스윙 트레이딩 시스템"
+  initial_capital: 1000000  # 초기 자본 100만원
+
+# 데이터 수집 설정
+data_collection:
+  # API 호출 설정
+  api_delay: 0.5  # API 호출 간격 (초)
+  max_retries: 3  # 최대 재시도 횟수
+  timeout: 30     # 타임아웃 (초)
+  
+  # 기본 업데이트 종목 (테스트용)
+  default_symbols:
+    - "005930"  # 삼성전자
+    - "000660"  # SK하이닉스
+    - "035420"  # NAVER
+    - "051910"  # LG화학
+    - "028260"  # 삼성물산
+    - "006400"  # 삼성SDI
+    - "012330"  # 현대모비스
+    - "207940"  # 삼성바이오로직스
+    - "066570"  # LG전자
+    - "003550"  # LG
+
+  # 시장 지수
+  market_indices:
+    - "KOSPI"
+    - "KOSDAQ"
+  
+  # 업데이트 스케줄
+  update_schedule: "daily"  # daily, weekly, manual
+  update_time: "18:00"      # 업데이트 시간
+  
+  # 데이터 보관 기간
+  data_retention_days: 1095  # 3년 (1095일)
+
+# TA-Lib 지표 기본 설정
+indicators:
+  # 추세 지표
+  trend:
+    sma:
+      periods: [5, 20, 60]  # 단기, 중기, 장기
+    ema:
+      periods: [12, 26, 50]
+    macd:
+      fast_period: 12
+      slow_period: 26
+      signal_period: 9
+    adx:
+      period: 14
+      strong_trend_threshold: 25
+    parabolic_sar:
+      acceleration: 0.02
+      maximum: 0.2
+
+  # 모멘텀 지표  
+  momentum:
+    rsi:
+      period: 14
+      oversold: 30
+      overbought: 70
+    stochastic:
+      k_period: 14
+      d_period: 3
+      oversold: 20
+      overbought: 80
+    williams_r:
+      period: 14
+      oversold: -80
+      overbought: -20
+    roc:
+      period: 10
+    cci:
+      period: 14
+      oversold: -100
+      overbought: 100
+
+  # 변동성 지표
+  volatility:
+    bollinger_bands:
+      period: 20
+      deviation: 2.0
+    atr:
+      period: 14
+    donchian_channel:
+      period: 20
+
+  # 거래량 지표
+  volume:
+    obv: {}  # 매개변수 없음
+    ad_line: {}
+    mfi:
+      period: 14
+
+# 매매 전략 설정
+strategies:
+  # MACD 전략
+  macd_strategy:
+    enabled: true
+    parameters:
+      fast_period: 12
+      slow_period: 26
+      signal_period: 9
+      histogram_threshold: 0.1
+    filters:
+      min_volume: 100000      # 최소 거래량
+      min_price: 1000         # 최소 주가
+      max_price: 500000       # 최대 주가
+
+  # RSI 전략
+  rsi_strategy:
+    enabled: true
+    parameters:
+      period: 14
+      oversold_threshold: 30
+      overbought_threshold: 70
+      divergence_lookback: 5
+    filters:
+      trend_confirmation: true  # 추세 확인 필요
+
+  # 볼린저 밴드 전략
+  bollinger_strategy:
+    enabled: true
+    parameters:
+      period: 20
+      deviation: 2.0
+      squeeze_threshold: 0.2
+    filters:
+      volume_confirmation: true
+
+  # 이동평균 전략
+  moving_average_strategy:
+    enabled: true
+    parameters:
+      short_period: 5
+      long_period: 20
+      confirmation_period: 3
+    filters:
+      trend_strength_min: 0.6
+
+# 백테스팅 설정
+backtesting:
+  # 기본 설정
+  initial_capital: 1000000
+  commission_rate: 0.00015    # 0.015% (국내 증권사 평균)
+  slippage_rate: 0.001        # 0.1%
+  
+  # 포지션 관리
+  position_sizing:
+    method: "fixed_amount"    # fixed_amount, percent, volatility
+    amount_per_position: 200000  # 종목당 20만원
+    max_positions: 5          # 최대 동시 보유 종목
+    
+  # 리스크 관리
+  risk_management:
+    max_position_size: 0.2    # 포트폴리오 대비 최대 포지션 크기 (20%)
+    stop_loss_pct: 0.02       # 손절매 (2%)
+    take_profit_pct: 0.04     # 익절매 (4%)
+    max_drawdown_limit: 0.1   # 최대 낙폭 제한 (10%)
+    
+  # 백테스팅 기간
+  default_period:
+    start_date: "2022-01-01"
+    end_date: "2024-12-31"
+    
+  # 성과 지표
+  performance_metrics:
+    - "total_return"
+    - "sharpe_ratio" 
+    - "max_drawdown"
+    - "win_rate"
+    - "profit_factor"
+    - "volatility"
+
+# 매개변수 최적화 설정
+optimization:
+  # 기본 설정
+  method: "grid_search"       # grid_search, random_search, bayesian
+  max_combinations: 100       # 최대 테스트 조합 수
+  n_jobs: -1                  # 병렬 처리 (-1: 모든 코어 사용)
+  
+  # 교차 검증
+  cross_validation:
+    method: "time_series_split"
+    n_splits: 5
+    test_size: 0.2
+    
+  # 과최적화 방지
+  overfitting_protection:
+    out_of_sample_ratio: 0.3  # 아웃오브샘플 비율
+    min_trades: 30            # 최소 거래 수
+    stability_threshold: 0.8   # 안정성 임계값
+    
+  # 최적화 대상 지표
+  target_metrics:
+    primary: "sharpe_ratio"
+    secondary: ["total_return", "max_drawdown"]
+
+# 실시간 매매 설정 (키움 API)
+trading:
+  # 매매 실행 설정
+  auto_trading: false         # 자동매매 활성화
+  paper_trading: true         # 모의투자 모드
+  
+  # 주문 설정
+  order_type: "market"        # market, limit
+  order_timeout: 300          # 주문 타임아웃 (초)
+  
+  # 모니터링
+  monitoring_interval: 60     # 모니터링 간격 (초)
+  max_daily_trades: 10        # 일일 최대 거래 수
+  
+  # 시장 시간
+  market_hours:
+    start: "09:00"
+    end: "15:30"
+    timezone: "Asia/Seoul"
+
+# 알림 설정
+notifications:
+  # 매매 신호 알림
+  trading_signals:
+    enabled: true
+    methods: ["console", "log"]  # console, email, slack, log
+    
+  # 시스템 알림
+  system_alerts:
+    enabled: true
+    error_threshold: "ERROR"
+    
+  # 성과 리포트
+  performance_report:
+    enabled: true
+    frequency: "daily"          # daily, weekly, monthly
+    send_time: "17:00"
+
+# 로깅 설정
+logging:
+  level: "INFO"               # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  
+  # 파일 로깅
+  file_logging:
+    enabled: true
+    max_size: "10MB"
+    backup_count: 5
+    
+  # 로그 파일별 설정
+  loggers:
+    trading: "logs/trading.log"
+    data: "logs/data_update.log"
+    backtest: "logs/backtest.log"
+    optimization: "logs/optimization.log"
+    error: "logs/error.log"
+
+# 데이터베이스 설정
+database:
+  type: "sqlite"
+  path: "data/trading.db"
+  
+  # 연결 설정
+  connection:
+    timeout: 30
+    check_same_thread: false
+    
+  # 백업 설정
+  backup:
+    enabled: true
+    frequency: "daily"
+    retention_days: 30
+    backup_path: "data/backups/"
+
+# UI 설정 (Streamlit)
+ui:
+  # 페이지 설정
+  page_config:
+    page_title: "TA-Lib 스윙 트레이딩"
+    page_icon: "📈"
+    layout: "wide"
+    initial_sidebar_state: "expanded"
+    
+  # 테마
+  theme:
+    primary_color: "#1f77b4"
+    background_color: "#ffffff"
+    secondary_background_color: "#f0f2f6"
+    text_color: "#262730"
+    
+  # 차트 설정
+  charts:
+    default_height: 600
+    candlestick_colors:
+      up: "#26a69a"
+      down: "#ef5350"
+    indicator_colors:
+      - "#1f77b4"  # 파란색
+      - "#ff7f0e"  # 주황색  
+      - "#2ca02c"  # 녹색
+      - "#d62728"  # 빨간색
+      - "#9467bd"  # 보라색
+
+# 스케줄링 설정
+scheduler:
+  enabled: false              # 스케줄러 활성화
+  timezone: "Asia/Seoul"
+  
+  # 작업 스케줄
+  jobs:
+    data_update:
+      schedule: "0 18 * * 1-5"  # 평일 오후 6시
+      enabled: true
+      
+    backup:
+      schedule: "0 2 * * *"     # 매일 새벽 2시
+      enabled: true
+      
+    performance_report:
+      schedule: "0 17 * * *"    # 매일 오후 5시
+      enabled: false
+
+# 환경별 설정
+environment:
+  development:
+    debug: true
+    log_level: "DEBUG"
+    auto_reload: true
+    
+  production:
+    debug: false
+    log_level: "INFO"
+    auto_reload: false
+    
+  testing:
+    debug: true
+    log_level: "DEBUG"
+    use_test_db: true
+
+# 보안 설정
+security:
+  # API 키 암호화
+  encrypt_api_keys: true
+  
+  # 접근 제한
+  allowed_ips: []  # 빈 리스트는 모든 IP 허용
+  
+  # 세션 관리
+  session_timeout: 3600  # 1시간
+
+# 성능 설정
+performance:
+  # 메모리 관리
+  max_memory_usage: "2GB"
+  data_cache_size: 1000     # 캐시할 데이터 수
+  
+  # 병렬 처리
+  max_workers: 4            # 최대 워커 수
+  chunk_size: 100           # 청크 크기
+  
+  # 최적화
+  enable_numba: false       # Numba 가속화
+  enable_cython: false      # Cython 최적화 

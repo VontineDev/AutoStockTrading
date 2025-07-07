@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>키움 API 알고리즘 매매 프로그램 개발 로드맵</title>
+<title>TA-Lib 스윙 트레이딩 자동매매 개발 로드맵</title>
 <style>
         * {
             margin: 0;
@@ -283,236 +283,228 @@
 <body>
 <div class="container">
 <div class="header">
-<h1>🚀 키움 API 알고리즘 매매 프로그램</h1>
-<div class="subtitle">2주 완성 개발 로드맵 | 1인 개발 프로젝트</div>
+<h1>🚀 TA-Lib 스윙 트레이딩 자동매매</h1>
+<div class="subtitle">2주 완성 개발 로드맵 | 100만원 규모 1인 개발 프로젝트</div>
 </div>
 <div class="tech-stack">
-<h3>🛠️ 기술 스택</h3>
+<h3>🛠️ 핵심 기술 스택</h3>
 <div class="tech-items">
 <div class="tech-item">
 <strong>Python 3.13</strong><br/>
-                    최신 안정 버전 (2024.10 릴리즈)
+                    최신 안정 버전
+                </div>
+<div class="tech-item">
+<strong>TA-Lib</strong><br/>
+                    150+ 기술적 분석 지표 라이브러리
+                </div>
+<div class="tech-item">
+<strong>pykrx</strong><br/>
+                    국내 주식 데이터 수집 (충분한 과거 데이터)
                 </div>
 <div class="tech-item">
 <strong>Streamlit</strong><br/>
                     빠른 웹 UI 개발
                 </div>
 <div class="tech-item">
-<strong>키움 REST API</strong><br/>
-                    차세대 웹 기반 API (2025.3 출시)
+<strong>SQLite</strong><br/>
+                    OHLCV 데이터 및 매매 이력 저장
                 </div>
 <div class="tech-item">
 <strong>pandas + numpy</strong><br/>
                     데이터 분석 및 처리
                 </div>
-<div class="tech-item">
-<strong>SQLite</strong><br/>
-                    매매 이력 및 설정 데이터 저장
-                </div>
-<div class="tech-item">
-<strong>Plotly</strong><br/>
-                    인터랙티브 차트 및 시각화
-                </div>
 </div>
 </div>
 <div class="tech-stack" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-<h3>🤖 AI 협업 도구</h3>
+<h3>📊 스윙 트레이딩 특화</h3>
 <div class="tech-items">
 <div class="tech-item">
-<strong>Cursor ($20/월)</strong><br/>
-                    AI 코드 에디터, 전체 프로젝트 맥락 이해
+<strong>100만원 규모</strong><br/>
+                    3-5 종목 분산투자, 종목당 20-30만원
                 </div>
 <div class="tech-item">
-<strong>Notion (무료)</strong><br/>
-                    개발 진행상황 및 코드 스니펫 관리
+<strong>일봉/시간봉 기반</strong><br/>
+                    중단기 매매 전략에 최적화
                 </div>
 <div class="tech-item">
-<strong>Git + GitHub (무료)</strong><br/>
-                    버전 관리 및 코드 변경 이력 추적
+<strong>매개변수 최적화</strong><br/>
+                    백테스팅 기반 파라미터 자동 탐색
                 </div>
 <div class="tech-item">
-<strong>Claude</strong><br/>
-                    코드 리뷰, 디버깅, 맥락 기반 협업
+<strong>리스크 관리</strong><br/>
+                    2-3% 손절매, 자동 포지션 사이징
                 </div>
 </div>
 </div>
 <div class="timeline">
 <div class="week">
 <div class="week-header">
-<div class="week-title">1주차: 기반 구축 및 API 연동</div>
-<div class="week-subtitle">환경 설정부터 기본 매매 로직까지</div>
+<div class="week-title">1주차: 데이터 기반 구축 및 TA-Lib 구현</div>
+<div class="week-subtitle">환경 설정부터 백테스팅 시스템까지</div>
 </div>
 <div class="days-grid">
 <div class="day-card priority-high">
 <div class="day-title">
 <div class="day-number">1</div>
-                            환경 설정 &amp; 키움 API 설치
+                            환경 설정 &amp; TA-Lib 설치
                         </div>
 <ul class="task-list">
 <li class="task-item">
-<div class="task-checkbox checked" onclick="toggleTask(this)"></div>
-<div class="task-text" style="text-decoration:line-through;color:gray;">Python 3.13 설치 및 가상환경 생성</div>
+<div class="task-checkbox" onclick="toggleTask(this)"></div>
+<div class="task-text">Python 3.13 설치 및 가상환경 생성</div>
 </li>
 <li class="task-item">
-<div class="task-checkbox checked" onclick="toggleTask(this)"></div>
-<div class="task-text" style="text-decoration:line-through;color:gray;">키움 REST API 개발자 계정 신청</div>
+<div class="task-checkbox" onclick="toggleTask(this)"></div>
+<div class="task-text">TA-Lib 라이브러리 설치 (Windows whl 파일)</div>
 </li>
 <li class="task-item">
-<div class="task-checkbox checked" onclick="toggleTask(this)"></div>
-<div class="task-text" style="text-decoration:line-through;color:gray;">API Key 및 Secret 발급받기</div>
+<div class="task-checkbox" onclick="toggleTask(this)"></div>
+<div class="task-text">pykrx, pandas, numpy, plotly 설치</div>
 </li>
 <li class="task-item">
-<div class="task-checkbox checked" onclick="toggleTask(this)"></div>
-<div class="task-text" style="text-decoration:line-through;color:gray;">REST API 가이드 문서 정리</div>
+<div class="task-checkbox" onclick="toggleTask(this)"></div>
+<div class="task-text">SQLite 데이터베이스 초기 설정</div>
 </li>
 <li class="task-item">
-<div class="task-checkbox checked" onclick="toggleTask(this)"></div>
-<div class="task-text" style=";text-decoration:line-through;color:gray;">requests 라이브러리로 인증 테스트</div>
+<div class="task-checkbox" onclick="toggleTask(this)"></div>
+<div class="task-text">기본 프로젝트 구조 생성</div>
 </li>
 <li class="task-item">
-<div class="task-checkbox checked" onclick="toggleTask(this)"></div>
-<div class="task-text" style="text-decoration:line-through;color:gray;">필수 라이브러리 설치 (streamlit, pandas, numpy, requests, plotly, python-dotenv)</div>
-</li>
-<li class="task-item">
-<div class="task-checkbox checked" onclick="toggleTask(this)"></div>
-<div class="task-text" style="text-decoration:line-through;color:gray;">SQLite 데이터베이스 초기 설정</div>
-</li>
-<li class="task-item">
-<div class="task-checkbox checked" onclick="toggleTask(this)"></div>
-<div class="task-text" style="text-decoration:line-through;color:gray;">.env 파일로 API 키 환경변수 관리</div>
+<div class="task-checkbox" onclick="toggleTask(this)"></div>
+<div class="task-text">TA-Lib 기본 지표 테스트 (RSI, MACD, SMA)</div>
 </li>
 </ul>
 </div>
 <div class="day-card priority-high">
-<div class="day-title">
-<div class="day-number">2</div>
-                            API 연결 테스트
+                        <div class="day-title">
+                            <div class="day-number">2</div>
+                            pykrx 데이터 수집 및 필터링 시스템
                         </div>
-<ul class="task-list">
-<li class="task-item">
-<div class="task-checkbox checked" onclick="toggleTask(this)"></div>
-<div class="task-text" style=";text-decoration:line-through;color:gray;">OAuth 토큰 인증 구현</div>
-</li>
-<li class="task-item">
-<div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">REST API 계좌 정보 조회</div>
-</li>
-<li class="task-item">
-<div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">HTTP 기반 실시간 시세 수신 구현</div>
-</li>
-<li class="task-item">
-<div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">JSON 기반 매수/매도 주문 테스트</div>
-</li>
-</ul>
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <div class="task-checkbox checked" onclick="toggleTask(this)"></div>
+                                <div class="task-text completed">pykrx 기반 OHLCV 데이터 수집 (완료)</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox checked" onclick="toggleTask(this)"></div>
+                                <div class="task-text completed">스마트 종목 필터링 시스템 (시가총액, 거래량 기반)</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox checked" onclick="toggleTask(this)"></div>
+                                <div class="task-text completed">거래일 관리 시스템 (휴일 제외)</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox checked" onclick="toggleTask(this)"></div>
+                                <div class="task-text completed">주식 데이터 매니저 (자동 업데이트)</div>
+                            </li>
+                        </ul>
 </div>
 <div class="day-card priority-medium">
 <div class="day-title">
 <div class="day-number">3</div>
-                            데이터 수집 모듈
+                            SQLite 데이터베이스 구축
                         </div>
 <ul class="task-list">
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">REST API 일봉/분봉 데이터 수집</div>
+<div class="task-text">stock_data 테이블 설계 및 생성</div>
 </li>
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">종목 검색 API 연동</div>
+<div class="task-text">indicators 테이블 설계 및 생성</div>
 </li>
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">웹소켓 실시간 체결가 수신</div>
+<div class="task-text">배치 insert 및 중복 데이터 처리</div>
 </li>
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">JSON 데이터 파싱 및 SQLite 저장</div>
+<div class="task-text">데이터 조회 및 필터링 함수</div>
 </li>
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">로깅 시스템 구축 (Python logging)</div>
+<div class="task-text">로깅 시스템 구축 (Python logging)</div>
 </li>
 </ul>
 </div>
 <div class="day-card priority-medium">
 <div class="day-title">
 <div class="day-number">4</div>
-                            기본 알고리즘 구현
+                            TA-Lib 기본 지표 구현
                         </div>
 <ul class="task-list">
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">이동평균 기반 매매 신호</div>
+<div class="task-text">이동평균 (SMA, EMA) 계산 모듈</div>
 </li>
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">볼린저 밴드 지표 계산</div>
+<div class="task-text">RSI 지표 계산 및 매매 신호</div>
 </li>
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">RSI 오실레이터 구현</div>
+<div class="task-text">MACD 지표 계산 및 신호</div>
 </li>
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">매매 조건 로직 구성</div>
+<div class="task-text">볼린저 밴드 및 ATR 지표</div>
 </li>
 </ul>
 </div>
 <div class="day-card priority-low">
-<div class="day-title">
-<div class="day-number">5</div>
-                            주문 관리 시스템
+                        <div class="day-title">
+                            <div class="day-number">5</div>
+                            고성능 백테스팅 시스템 개발
                         </div>
-<ul class="task-list">
-<li class="task-item">
-<div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">REST API 주문 클래스 구현</div>
-</li>
-<li class="task-item">
-<div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">HTTP 기반 손절/익절 설정</div>
-</li>
-<li class="task-item">
-<div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">비동기 주문 처리 (asyncio)</div>
-</li>
-<li class="task-item">
-<div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">주문체결 상태 실시간 모니터링</div>
-</li>
-</ul>
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <div class="task-checkbox checked" onclick="toggleTask(this)"></div>
+                                <div class="task-text completed">병렬 처리 백테스팅 엔진 (8워커 지원)</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox checked" onclick="toggleTask(this)"></div>
+                                <div class="task-text completed">2단계 캐싱 시스템 (Memory + SQLite)</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox checked" onclick="toggleTask(this)"></div>
+                                <div class="task-text completed">배치 처리 최적화 (5.7x 성능 향상)</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox checked" onclick="toggleTask(this)"></div>
+                                <div class="task-text completed">코스피 전체 962종목 14초 내 완료</div>
+                            </li>
+                        </ul>
 </div>
 <div class="day-card priority-low">
-<div class="day-title">
-<div class="day-number">6-7</div>
-                            백테스팅 &amp; 검증
+                        <div class="day-title">
+                            <div class="day-number">6-7</div>
+                            고급 매개변수 최적화 시스템
                         </div>
-<ul class="task-list">
-<li class="task-item">
-<div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">과거 데이터 백테스팅 엔진</div>
-</li>
-<li class="task-item">
-<div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">수익률 계산 및 리포트</div>
-</li>
-<li class="task-item">
-<div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">전략 성과 분석 도구</div>
-</li>
-<li class="task-item">
-<div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">파라미터 최적화 기능</div>
-</li>
-</ul>
+                        <ul class="task-list">
+                            <li class="task-item">
+                                <div class="task-checkbox checked" onclick="toggleTask(this)"></div>
+                                <div class="task-text completed">병렬 그리드 서치 최적화 (4워커)</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox checked" onclick="toggleTask(this)"></div>
+                                <div class="task-text completed">다중 전략 동시 최적화 (MACD, RSI, BB, MA)</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox checked" onclick="toggleTask(this)"></div>
+                                <div class="task-text completed">복합 점수 기반 최적 파라미터 선택</div>
+                            </li>
+                            <li class="task-item">
+                                <div class="task-checkbox checked" onclick="toggleTask(this)"></div>
+                                <div class="task-text completed">최적화 결과 자동 저장 및 순위</div>
+                            </li>
+                        </ul>
 </div>
 </div>
 </div>
 <div class="week">
 <div class="week-header">
-<div class="week-title">2주차: UI 개발 및 최종 완성</div>
-<div class="week-subtitle">사용자 인터페이스 구축 및 실전 배포</div>
+<div class="week-title">2주차: UI 개발 및 실전 연동</div>
+<div class="week-subtitle">Streamlit 인터페이스 구축 및 최종 완성</div>
 </div>
 <div class="days-grid">
 <div class="day-card priority-high">
@@ -523,91 +515,91 @@
 <ul class="task-list">
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">메인 대시보드 레이아웃</div>
+<div class="task-text">메인 대시보드 레이아웃</div>
 </li>
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">사이드바 설정 패널</div>
+<div class="task-text">종목 선택 및 데이터 로드 UI</div>
 </li>
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">실시간 시세 차트 표시 (Plotly 연동)</div>
+<div class="task-text">Plotly 차트로 OHLCV 시각화</div>
 </li>
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">로그인 인증 화면</div>
+<div class="task-text">TA-Lib 지표 오버레이 표시</div>
 </li>
 </ul>
 </div>
 <div class="day-card priority-high">
 <div class="day-title">
 <div class="day-number">9</div>
-                            거래 관리 UI
+                            전략 설정 및 백테스팅 UI
                         </div>
 <ul class="task-list">
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">포트폴리오 현황 대시보드</div>
+<div class="task-text">지표별 매개변수 조정 패널</div>
 </li>
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">매매 이력 테이블</div>
+<div class="task-text">백테스팅 결과 시각화</div>
 </li>
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">수익률 그래프 시각화</div>
+<div class="task-text">수익률 그래프 및 성과 지표 표시</div>
 </li>
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">실시간 잔고 표시</div>
+<div class="task-text">매매 신호 포인트 차트 표시</div>
 </li>
 </ul>
 </div>
 <div class="day-card priority-medium">
 <div class="day-title">
 <div class="day-number">10</div>
-                            전략 설정 UI
+                            실시간 모니터링 UI
                         </div>
 <ul class="task-list">
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">알고리즘 파라미터 조정</div>
+<div class="task-text">포트폴리오 현황 대시보드</div>
 </li>
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">관심종목 관리 화면</div>
+<div class="task-text">관심종목 관리 화면</div>
 </li>
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">위험 관리 설정</div>
+<div class="task-text">리스크 관리 설정 (손절/익절)</div>
 </li>
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">자동매매 ON/OFF 스위치</div>
+<div class="task-text">100만원 규모 포지션 사이징</div>
 </li>
 </ul>
 </div>
 <div class="day-card priority-medium">
 <div class="day-title">
 <div class="day-number">11</div>
-                            모니터링 &amp; 알림
+                            키움 API 실전 연동 (선택)
                         </div>
 <ul class="task-list">
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">실시간 로그 표시</div>
+<div class="task-text">키움 REST API 계정 설정</div>
 </li>
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">매매 신호 알림 시스템</div>
+<div class="task-text">실시간 시세 수신 연동</div>
 </li>
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">오류 상황 처리</div>
+<div class="task-text">자동 주문 시스템 (모의투자)</div>
 </li>
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">성과 리포트 생성</div>
+<div class="task-text">매매 신호 알림 시스템</div>
 </li>
 </ul>
 </div>
@@ -619,43 +611,43 @@
 <ul class="task-list">
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">코드 리팩토링 및 최적화</div>
+<div class="task-text">코드 리팩토링 및 최적화</div>
 </li>
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">모의투자 환경 테스트</div>
+<div class="task-text">스윙 트레이딩 전략 최종 검증</div>
 </li>
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">예외 상황 처리 보완</div>
+<div class="task-text">예외 상황 처리 보완</div>
 </li>
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">사용자 매뉴얼 작성</div>
+<div class="task-text">사용자 매뉴얼 작성</div>
 </li>
 </ul>
 </div>
 <div class="day-card priority-low">
 <div class="day-title">
 <div class="day-number">13-14</div>
-                            실전 배포 &amp; 런칭
+                            실전 검증 &amp; 런칭
                         </div>
 <ul class="task-list">
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">실계좌 연동 최종 점검</div>
+<div class="task-text">소액 자금 백테스팅 재검증</div>
 </li>
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">소액 자금 실전 테스트</div>
+<div class="task-text">100만원 포트폴리오 구성</div>
 </li>
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">안정성 모니터링</div>
+<div class="task-text">실전 테스트 및 모니터링</div>
 </li>
 <li class="task-item">
 <div class="task-checkbox" onclick="toggleTask(this)"></div>
-<div class="task-text" style="">향후 개선사항 정리</div>
+<div class="task-text">향후 개선사항 정리</div>
 </li>
 </ul>
 </div>
@@ -663,22 +655,23 @@
 </div>
 </div>
 <div class="progress-section">
-<div class="progress-text">전체 진행률: <span id="progress-percentage">17%</span></div>
+<div class="progress-text">전체 진행률: <span id="progress-percentage">0%</span></div>
 <div class="progress-bar">
-<div class="progress-fill" id="progress-fill" style="width:17%"></div>
+<div class="progress-fill" id="progress-fill" style="width:0%"></div>
 </div>
-<div>완료된 작업: <span id="completed-tasks">9</span> / <span id="total-tasks">53</span></div>
+<div>완료된 작업: <span id="completed-tasks">0</span> / <span id="total-tasks">52</span></div>
 </div>
 <div class="tips-section">
-<div class="tips-title">💡 개발 성공 팁</div>
+<div class="tips-title">💡 스윙 트레이딩 성공 팁</div>
 <ul class="tips-list">
-<li><strong>웹 기반 장점:</strong> 별도 프로그램 설치 없이 Windows/Mac/Linux 모두 지원</li>
-<li><strong>다양한 언어:</strong> Python, Java 등 다양한 프로그래밍 언어 지원</li>
-<li><strong>REST API:</strong> HTTP 요청으로 간단한 JSON 데이터 처리</li>
-<li><strong>실시간 데이터:</strong> 웹소켓 기반 실시간 시세 수신</li>
-<li><strong>간편한 인증:</strong> API Key 기반 OAuth 토큰 인증</li>
-<li><strong>API 제한:</strong> REST API 호출 횟수 제한 고려한 설계</li>
+<li><strong>TA-Lib 활용:</strong> 검증된 150+ 기술적 지표로 복잡한 구현 불필요</li>
+<li><strong>pykrx 데이터:</strong> 충분한 과거 데이터로 안정적인 백테스팅</li>
+<li><strong>OHLCV 기반:</strong> 95% 이상의 지표가 기본 데이터로 계산 가능</li>
+<li><strong>매개변수 최적화:</strong> 그리드 서치로 최적 파라미터 자동 탐색</li>
+<li><strong>100만원 규모:</strong> 3-5 종목 분산투자로 리스크 관리</li>
+<li><strong>스윙 트레이딩:</strong> 일봉/시간봉 기반 중단기 전략에 특화</li>
 </ul>
+</div>
 </div>
 </div>
 <script></script></body></html>

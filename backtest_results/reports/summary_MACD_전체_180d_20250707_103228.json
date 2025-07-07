@@ -1,0 +1,116 @@
+{
+  "meta": {
+    "strategy": "MACD",
+    "scope": "전체",
+    "period_days": 180,
+    "total_symbols": 935,
+    "successful_symbols": 935,
+    "success_rate": 100.0,
+    "execution_time_seconds": 117.42735505104065,
+    "timestamp": "20250707_103228"
+  },
+  "performance_statistics": {
+    "returns": {
+      "mean": 0.0,
+      "median": 0.0,
+      "std": 0.0,
+      "min": "0",
+      "max": "0",
+      "positive_count": 0,
+      "negative_count": 0
+    },
+    "sharpe_ratios": {
+      "mean": 0.0,
+      "median": 0.0,
+      "std": 0.0,
+      "min": "0",
+      "max": "0"
+    },
+    "max_drawdowns": {
+      "mean": 0.0,
+      "median": 0.0,
+      "std": 0.0,
+      "min": "0",
+      "max": "0"
+    },
+    "win_rates": {
+      "mean": 0.0,
+      "median": 0.0,
+      "std": 0.0,
+      "min": "0",
+      "max": "0"
+    }
+  },
+  "optimization_performance": {
+    "total_symbols": 935,
+    "successful_symbols": 935,
+    "failed_symbols": 0,
+    "success_rate": 100.0,
+    "total_time": 115.84019947052002,
+    "avg_time_per_symbol": 0.12389326146579681,
+    "symbols_per_second": 8.071464001906753,
+    "backtest_stats": {
+      "avg_return": 0.0,
+      "median_return": 0.0,
+      "std_return": 0.0,
+      "best_return": 0,
+      "worst_return": 0,
+      "avg_sharpe": 0.0,
+      "positive_returns": 0,
+      "negative_returns": 0
+    },
+    "parallel_stats": {
+      "total_symbols": 935,
+      "successful_backtests": 935,
+      "failed_backtests": 0,
+      "total_time": 55.59047031402588,
+      "avg_time_per_symbol": 0.0594550484641988,
+      "cache_hits": 0
+    },
+    "cache_stats": {
+      "cache_hits": 0,
+      "cache_misses": 935,
+      "cache_saves": 935,
+      "cache_cleanups": 0,
+      "memory_cache_hits": 0,
+      "db_cache_hits": 0,
+      "total_requests": 935,
+      "total_cached_items": 935,
+      "total_cache_size_mb": 0.1391000747680664,
+      "avg_access_count": 0,
+      "memory_cache_items": 935,
+      "strategy_breakdown": {
+        "MACDStrategy": 935
+      },
+      "hit_rate": 0.0,
+      "miss_rate": 100.0
+    },
+    "batch_stats": {
+      "batch_optimizer": {
+        "total_batches": 19,
+        "total_items": 935,
+        "total_time": 47.60299730300903,
+        "avg_items_per_second": 19.641620338492796,
+        "avg_batch_time": 2.505420910684686,
+        "memory_optimizations": 0,
+        "batch_size_changes": 2
+      },
+      "data_loader": {
+        "cache_hits": 0,
+        "cache_misses": 0,
+        "data_loads": 0,
+        "cache_size_mb": 0.0
+      },
+      "memory_monitor": {
+        "peak_memory_mb": 142.75390625,
+        "current_memory_mb": 142.75390625,
+        "gc_count": 0,
+        "memory_warnings": 0,
+        "memory_exceeded_count": 0
+      },
+      "current_batch_size": 42,
+      "cache_size_mb": 0.0,
+      "memory_usage_mb": 142.6328125
+    }
+  }
+}
