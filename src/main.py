@@ -196,11 +196,64 @@ def run_data_update(args):
         
         # 데이터베이스 현황만 표시
         if hasattr(args, 'summary') and args.summary:
-            summary = updater.get_data_summary()
-            logger.info("\n=== 데이터베이스 현황 ===")
-            logger.info(f"종목 수: {summary.get('symbols_count', 0):,}개")
-            logger.info(f"데이터 기간: {summary.get('date_range', ('N/A', 'N/A'))[0]} ~ {summary.get('date_range', ('N/A', 'N/A'))[1]}")
-            logger.info(f"총 데이터: {summary.get('total_records', 0):,}건")
+            # 백테스팅 분석 포함 여부 확인
+            include_backtest = getattr(args, 'backtest_analysis', False)
+            
+            if include_backtest:
+                # 종합 상태 분석
+                comprehensive_status = updater.get_comprehensive_status(include_backtest_analysis=True)
+                
+                # 기본 요약
+                basic = comprehensive_status.get('basic_summary', {})
+                logger.info("\n=== 📊 데이터베이스 기본 현황 ===")
+                logger.info(f"종목 수: {basic.get('symbols_count', 0):,}개")
+                logger.info(f"데이터 기간: {basic.get('date_range', ('N/A', 'N/A'))[0]} ~ {basic.get('date_range', ('N/A', 'N/A'))[1]}")
+                logger.info(f"총 데이터: {basic.get('total_records', 0):,}건")
+                logger.info(f"DB 경로: {basic.get('db_path', 'N/A')}")
+                
+                # 백테스팅 분석
+                backtest = comprehensive_status.get('backtest_analysis', {})
+                if backtest:
+                    logger.info(f"\n=== 🚀 백테스팅 적합성 분석 ===")
+                    logger.info(f"분석 기간: {backtest.get('analysis_period', 'N/A')}")
+                    logger.info(f"최소 데이터 요구: {backtest.get('min_data_days', 0)}일")
+                    logger.info(f"백테스팅 가능 종목: {backtest.get('valid_symbols_count', 0):,}개 ({backtest.get('valid_percentage', 0)}%)")
+                    
+                    # 상위 종목 표시
+                    top_symbols = backtest.get('top_symbols', [])
+                    if top_symbols:
+                        logger.info(f"\n📈 데이터가 가장 충실한 상위 {len(top_symbols)}개 종목:")
+                        for i, symbol_info in enumerate(top_symbols[:10], 1):
+                            symbol = symbol_info['symbol']
+                            days = symbol_info['days']
+                            start_date = symbol_info['start_date']
+                            end_date = symbol_info['end_date']
+                            logger.info(f"  {i:2d}. {symbol}: {days}일 ({start_date} ~ {end_date})")
+                        
+                        if len(top_symbols) > 10:
+                            logger.info(f"     ... 외 {len(top_symbols) - 10}개 종목")
+                    
+                    # 테스트 추천 종목
+                    test_symbols = backtest.get('test_symbols_string', '')
+                    if test_symbols:
+                        logger.info(f"\n🎯 백테스팅 테스트 추천 종목 (상위 10개):")
+                        logger.info(f"   {test_symbols}")
+                
+                # API 상태
+                api_status = comprehensive_status.get('api_status', {})
+                if api_status:
+                    logger.info(f"\n=== 🔌 API 사용 현황 ===")
+                    logger.info(f"세션 호출: {api_status.get('api_calls', 0)}회")
+                    logger.info(f"세션 시간: {api_status.get('session_duration', 'N/A')}")
+                    logger.info(f"분당 호출: {api_status.get('calls_per_minute', 0):.1f}회")
+                    
+            else:
+                # 기존 간단한 요약
+                summary = updater.get_data_summary()
+                logger.info("\n=== 데이터베이스 현황 ===")
+                logger.info(f"종목 수: {summary.get('symbols_count', 0):,}개")
+                logger.info(f"데이터 기간: {summary.get('date_range', ('N/A', 'N/A'))[0]} ~ {summary.get('date_range', ('N/A', 'N/A'))[1]}")
+                logger.info(f"총 데이터: {summary.get('total_records', 0):,}건")
             return
         
         # 전날 데이터만 업데이트
@@ -700,28 +753,28 @@ def run_streamlit():
 def run_optimization(args):
     """매개변수 최적화 실행"""
     try:
-        from src.ui.optimization import ParameterOptimizer
         from src.strategies.macd_strategy import MACDStrategy
-        import pandas as pd
+        from src.trading.parameter_optimizer import ParameterOptimizer
         import sqlite3
         
-        logger.info("매개변수 최적화 시작...")
+        logger.info("🔧 매개변수 최적화 시작...")
         
-        # 데이터 로드 (백테스트와 동일)
+        # 데이터베이스에서 데이터 로드
         db_path = PROJECT_ROOT / 'data' / 'trading.db'
+        
         if not db_path.exists():
-            logger.error("데이터베이스가 없습니다. 먼저 데이터를 업데이트하세요.")
+            logger.error("❌ 데이터베이스가 없습니다. 먼저 데이터를 업데이트하세요.")
             return
         
-        symbols = args.symbols or ['005930']
+        symbols = args.symbols if args.symbols else ['005930']  # 기본: 삼성전자
         data = {}
         
         with sqlite3.connect(db_path) as conn:
             for symbol in symbols:
                 query = """
-                SELECT date, open, high, low, close, volume
+                SELECT date, open, high, low, close, volume 
                 FROM stock_data 
-                WHERE symbol = ?
+                WHERE symbol = ? 
                 ORDER BY date
                 """
                 df = pd.read_sql_query(query, conn, params=(symbol,))
@@ -761,6 +814,124 @@ def run_optimization(args):
     except Exception as e:
         logger.error(f"최적화 실패: {e}")
 
+def run_check_data(args):
+    """종합 데이터 상태 확인 (check_data_status.py 기능 통합)"""
+    try:
+        from scripts.data_update import StockDataUpdater
+        
+        updater = StockDataUpdater()
+        
+        # 데이터베이스 존재 여부 확인
+        if not Path(updater.db_path).exists():
+            logger.error("❌ 데이터베이스가 없습니다.")
+            logger.info("다음 명령어로 데이터를 먼저 수집하세요:")
+            logger.info("python src/main.py update-data --top-kospi 50 --period 6m")
+            return
+        
+        logger.info("🔍 데이터 상태 종합 분석 중...")
+        
+        # 분석 매개변수 설정
+        days_back = getattr(args, 'days_back', 60)
+        min_days = getattr(args, 'min_days', 30)
+        top_limit = getattr(args, 'top_limit', 20)
+        
+        # 종합 상태 분석 실행
+        comprehensive_status = updater.get_comprehensive_status(include_backtest_analysis=True)
+        
+        # 기본 현황
+        basic = comprehensive_status.get('basic_summary', {})
+        logger.info("\n" + "="*50)
+        logger.info("📊 데이터베이스 기본 현황")
+        logger.info("="*50)
+        logger.info(f"총 종목 수: {basic.get('symbols_count', 0):,}개")
+        logger.info(f"데이터 기간: {basic.get('date_range', ('N/A', 'N/A'))[0]} ~ {basic.get('date_range', ('N/A', 'N/A'))[1]}")
+        logger.info(f"총 데이터: {basic.get('total_records', 0):,}건")
+        logger.info(f"DB 파일: {basic.get('db_path', 'N/A')}")
+        
+        # 최근 업데이트 정보
+        recent_updates = basic.get('recent_updates', [])
+        if recent_updates:
+            logger.info(f"\n📅 최근 업데이트 종목 (상위 5개):")
+            for symbol, last_date in recent_updates:
+                logger.info(f"  • {symbol}: {last_date}")
+        
+        # 백테스팅 분석
+        backtest = comprehensive_status.get('backtest_analysis', {})
+        if backtest:
+            logger.info(f"\n" + "="*50)
+            logger.info("🚀 백테스팅 적합성 분석")
+            logger.info("="*50)
+            logger.info(f"분석 기간: {backtest.get('analysis_period', 'N/A')}")
+            logger.info(f"최소 데이터 요구: {backtest.get('min_data_days', 0)}일 이상")
+            logger.info(f"백테스팅 가능 종목: {backtest.get('valid_symbols_count', 0):,}개")
+            logger.info(f"적합성 비율: {backtest.get('valid_percentage', 0)}% ({backtest.get('valid_symbols_count', 0)}/{basic.get('symbols_count', 0)})")
+            
+            # 상위 종목 상세 표시
+            top_symbols = backtest.get('top_symbols', [])
+            if top_symbols:
+                logger.info(f"\n📈 데이터가 가장 충실한 상위 {len(top_symbols)}개 종목:")
+                for i, symbol_info in enumerate(top_symbols, 1):
+                    symbol = symbol_info['symbol']
+                    days = symbol_info['days']
+                    start_date = symbol_info['start_date']
+                    end_date = symbol_info['end_date']
+                    logger.info(f"  {i:2d}. {symbol}: {days:3d}일 ({start_date} ~ {end_date})")
+            
+            # 테스트 추천 종목
+            test_symbols = backtest.get('test_symbols_string', '')
+            if test_symbols:
+                logger.info(f"\n🎯 백테스팅 테스트 추천 종목 (상위 10개):")
+                logger.info(f"   {test_symbols}")
+                logger.info("\n💡 사용 방법:")
+                logger.info(f"   python src/main.py backtest --symbols {' '.join(backtest.get('test_symbols', [])[:3])}")
+                logger.info(f"   python src/main.py backtest --top-kospi 10 --strategy all")
+        
+        # API 사용 현황
+        api_status = comprehensive_status.get('api_status', {})
+        if api_status and api_status.get('api_calls', 0) > 0:
+            logger.info(f"\n" + "="*50)
+            logger.info("🔌 현재 세션 API 사용 현황")
+            logger.info("="*50)
+            logger.info(f"API 호출: {api_status.get('api_calls', 0)}회")
+            logger.info(f"세션 시간: {api_status.get('session_duration', 'N/A')}")
+            logger.info(f"분당 호출율: {api_status.get('calls_per_minute', 0):.1f}회/분")
+            logger.info(f"참고: {api_status.get('notes', 'N/A')}")
+        
+        # 추가 권장사항
+        valid_count = backtest.get('valid_symbols_count', 0)
+        total_count = basic.get('symbols_count', 0)
+        
+        logger.info(f"\n" + "="*50)
+        logger.info("💡 권장사항")
+        logger.info("="*50)
+        
+        if valid_count == 0:
+            logger.info("⚠️  백테스팅 가능한 종목이 없습니다.")
+            logger.info("   데이터를 더 수집하거나 기간을 늘려보세요:")
+            logger.info("   python src/main.py update-data --top-kospi 100 --period 1y")
+        elif valid_count < 10:
+            logger.info("⚠️  백테스팅 가능한 종목이 부족합니다.")
+            logger.info("   더 많은 종목 데이터 수집을 권장합니다:")
+            logger.info("   python src/main.py update-data --top-kospi 50 --period 6m")
+        elif valid_count < 50:
+            logger.info("✅ 소규모 백테스팅에 적합합니다.")
+            logger.info("   추가 종목 수집으로 더 정확한 분석이 가능합니다:")
+            logger.info("   python src/main.py update-data --top-kospi 100 --period 1y")
+        else:
+            logger.info("🎉 대규모 백테스팅에 최적화된 상태입니다!")
+            logger.info("   병렬 백테스팅으로 효율적인 분석을 진행하세요:")
+            logger.info("   python src/main.py backtest --all-kospi --parallel --workers 8")
+        
+        # 마지막 실행 명령어 제안
+        if test_symbols:
+            logger.info(f"\n🚀 바로 시작할 수 있는 명령어:")
+            logger.info(f"   python src/main.py backtest --symbols {' '.join(backtest.get('test_symbols', [])[:5])}")
+        
+    except Exception as e:
+        logger.error(f"데이터 상태 확인 실패: {e}")
+        logger.info("기본 상태 확인을 시도하세요:")
+        logger.info("python src/main.py update-data --summary")
+
 def main():
     """메인 함수"""
     # 설정 로드
@@ -782,6 +953,10 @@ def main():
 사용 예시:
   python src/main.py check-deps           # 패키지 설치 확인
   
+  # 데이터 상태 확인 (통합된 check_data_status.py 기능)
+  python src/main.py check-data           # 종합 데이터 상태 및 백테스팅 적합성 분석
+  python src/main.py check-data --days-back 90 --min-days 45  # 사용자 정의 분석 조건
+  
   # 데이터 업데이트 (기본: 1년 데이터)
   python src/main.py update-data          # 코스피 상위 30종목 1년 데이터 업데이트
   python src/main.py update-data --top-kospi 50  # 코스피 상위 50종목 1년 데이터
@@ -799,7 +974,8 @@ def main():
   python src/main.py update-data -y --top-kospi 30  # 코스피 상위 30종목 전날 데이터
   
   # 상태 확인
-  python src/main.py update-data --summary     # 데이터베이스 현황 확인
+  python src/main.py update-data --summary     # 기본 데이터베이스 현황 확인
+  python src/main.py update-data --summary --backtest-analysis  # 백테스팅 분석 포함 상세 현황
   python src/main.py update-data --api-status  # API 사용량 확인
   
   # 백테스팅 (기본)
@@ -827,12 +1003,19 @@ def main():
     # 패키지 확인 명령어
     subparsers.add_parser('check-deps', help='필수 패키지 설치 확인')
     
+    # 데이터 상태 확인 명령어 (통합된 check_data_status.py 기능)
+    check_parser = subparsers.add_parser('check-data', help='종합 데이터 상태 확인 (백테스팅 적합성 분석)')
+    check_parser.add_argument('--days-back', type=int, default=60, help='분석 기간 (현재부터 N일 전, 기본: 60일)')
+    check_parser.add_argument('--min-days', type=int, default=30, help='백테스팅 최소 데이터 요구 일수 (기본: 30일)')
+    check_parser.add_argument('--top-limit', type=int, default=20, help='상위 종목 표시 개수 (기본: 20개)')
+    
     # 데이터 업데이트 명령어
     update_parser = subparsers.add_parser('update-data', help='주식 데이터 업데이트')
     update_parser.add_argument('--symbols', nargs='+', help='업데이트할 종목 코드들')
     update_parser.add_argument('--top-kospi', type=int, default=30, dest='top_kospi', help='코스피 상위 N개 종목 (기본: 30)')
     update_parser.add_argument('--force', action='store_true', help='강제 업데이트')
     update_parser.add_argument('--summary', action='store_true', help='데이터베이스 현황 보기')
+    update_parser.add_argument('--backtest-analysis', action='store_true', dest='backtest_analysis', help='백테스팅 적합성 분석 포함 (--summary와 함께 사용)')
     update_parser.add_argument('--api-status', action='store_true', dest='api_status', help='API 사용량 현황 보기')
     update_parser.add_argument('--yesterday-only', '-y', action='store_true', dest='yesterday_only', help='전날 데이터만 업데이트 (효율적)')
     
@@ -914,6 +1097,9 @@ def main():
             
         elif args.command == 'web':
             run_streamlit()
+            
+        elif args.command == 'check-data':
+            run_check_data(args)
             
     except KeyboardInterrupt:
         logger.info("사용자에 의해 중단됨")

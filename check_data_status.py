@@ -2,6 +2,26 @@ import sqlite3
 import pandas as pd
 from datetime import datetime, timedelta
 
+print("🔄 이 스크립트는 main.py에 통합되었습니다!")
+print("새로운 통합 명령어를 사용하세요:")
+print("")
+print("📊 종합 데이터 상태 확인:")
+print("   python src/main.py check-data")
+print("")
+print("📈 상세 백테스팅 분석:")  
+print("   python src/main.py update-data --summary --backtest-analysis")
+print("")
+print("⚡ 빠른 기본 현황:")
+print("   python src/main.py update-data --summary")
+print("")
+print("🔧 사용자 정의 분석:")
+print("   python src/main.py check-data --days-back 90 --min-days 45")
+print("")
+print("=" * 60)
+print("기존 기능을 한 번만 더 실행합니다... (곧 제거될 예정)")
+print("=" * 60)
+print("")
+
 # 데이터베이스 연결
 conn = sqlite3.connect('data/trading.db')
 
@@ -57,4 +77,9 @@ conn.close()
 
 # 유효한 종목들 일부 반환
 print(f'\n🎯 테스트용 종목 리스트 (상위 10개):')
-print(','.join(valid_symbols[:10])) 
+print(','.join(valid_symbols[:10]))
+
+print("\n" + "=" * 60)
+print("⚠️  앞으로는 다음 명령어를 사용하세요:")
+print("   python src/main.py check-data")
+print("=" * 60) 

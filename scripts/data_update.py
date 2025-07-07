@@ -1039,6 +1039,99 @@ class StockDataUpdater:
             logger.error(f"데이터 요약 조회 실패: {e}")
             return {}
     
+    def get_backtest_analysis(self, days_back: int = 60, min_days: int = 30, top_limit: int = 20) -> Dict:
+        """백테스팅 가능 종목 분석 (check_data_status.py 기능 통합)"""
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                from datetime import datetime, timedelta
+                
+                # 총 종목 수
+                total_symbols = conn.execute('SELECT COUNT(DISTINCT symbol) FROM stock_data').fetchone()[0]
+                
+                # 최근 N일 기준일 계산
+                recent_date = (datetime.now() - timedelta(days=days_back)).strftime('%Y-%m-%d')
+                
+                # 백테스팅 가능 종목 (최근 N일간 min_days 이상 데이터)
+                valid_symbols_query = '''
+                    SELECT symbol, COUNT(*) as days, MIN(date) as start_date, MAX(date) as end_date
+                    FROM stock_data 
+                    WHERE date >= ?
+                    GROUP BY symbol
+                    HAVING COUNT(*) >= ?
+                    ORDER BY days DESC
+                '''
+                
+                # 상위 종목들 조회
+                top_symbols = conn.execute(
+                    valid_symbols_query + f' LIMIT {top_limit}', 
+                    (recent_date, min_days)
+                ).fetchall()
+                
+                # 전체 유효 종목 수 계산
+                valid_count = conn.execute('''
+                    SELECT COUNT(*)
+                    FROM (
+                        SELECT symbol
+                        FROM stock_data 
+                        WHERE date >= ?
+                        GROUP BY symbol
+                        HAVING COUNT(*) >= ?
+                    ) as valid_symbols
+                ''', (recent_date, min_days)).fetchone()[0]
+                
+                # 결과 정리
+                top_symbols_list = []
+                test_symbols = []
+                
+                for symbol, days, start_date, end_date in top_symbols:
+                    top_symbols_list.append({
+                        'symbol': symbol,
+                        'days': days,
+                        'start_date': start_date,
+                        'end_date': end_date
+                    })
+                    
+                    # 상위 10개는 테스트용으로 추출
+                    if len(test_symbols) < 10:
+                        test_symbols.append(symbol)
+                
+                return {
+                    'analysis_period': f'최근 {days_back}일',
+                    'min_data_days': min_days,
+                    'total_symbols': total_symbols,
+                    'valid_symbols_count': valid_count,
+                    'valid_percentage': round((valid_count / total_symbols * 100), 1) if total_symbols > 0 else 0,
+                    'top_symbols': top_symbols_list,
+                    'test_symbols': test_symbols,
+                    'test_symbols_string': ','.join(test_symbols),
+                    'db_path': self.db_path
+                }
+                
+        except Exception as e:
+            logger.error(f"백테스팅 분석 실패: {e}")
+            return {}
+
+    def get_comprehensive_status(self, include_backtest_analysis: bool = True) -> Dict:
+        """종합 데이터 상태 분석 (기본 요약 + 백테스팅 분석)"""
+        try:
+            # 기본 데이터 요약
+            basic_summary = self.get_data_summary()
+            
+            result = {
+                'basic_summary': basic_summary,
+                'api_status': self.get_api_usage_status()
+            }
+            
+            # 백테스팅 분석 추가
+            if include_backtest_analysis:
+                result['backtest_analysis'] = self.get_backtest_analysis()
+            
+            return result
+            
+        except Exception as e:
+            logger.error(f"종합 상태 분석 실패: {e}")
+            return {}
+    
     def _track_api_call(self):
         """API 호출 추적"""
         self.api_call_count += 1

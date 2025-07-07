@@ -385,3 +385,64 @@ CREATE TABLE indicators (
 </div>
 
 **프로젝트 업데이트**: 2024년 7월 TA-Lib 기반 스윙 트레이딩 시스템으로 구조 개편 완료
+
+## 🔧 핵심 전략
+
+### 📊 구현된 TA-Lib 전략
+1. **MACD 전략**: 추세 추종 + 모멘텀 결합
+2. **RSI 전략**: 과매수/과매도 구간 활용
+3. **볼린저 밴드**: 변동성 기반 평균 회귀
+4. **이동평균**: 단순/지수 이동평균 교차
+
+### 🎯 스윙 트레이딩 최적화
+- **보유 기간**: 3-15일 (단기 변동성 활용)
+- **포지션 크기**: 종목당 최대 25% (리스크 분산)
+- **손절매**: 3% 고정 (리스크 관리)
+- **분산투자**: 최대 5종목 동시 보유
+
+## 🛡️ 리스크 관리
+
+### 💰 100만원 규모 최적화
+```python
+# 포트폴리오 설정 예시
+TOTAL_CAPITAL = 1_000_000     # 총 투자금
+MAX_STOCKS = 5                # 최대 보유 종목
+MAX_POSITION = 0.25           # 종목당 최대 25%
+STOP_LOSS = 0.03              # 3% 손절매
+```
+
+### 📈 성과 지표
+- **샤프 비율**: 위험 대비 수익률
+- **최대낙폭(MDD)**: 최대 손실폭 추적
+- **승률**: 수익 거래 비율
+- **수익/손실 비율**: 평균 수익 대 평균 손실
+
+## 🚨 주의사항
+
+⚠️ **백테스팅 결과는 과거 데이터 기반이며, 미래 수익을 보장하지 않습니다.**
+
+⚠️ **실거래 전 충분한 검증과 소액 테스트를 권장합니다.**
+
+⚠️ **키움 API 연동 시 실제 계좌 정보가 필요합니다.**
+
+## 🤝 기여하기
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 라이선스
+
+MIT License - 자세한 내용은 [LICENSE](LICENSE) 파일을 참조하세요.
+
+## 📞 지원 및 문의
+
+- **GitHub Issues**: 버그 리포트 및 기능 요청
+- **Wiki**: 상세 사용법 및 FAQ
+- **Discussions**: 커뮤니티 질의응답
+
+---
+
+🎯 **100만원으로 시작하는 체계적인 알고리즘 트레이딩 여정을 응원합니다!** 🚀
