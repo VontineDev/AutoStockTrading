@@ -194,7 +194,10 @@ class BatchOptimizer:
         self.stats['total_batches'] += 1
         self.stats['total_items'] += len(batch)
         self.stats['total_time'] += batch_time
-        self.stats['avg_batch_time'] = self.stats['total_time'] / self.stats['total_batches']
+        
+        # 안전한 통계 계산
+        if self.stats['total_batches'] > 0:
+            self.stats['avg_batch_time'] = self.stats['total_time'] / self.stats['total_batches']
         
         if self.stats['total_time'] > 0:
             self.stats['avg_items_per_second'] = self.stats['total_items'] / self.stats['total_time']
@@ -283,6 +286,27 @@ class BatchProcessor:
                                  **kwargs) -> Dict[str, Any]:
         """심볼 목록을 배치로 처리"""
         
+        # 빈 심볼 리스트 처리
+        if not symbols:
+            logger.warning("빈 심볼 리스트가 제공되었습니다.")
+            return {
+                'results': {},
+                'performance_stats': {
+                    'total_symbols': 0,
+                    'successful_symbols': 0,
+                    'failed_symbols': 0,
+                    'success_rate': 0.0,
+                    'total_time': 0.0,
+                    'avg_time_per_symbol': 0.0,
+                    'symbols_per_second': 0.0,
+                    'total_batches': 0,
+                    'avg_batch_size': 0.0,
+                    'memory_stats': self.memory_monitor.stats,
+                    'optimizer_stats': self.optimizer.stats,
+                    'loader_stats': self.data_loader.stats
+                }
+            }
+        
         start_time = time.time()
         logger.info(f"배치 처리 시작: {len(symbols)}개 심볼")
         
@@ -324,17 +348,22 @@ class BatchProcessor:
         
         total_time = time.time() - start_time
         
+        # 안전한 나눗셈을 위한 함수
+        def safe_divide(numerator: float, denominator: float, default: float = 0.0) -> float:
+            """0으로 나누기 방지를 위한 안전한 나눗셈"""
+            return numerator / denominator if denominator != 0 else default
+        
         # 최종 성능 통계
         performance_stats = {
             'total_symbols': len(symbols),
             'successful_symbols': successful_count,
             'failed_symbols': failed_count,
-            'success_rate': successful_count / len(symbols) * 100,
+            'success_rate': safe_divide(successful_count, len(symbols), 0.0) * 100,
             'total_time': total_time,
-            'avg_time_per_symbol': total_time / len(symbols),
-            'symbols_per_second': len(symbols) / total_time,
+            'avg_time_per_symbol': safe_divide(total_time, len(symbols), 0.0),
+            'symbols_per_second': safe_divide(len(symbols), total_time, 0.0),
             'total_batches': len(batches),
-            'avg_batch_size': len(symbols) / len(batches),
+            'avg_batch_size': safe_divide(len(symbols), len(batches), 0.0),
             'memory_stats': self.memory_monitor.stats,
             'optimizer_stats': self.optimizer.stats,
             'loader_stats': self.data_loader.stats

@@ -351,7 +351,7 @@ class TestBaseStrategy(unittest.TestCase):
         self.assertIn('parameters', info)
         self.assertIn('risk_management', info)
         self.assertIn('performance_metrics', info)
-        self.assertIn('signals_count', info)
+        self.assertIn('total_signals', info)
 
 
 class TestUtilityFunctions(unittest.TestCase):

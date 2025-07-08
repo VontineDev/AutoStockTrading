@@ -11,12 +11,9 @@ from src.data.indicators import TechnicalIndicators
 
 class StockDataManager:
     def __init__(self, db_path="stock_data.db", schema_path=None):
-        if schema_path is None:
-            # 프로젝트 루트 기준으로 data/stock_db_schema.sql 경로 지정
-            project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-            schema_path = os.path.join(project_root, 'data', 'stock_db_schema.sql')
         self.db = DatabaseManager(db_path)
-        self.db.initialize_schema(schema_path)
+        if schema_path and os.path.exists(schema_path):
+            self.db.initialize_schema(schema_path)
         self.collector = StockCollector()
         self.indicator = TechnicalIndicators()
         

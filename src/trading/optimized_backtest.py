@@ -134,6 +134,19 @@ class OptimizedBacktestEngine:
             최적화된 백테스팅 결과
         """
         
+        # 입력 검증
+        if strategy_class is None:
+            raise TypeError("전략 클래스가 None입니다.")
+        
+        if not hasattr(strategy_class, '__call__'):
+            raise AttributeError("전략 클래스가 호출 가능하지 않습니다.")
+        
+        if days <= 0:
+            raise ValueError(f"백테스팅 기간은 양수여야 합니다: {days}")
+        
+        if not isinstance(symbols, list):
+            raise TypeError("심볼은 리스트 형태여야 합니다.")
+        
         start_time = time.time()
         logger.info(f"최적화된 백테스팅 시작: {len(symbols)}개 심볼, {days}일")
         

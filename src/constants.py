@@ -41,6 +41,10 @@ class DataCollectionConstants:
     DEFAULT_BATCH_SIZE = 30
     MIN_BATCH_SIZE = 5
     MAX_BATCH_SIZE = 100
+    
+    # 연결 및 재시도 설정
+    CONNECTION_TIMEOUT = 30
+    MAX_RETRIES = 3
 
 
 # =============================================================================
@@ -163,6 +167,9 @@ class OptimizationConstants:
     # 스레드 풀 설정
     THREAD_POOL_TIMEOUT = 300  # 5분
     TASK_TIMEOUT = 120  # 2분
+    
+    # 메모리 관리
+    MEMORY_WARNING_THRESHOLD_MB = 500
 
 
 # =============================================================================
