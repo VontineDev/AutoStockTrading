@@ -24,17 +24,17 @@ class Position:
     current_price: float = 0.0
     
     @property
-    def market_value(self) -> float:
+def market_value(self) -> float:
         """현재 시장 가치"""
         return self.quantity * self.current_price
     
     @property
-    def unrealized_pnl(self) -> float:
+def unrealized_pnl(self) -> float:
         """미실현 손익"""
         return (self.current_price - self.entry_price) * self.quantity
     
     @property
-    def unrealized_pnl_pct(self) -> float:
+def unrealized_pnl_pct(self) -> float:
         """미실현 손익 비율"""
         if self.entry_price == 0:
             return 0.0
@@ -52,19 +52,19 @@ class Trade:
     tax: float = 0.0
     
     @property
-    def gross_amount(self) -> float:
+def gross_amount(self) -> float:
         """수수료 제외 금액"""
         return self.quantity * self.price
     
     @property
-    def net_amount(self) -> float:
+def net_amount(self) -> float:
         """수수료 포함 순 금액"""
         return self.gross_amount + self.commission + self.tax
 
 class Portfolio:
     """포트폴리오 관리 클래스"""
     
-    def __init__(self, initial_cash: float = 1000000.0, commission_rate: float = 0.00015, tax_rate: float = 0.0025):
+def __init__(self, initial_cash: float = 1000000.0, commission_rate: float = 0.00015, tax_rate: float = 0.0025):
         """
         포트폴리오 초기화
         
@@ -92,7 +92,7 @@ class Portfolio:
         # 초기 포트폴리오 가치 기록
         self.portfolio_values.append((datetime.now(), initial_cash))
     
-    def buy(self, symbol: str, quantity: int, price: float, date: datetime = None) -> bool:
+def buy(self, symbol: str, quantity: int, price: float, date: datetime = None) -> bool:
         """매수 주문 실행"""
         if date is None:
             date = datetime.now()
@@ -149,7 +149,7 @@ class Portfolio:
         self.logger.info(f"매수 완료: {symbol} {quantity}주 @ {price:,.0f}원 (수수료: {commission:,.0f}원)")
         return True
     
-    def sell(self, symbol: str, quantity: int, price: float, date: datetime = None) -> bool:
+def sell(self, symbol: str, quantity: int, price: float, date: datetime = None) -> bool:
         """매도 주문 실행"""
         if date is None:
             date = datetime.now()
@@ -202,7 +202,7 @@ class Portfolio:
         self.logger.info(f"매도 완료: {symbol} {quantity}주 @ {price:,.0f}원 (수수료: {commission:,.0f}원, 세금: {tax:,.0f}원)")
         return True
     
-    def update_prices(self, prices: Dict[str, float], date: datetime = None):
+def update_prices(self, prices: Dict[str, float], date: datetime = None):
         """현재 가격 업데이트"""
         if date is None:
             date = datetime.now()
@@ -221,12 +221,12 @@ class Portfolio:
             daily_return = (total_value - prev_value) / prev_value
             self.daily_returns.append(daily_return)
     
-    def get_total_value(self) -> float:
+def get_total_value(self) -> float:
         """총 포트폴리오 가치"""
         positions_value = sum(pos.market_value for pos in self.positions.values())
         return self.cash + positions_value
     
-    def get_positions_summary(self) -> pd.DataFrame:
+def get_positions_summary(self) -> pd.DataFrame:
         """포지션 요약 정보"""
         if not self.positions:
             return pd.DataFrame()
@@ -246,7 +246,7 @@ class Portfolio:
         
         return pd.DataFrame(data)
     
-    def get_trades_summary(self) -> pd.DataFrame:
+def get_trades_summary(self) -> pd.DataFrame:
         """매매 기록 요약"""
         if not self.trades:
             return pd.DataFrame()
@@ -267,7 +267,7 @@ class Portfolio:
         
         return pd.DataFrame(data)
     
-    def get_performance_metrics(self) -> Dict[str, float]:
+def get_performance_metrics(self) -> Dict[str, float]:
         """성과 지표 계산"""
         if len(self.portfolio_values) < 2:
             return {}
@@ -337,7 +337,7 @@ class Portfolio:
             'completed_trades': total_completed_trades
         }
     
-    def get_equity_curve(self) -> pd.DataFrame:
+def get_equity_curve(self) -> pd.DataFrame:
         """자산 곡선 데이터"""
         if not self.portfolio_values:
             return pd.DataFrame()
@@ -352,7 +352,7 @@ class Portfolio:
         
         return pd.DataFrame(data)
     
-    def reset(self):
+def reset(self):
         """포트폴리오 초기화"""
         self.cash = self.initial_cash
         self.positions.clear()

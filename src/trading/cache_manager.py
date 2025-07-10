@@ -33,7 +33,7 @@ class CacheConfig:
 class BacktestCacheManager:
     """백테스팅 결과 캐싱 관리자"""
     
-    def __init__(self, config: CacheConfig = None):
+def __init__(self, config: CacheConfig = None):
         self.config = config or CacheConfig()
         self.db_path = Path(self.config.db_path)
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
@@ -62,7 +62,7 @@ class BacktestCacheManager:
         
         logger.info(f"캐시 관리자 초기화: {self.db_path}")
     
-    def _init_database(self):
+def _init_database(self):
         """데이터베이스 초기화"""
         try:
             with sqlite3.connect(self.db_path) as conn:
@@ -108,7 +108,7 @@ class BacktestCacheManager:
             logger.error(f"데이터베이스 초기화 실패: {e}")
             raise
     
-    def generate_cache_key(self, 
+def generate_cache_key(self, 
                           strategy_name: str,
                           symbol: str,
                           data_hash: str,
@@ -126,7 +126,7 @@ class BacktestCacheManager:
         key_string = json.dumps(key_data, sort_keys=True)
         return hashlib.md5(key_string.encode()).hexdigest()
     
-    def get_data_hash(self, data: pd.DataFrame) -> str:
+def get_data_hash(self, data: pd.DataFrame) -> str:
         """데이터의 해시값 계산"""
         # 데이터의 크기와 첫/마지막 몇 행의 해시를 조합
         data_info = {
@@ -143,7 +143,7 @@ class BacktestCacheManager:
         
         return hashlib.md5(json.dumps(data_info, sort_keys=True).encode()).hexdigest()
     
-    def get_cached_result(self,
+def get_cached_result(self,
                          strategy_name: str,
                          symbol: str,
                          data: pd.DataFrame,
@@ -225,7 +225,7 @@ class BacktestCacheManager:
             self.stats['cache_misses'] += 1
             return None
     
-    def save_result(self,
+def save_result(self,
                    strategy_name: str,
                    symbol: str,
                    data: pd.DataFrame,
@@ -282,7 +282,7 @@ class BacktestCacheManager:
         except Exception as e:
             logger.error(f"캐시 저장 실패: {e}")
     
-    def _add_to_memory_cache(self, cache_key: str, results: Dict[str, Any]):
+def _add_to_memory_cache(self, cache_key: str, results: Dict[str, Any]):
         """메모리 캐시에 추가"""
         with self.cache_lock:
             # 메모리 캐시 크기 제한
@@ -296,7 +296,7 @@ class BacktestCacheManager:
             self.memory_cache[cache_key] = results
             self.memory_cache_usage[cache_key] = time.time()
     
-    def _periodic_cleanup(self):
+def _periodic_cleanup(self):
         """주기적 캐시 정리"""
         current_time = time.time()
         
@@ -304,7 +304,7 @@ class BacktestCacheManager:
             self.cleanup_cache()
             self.last_cleanup = current_time
     
-    def cleanup_cache(self):
+def cleanup_cache(self):
         """캐시 정리"""
         try:
             with sqlite3.connect(self.db_path) as conn:
@@ -346,7 +346,7 @@ class BacktestCacheManager:
         except Exception as e:
             logger.error(f"캐시 정리 실패: {e}")
     
-    def get_cache_stats(self) -> Dict[str, Any]:
+def get_cache_stats(self) -> Dict[str, Any]:
         """캐시 통계 조회"""
         try:
             with sqlite3.connect(self.db_path) as conn:
@@ -391,7 +391,7 @@ class BacktestCacheManager:
             logger.error(f"캐시 통계 조회 실패: {e}")
             return self.stats.copy()
     
-    def clear_cache(self, strategy_name: str = None, symbol: str = None):
+def clear_cache(self, strategy_name: str = None, symbol: str = None):
         """캐시 삭제"""
         try:
             with sqlite3.connect(self.db_path) as conn:
@@ -430,7 +430,7 @@ class BacktestCacheManager:
             logger.error(f"캐시 삭제 실패: {e}")
     
     @contextmanager
-    def cached_backtest(self,
+def cached_backtest(self,
                        strategy_name: str,
                        symbol: str,
                        data: pd.DataFrame,
@@ -449,7 +449,7 @@ class BacktestCacheManager:
             # 캐시 미스 시 새로운 결과 저장을 위한 플레이스홀더
             result_container = {'result': None}
             
-            def save_result_callback(result):
+def save_result_callback(result):
                 result_container['result'] = result
                 self.save_result(
                     strategy_name, symbol, data, result, strategy_params, backtest_config

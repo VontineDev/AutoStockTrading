@@ -42,13 +42,13 @@ class BollingerBandConfig(StrategyConfig):
 class BollingerBandStrategy(BaseStrategy):
     """볼린저 밴드 기반 스윙 트레이딩 전략"""
     
-    def __init__(self, config: Optional[BollingerBandConfig] = None):
+def __init__(self, config: Optional[BollingerBandConfig] = None):
         super().__init__(config or BollingerBandConfig())
         self.config: BollingerBandConfig = self.config
         logger.info(f"볼린저 밴드 전략 초기화: period={self.config.bb_period}, "
                    f"deviation={self.config.bb_deviation}")
     
-    def calculate_indicators(self, df: pd.DataFrame) -> pd.DataFrame:
+def calculate_indicators(self, df: pd.DataFrame) -> pd.DataFrame:
         """기술적 지표 계산"""
         # 볼린저 밴드 계산
         df['BB_upper'], df['BB_middle'], df['BB_lower'] = talib.BBANDS(
@@ -90,7 +90,7 @@ class BollingerBandStrategy(BaseStrategy):
         
         return df
     
-    def _assess_risk_level(self, current_row: pd.Series, confidence: float) -> str:
+def _assess_risk_level(self, current_row: pd.Series, confidence: float) -> str:
         """리스크 레벨 평가"""
         bb_position = current_row.get('BB_position', 0.5)
         bb_width = current_row.get('BB_width', 0.05)
@@ -104,7 +104,7 @@ class BollingerBandStrategy(BaseStrategy):
         else:
             return 'MEDIUM'
     
-    def _generate_buy_signals(self, df: pd.DataFrame) -> List[TradeSignal]:
+def _generate_buy_signals(self, df: pd.DataFrame) -> List[TradeSignal]:
         """매수 신호 생성"""
         signals = []
         
@@ -198,7 +198,7 @@ class BollingerBandStrategy(BaseStrategy):
         
         return signals
     
-    def _generate_sell_signals(self, df: pd.DataFrame) -> List[TradeSignal]:
+def _generate_sell_signals(self, df: pd.DataFrame) -> List[TradeSignal]:
         """매도 신호 생성"""
         signals = []
         
@@ -293,7 +293,7 @@ class BollingerBandStrategy(BaseStrategy):
         
         return signals
     
-    def generate_signals(self, df: pd.DataFrame) -> List[TradeSignal]:
+def generate_signals(self, df: pd.DataFrame) -> List[TradeSignal]:
         """매매 신호 생성 (메인 로직)"""
         # 지표 계산
         df = self.calculate_indicators(df)
@@ -309,7 +309,7 @@ class BollingerBandStrategy(BaseStrategy):
         logger.info(f"볼린저 밴드 전략으로 {len(all_signals)}개 신호 생성")
         return all_signals
     
-    def validate_signal(self, signal: TradeSignal, data: pd.DataFrame) -> bool:
+def validate_signal(self, signal: TradeSignal, data: pd.DataFrame) -> bool:
         """신호 검증"""
         # 기본 검증: 가격과 신뢰도 확인
         if signal.price <= 0 or signal.confidence < 50:

@@ -3,12 +3,12 @@ from typing import Optional, Dict, Any
 import requests
 
 class KiwoomApiClient:
-    def __init__(self, api_key: str, api_secret: str):
+def __init__(self, api_key: str, api_secret: str):
         self.api_key = api_key
         self.api_secret = api_secret
         self.logger = logging.getLogger(self.__class__.__name__)
 
-    def get_account_info(self, access_token: str, timeout: int = 30) -> Optional[Dict[str, Any]]:
+def get_account_info(self, access_token: str, timeout: int = 30) -> Optional[Dict[str, Any]]:
         """
         키움 REST API 계좌평가현황요청(kt00004)
         """
@@ -33,6 +33,37 @@ class KiwoomApiClient:
             return result
         except requests.exceptions.RequestException as e:
             self.logger.error(f"계좌 정보 조회 실패: {e}")
+            return None
+
+def get_daily_ohlcv(self, access_token: str, symbol: str, start_date: str, end_date: str, timeout: int = 30) -> Optional[Dict[str, Any]]:
+        """
+        키움 REST API 주식일주월시분요청(CTPF1604R)
+        """
+        url = "https://api.kiwoom.com/api/dostk/market-data"
+        headers = {
+            "Content-Type": "application/json;charset=UTF-8",
+            "authorization": f"Bearer {access_token}",
+            "api-id": "CTPF1604R",
+            "cont-yn": "N",
+            "next-key": ""
+        }
+        data = {
+            "symbol": symbol,
+            "from_dt": start_date,
+            "to_dt": end_date,
+            "period_tp": "D", # D:일, W:주, M:월
+            "prc_tp": "1", # 1:수정주가, 2:원주가
+            "vol_adj_tp": "1" # 1:거래량, 2:거래대금
+        }
+        try:
+            self.logger.info(f"주식일봉데이터요청({symbol}) API 호출")
+            response = requests.post(url, headers=headers, json=data, timeout=timeout)
+            response.raise_for_status()
+            result = response.json()
+            self.logger.info(f"주식일봉데이터({symbol}) 조회 성공: {len(result.get('output', []))}건")
+            return result
+        except requests.exceptions.RequestException as e:
+            self.logger.error(f"주식일봉데이터({symbol}) 조회 실패: {e}")
             return None
 
 if __name__ == "__main__":

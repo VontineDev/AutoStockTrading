@@ -37,13 +37,13 @@ class RSIConfig(StrategyConfig):
 class RSIStrategy(BaseStrategy):
     """RSI 기반 스윙 트레이딩 전략"""
     
-    def __init__(self, config: Optional[RSIConfig] = None):
+def __init__(self, config: Optional[RSIConfig] = None):
         super().__init__(config or RSIConfig())
         self.config: RSIConfig = self.config
         logger.info(f"RSI 전략 초기화: period={self.config.rsi_period}, "
                    f"oversold={self.config.oversold}, overbought={self.config.overbought}")
     
-    def calculate_indicators(self, df: pd.DataFrame) -> pd.DataFrame:
+def calculate_indicators(self, df: pd.DataFrame) -> pd.DataFrame:
         """기술적 지표 계산"""
         # 기본 RSI 계산
         df['RSI'] = talib.RSI(df['close'], timeperiod=self.config.rsi_period)
@@ -65,7 +65,7 @@ class RSIStrategy(BaseStrategy):
         
         return df
     
-    def _assess_risk_level(self, current_row: pd.Series, confidence: float) -> str:
+def _assess_risk_level(self, current_row: pd.Series, confidence: float) -> str:
         """리스크 레벨 평가"""
         rsi = current_row.get('RSI', 50)
         volume_ratio = current_row.get('volume_ratio', 1.0)
@@ -79,7 +79,7 @@ class RSIStrategy(BaseStrategy):
         else:
             return 'MEDIUM'
     
-    def _generate_buy_signals(self, df: pd.DataFrame) -> List[TradeSignal]:
+def _generate_buy_signals(self, df: pd.DataFrame) -> List[TradeSignal]:
         """매수 신호 생성"""
         signals = []
         
@@ -152,7 +152,7 @@ class RSIStrategy(BaseStrategy):
         
         return signals
     
-    def _generate_sell_signals(self, df: pd.DataFrame) -> List[TradeSignal]:
+def _generate_sell_signals(self, df: pd.DataFrame) -> List[TradeSignal]:
         """매도 신호 생성"""
         signals = []
         
@@ -225,7 +225,7 @@ class RSIStrategy(BaseStrategy):
         
         return signals
     
-    def generate_signals(self, df: pd.DataFrame) -> List[TradeSignal]:
+def generate_signals(self, df: pd.DataFrame) -> List[TradeSignal]:
         """매매 신호 생성 (메인 로직)"""
         # 지표 계산
         df = self.calculate_indicators(df)
@@ -241,7 +241,7 @@ class RSIStrategy(BaseStrategy):
         logger.info(f"RSI 전략으로 {len(all_signals)}개 신호 생성")
         return all_signals
     
-    def validate_signal(self, signal: TradeSignal, data: pd.DataFrame) -> bool:
+def validate_signal(self, signal: TradeSignal, data: pd.DataFrame) -> bool:
         """신호 검증"""
         # 기본 검증: 가격과 신뢰도 확인
         if signal.price <= 0 or signal.confidence < 50:

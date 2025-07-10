@@ -6,8 +6,26 @@ pykrx 기반 주식 데이터 자동 업데이트 스크립트
 SQLite 데이터베이스에 저장하는 스크립트입니다.
 """
 
-import os
 import sys
+import os
+
+def is_venv_active():
+    return (
+        hasattr(sys, 'real_prefix') or
+        (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix)
+    )
+
+if not is_venv_active():
+    print("""
+[ERROR] 가상환경(venv)이 활성화되어 있지 않습니다!\n
+반드시 아래 명령어로 가상환경을 활성화한 후 실행하세요:
+    .\\venv\\Scripts\\activate   (Windows)
+    source venv/bin/activate    (Linux/Mac)
+
+(IDE를 사용하는 경우, Python 인터프리터를 venv로 지정하세요.)
+""")
+    sys.exit(1)
+
 import sqlite3
 import pandas as pd
 import numpy as np
@@ -18,6 +36,8 @@ import time
 import argparse
 from pathlib import Path
 import yaml
+import requests
+
 
 # 병렬 처리를 위한 imports
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -49,7 +69,18 @@ import threading
 PROJECT_ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
+# 키움 API 클라이언트 import
+try:
+    from src.api.kiwoom_client import KiwoomApiClient
+    from src.api.auth import get_access_token, get_kiwoom_env
+    KIWOOM_API_AVAILABLE = True
+except ImportError as e:
+    logger.warning(f"키움 API 클라이언트를 불러올 수 없습니다: {e}")
+    KIWOOM_API_AVAILABLE = False
+
+
 # 로깅 설정
+sys.stdout.reconfigure(encoding='utf-8') # sys.stdout의 인코딩을 변경
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -75,7 +106,7 @@ except ImportError as e:
 class StockDataUpdater:
     """주식 데이터 업데이트 클래스"""
     
-    def __init__(self, db_path: str = None, config_path: str = None):
+def __init__(self, db_path: str = None, config_path: str = None):
         """
         Args:
             db_path: SQLite 데이터베이스 경로
@@ -101,9 +132,24 @@ class StockDataUpdater:
         self.db_lock = Lock()
         self.progress_lock = Lock()
         
+        # 환경변수에서 API 키 읽기
+        API_KEY = os.getenv('KIWOOM_API_KEY')
+        API_SECRET = os.getenv('KIWOOM_API_SECRET')
+        if not API_KEY or not API_SECRET:
+            logger.warning("환경변수에 KIWOOM_API_KEY 또는 KIWOOM_API_SECRET 값이 없습니다. 키움 API 기능이 제한될 수 있습니다.")
+        # 키움 API 클라이언트 초기화
+        if KIWOOM_API_AVAILABLE:
+            self.kiwoom_client = KiwoomApiClient(API_KEY, API_SECRET)
+            self.access_token = get_access_token(API_KEY, API_SECRET)
+            if not self.access_token:
+                logger.warning("키움 API 접근 토큰 발급 실패. 키움 관련 기능이 제한될 수 있습니다.")
+        else:
+            self.kiwoom_client = None
+            self.access_token = None
+
         logger.info(f"데이터 업데이터 초기화 완료: DB={self.db_path}")
     
-    def _load_config(self) -> Dict:
+def _load_config(self) -> Dict:
         """설정 파일 로드"""
         try:
             if os.path.exists(self.config_path):
@@ -123,7 +169,7 @@ class StockDataUpdater:
             }
         }
     
-    def _init_database(self):
+def _init_database(self):
         """데이터베이스 및 테이블 초기화"""
         os.makedirs(os.path.dirname(self.db_path), exist_ok=True)
         
@@ -179,11 +225,12 @@ class StockDataUpdater:
             conn.commit()
             logger.info("데이터베이스 테이블 초기화 완료")
     
-    def get_kospi_symbols(self, limit: int = None) -> List[str]:
+def get_kospi_symbols(self, limit: int = None, date: str = None) -> List[str]:
         """KOSPI 종목 코드 조회"""
         try:
-            today = datetime.now().strftime('%Y%m%d')
-            symbols = stock.get_market_ticker_list(today, market="KOSPI")
+            if date is None:
+                date = datetime.now().strftime('%Y%m%d')
+            symbols = stock.get_market_ticker_list(date, market="KOSPI")
             
             if limit:
                 symbols = symbols[:limit]
@@ -195,7 +242,7 @@ class StockDataUpdater:
             logger.error(f"KOSPI 종목 조회 실패: {e}")
             return []
     
-    def get_latest_trading_date_from_db(self) -> Optional[str]:
+def get_latest_trading_date_from_db(self) -> Optional[str]:
         """데이터베이스에서 최신 거래일 조회"""
         try:
             with sqlite3.connect(self.db_path) as conn:
@@ -213,7 +260,7 @@ class StockDataUpdater:
             logger.error(f"데이터베이스에서 최신 거래일 조회 실패: {e}")
             return None
     
-    def get_kospi_top_symbols_from_db(self, target_date: str, limit: int = 30) -> Optional[List[str]]:
+def get_kospi_top_symbols_from_db(self, target_date: str, limit: int = 30) -> Optional[List[str]]:
         """데이터베이스 데이터 기반 KOSPI 상위 종목 선별"""
         try:
             # 해당 날짜에 KOSPI 데이터가 충분히 있는지 확인
@@ -272,7 +319,7 @@ class StockDataUpdater:
             logger.error(f"데이터베이스 기반 종목 선별 실패: {e}")
             return None
     
-    def get_kospi_top_symbols_with_retry(self, limit: int = 30, max_retries: int = 3) -> Optional[List[str]]:
+def get_kospi_top_symbols_with_retry(self, limit: int = 30, max_retries: int = 3) -> Optional[List[str]]:
         """재시도 로직을 포함한 Ultra-Fast API 호출"""
         for attempt in range(max_retries):
             try:
@@ -291,7 +338,7 @@ class StockDataUpdater:
         logger.error(f"Ultra-Fast API 호출 {max_retries}회 모두 실패")
         return None
     
-    def get_kospi_top_symbols_fallback(self, limit: int = 30) -> List[str]:
+def get_kospi_top_symbols_fallback(self, limit: int = 30) -> List[str]:
         """폴백: 전날 또는 최근 데이터 기반 종목 선별"""
         try:
             # 1. 데이터베이스에서 최근 거래일 찾기
@@ -360,7 +407,7 @@ class StockDataUpdater:
             # 최종 안전망
             return ['005930', '000660', '207940', '373220', '005380'][:limit]
     
-    def get_kospi_top_symbols(self, limit: int = 30) -> List[str]:
+def get_kospi_top_symbols(self, limit: int = 30) -> List[str]:
         """스마트 KOSPI 상위 종목 조회: DB 우선 → API 재시도 → 폴백"""
         logger.info(f"=== KOSPI 상위 {limit}개 종목 조회 시작 ===")
         
@@ -414,7 +461,7 @@ class StockDataUpdater:
             safe_symbols = ['005930', '000660', '207940', '373220', '005380']
             return safe_symbols[:limit]
     
-    def get_kospi_top_symbols_ultra_fast(self, limit: int = 30) -> List[str]:
+def get_kospi_top_symbols_ultra_fast(self, limit: int = 30) -> List[str]:
         """Ultra-Fast: 한번의 API 호출로 KOSPI 상위 종목 조회"""
         try:
             today = datetime.now().strftime('%Y%m%d')
@@ -472,11 +519,12 @@ class StockDataUpdater:
             logger.info("기존 방식으로 폴백")
             return self.get_kospi_top_symbols(limit)
 
-    def get_kosdaq_symbols(self, limit: int = None) -> List[str]:
+def get_kosdaq_symbols(self, limit: int = None, date: str = None) -> List[str]:
         """KOSDAQ 종목 코드 조회"""
         try:
-            today = datetime.now().strftime('%Y%m%d')
-            symbols = stock.get_market_ticker_list(today, market="KOSDAQ")
+            if date is None:
+                date = datetime.now().strftime('%Y%m%d')
+            symbols = stock.get_market_ticker_list(date, market="KOSDAQ")
             
             if limit:
                 symbols = symbols[:limit]
@@ -488,7 +536,7 @@ class StockDataUpdater:
             logger.error(f"KOSDAQ 종목 조회 실패: {e}")
             return []
     
-    def get_symbol_info(self, symbol: str) -> Optional[Dict]:
+def get_symbol_info(self, symbol: str) -> Optional[Dict]:
         """종목 기본 정보 조회"""
         try:
             today = datetime.now().strftime('%Y%m%d')
@@ -518,8 +566,12 @@ class StockDataUpdater:
             logger.warning(f"종목 정보 조회 실패 ({symbol}): {e}")
             return None
     
-    def fetch_stock_data(self, symbol: str, start_date: str, end_date: str) -> Optional[pd.DataFrame]:
+def fetch_stock_data(self, symbol: str, start_date: str, end_date: str, source: str = 'pykrx') -> Optional[pd.DataFrame]:
         """개별 종목 데이터 조회"""
+        if source == 'kiwoom':
+            return self.fetch_stock_data_kiwoom(symbol, start_date, end_date)
+
+        # 기본 동작은 pykrx
         max_retries = self.config['data_collection']['max_retries']
         
         for attempt in range(max_retries):
@@ -565,7 +617,7 @@ class StockDataUpdater:
                 
         return None
     
-    def save_stock_data(self, df: pd.DataFrame):
+def save_stock_data(self, df: pd.DataFrame):
         """주식 데이터를 데이터베이스에 저장 (Thread-safe, 개선된 중복 처리)"""
         try:
             # 병렬 처리 시 DB 접근을 동기화
@@ -602,7 +654,7 @@ class StockDataUpdater:
             logger.error(f"❌ 데이터 저장 실패: {e}")
             raise
     
-    def save_symbol_info(self, symbol_info: Dict):
+def save_symbol_info(self, symbol_info: Dict):
         """종목 정보 저장"""
         try:
             with sqlite3.connect(self.db_path) as conn:
@@ -624,7 +676,7 @@ class StockDataUpdater:
         except Exception as e:
             logger.error(f"종목 정보 저장 실패: {e}")
     
-    def get_last_update_date(self, symbol: str) -> Optional[date]:
+def get_last_update_date(self, symbol: str) -> Optional[date]:
         """종목의 마지막 업데이트 날짜 조회"""
         try:
             with sqlite3.connect(self.db_path) as conn:
@@ -648,8 +700,8 @@ class StockDataUpdater:
         
         return None
     
-    def update_symbol(self, symbol: str, start_date: str = None, end_date: str = None, 
-                     force_update: bool = False, show_date_progress: bool = False) -> bool:
+def update_symbol(self, symbol: str, start_date: str = None, end_date: str = None, 
+                     force_update: bool = False, show_date_progress: bool = False, source: str = 'pykrx') -> bool:
         """개별 종목 데이터 업데이트 (개선된 날짜 진행상황 표시)"""
         try:
             # 종목 정보 업데이트
@@ -701,7 +753,7 @@ class StockDataUpdater:
             fetch_start = datetime.now()
             
             # 데이터 조회
-            df = self.fetch_stock_data(symbol, start_date, end_date)
+            df = self.fetch_stock_data(symbol, start_date, end_date, source=source)
             
             if df is not None and not df.empty:
                 # 데이터 저장
@@ -740,7 +792,7 @@ class StockDataUpdater:
                 logger.error(f"종목 업데이트 실패: {symbol} - {e}")
             return False
     
-    def update_multiple_symbols(self, symbols: List[str], start_date: str = None, 
+def update_multiple_symbols(self, symbols: List[str], start_date: str = None, 
                               end_date: str = None, force_update: bool = False) -> Dict[str, bool]:
         """여러 종목 일괄 업데이트 (개선된 진행상황 표시)"""
         results = {}
@@ -835,7 +887,7 @@ class StockDataUpdater:
         
         return results
     
-    def _update_single_symbol_parallel(self, args_tuple) -> tuple:
+def _update_single_symbol_parallel(self, args_tuple) -> tuple:
         """병렬 처리용 단일 종목 업데이트 함수"""
         symbol, start_date, end_date, force_update = args_tuple
         
@@ -845,7 +897,7 @@ class StockDataUpdater:
         except Exception as e:
             return symbol, False, str(e)
     
-    def update_multiple_symbols_parallel(self, symbols: List[str], start_date: str = None, 
+def update_multiple_symbols_parallel(self, symbols: List[str], start_date: str = None, 
                                        end_date: str = None, force_update: bool = False,
                                        max_workers: int = 5) -> Dict[str, bool]:
         """병렬 처리로 여러 종목 일괄 업데이트"""
@@ -958,7 +1010,7 @@ class StockDataUpdater:
         
         return results
     
-    def update_market_indices(self, start_date: str = None, end_date: str = None):
+def update_market_indices(self, start_date: str = None, end_date: str = None):
         """시장 지수 업데이트"""
         indices = self.config['data_collection']['market_indices']
         
@@ -1003,7 +1055,7 @@ class StockDataUpdater:
             except Exception as e:
                 logger.error(f"시장 지수 업데이트 실패: {index_name} - {e}")
     
-    def get_data_summary(self) -> Dict:
+def get_data_summary(self) -> Dict:
         """데이터베이스 현황 요약"""
         try:
             with sqlite3.connect(self.db_path) as conn:
@@ -1039,7 +1091,7 @@ class StockDataUpdater:
             logger.error(f"데이터 요약 조회 실패: {e}")
             return {}
     
-    def get_backtest_analysis(self, days_back: int = 60, min_days: int = 30, top_limit: int = 20) -> Dict:
+def get_backtest_analysis(self, days_back: int = 60, min_days: int = 30, top_limit: int = 20) -> Dict:
         """백테스팅 가능 종목 분석 (check_data_status.py 기능 통합)"""
         try:
             with sqlite3.connect(self.db_path) as conn:
@@ -1111,7 +1163,7 @@ class StockDataUpdater:
             logger.error(f"백테스팅 분석 실패: {e}")
             return {}
 
-    def get_comprehensive_status(self, include_backtest_analysis: bool = True) -> Dict:
+def get_comprehensive_status(self, include_backtest_analysis: bool = True) -> Dict:
         """종합 데이터 상태 분석 (기본 요약 + 백테스팅 분석)"""
         try:
             # 기본 데이터 요약
@@ -1132,14 +1184,14 @@ class StockDataUpdater:
             logger.error(f"종합 상태 분석 실패: {e}")
             return {}
     
-    def _track_api_call(self):
+def _track_api_call(self):
         """API 호출 추적"""
         self.api_call_count += 1
         if self.api_call_count % 50 == 0:  # 50회마다 로그 출력
             elapsed = datetime.now() - self.session_start_time
             logger.info(f"API 호출 현황: {self.api_call_count}회 (경과시간: {elapsed})")
     
-    def get_api_usage_status(self) -> Dict:
+def get_api_usage_status(self) -> Dict:
         """API 사용량 현황 조회"""
         elapsed = datetime.now() - self.session_start_time
         
@@ -1151,7 +1203,7 @@ class StockDataUpdater:
             'notes': 'pykrx는 한국거래소 공개 데이터를 사용하므로 API 제한이 거의 없습니다.'
         }
     
-    def update_yesterday_data(self, symbols: List[str] = None, use_kospi_top: bool = False, top_limit: int = 30) -> Dict:
+def update_yesterday_data(self, symbols: List[str] = None, use_kospi_top: bool = False, top_limit: int = 30) -> Dict:
         """전날 데이터만 업데이트 (효율적인 일일 업데이트용)"""
         
         # 전날 거래일 계산
@@ -1260,7 +1312,7 @@ class StockDataUpdater:
         
         return results
     
-    def _get_last_trading_day(self) -> str:
+def _get_last_trading_day(self) -> str:
         """마지막 거래일 조회 (주말/공휴일 고려)"""
         today = datetime.now()
         
@@ -1274,7 +1326,7 @@ class StockDataUpdater:
             
         return last_trading_day.strftime('%Y%m%d')
 
-    def get_all_kospi_data_ultra_fast(self, date: str = None) -> Optional[pd.DataFrame]:
+def get_all_kospi_data_ultra_fast(self, date: str = None) -> Optional[pd.DataFrame]:
         """Ultra-Fast: 한번의 API 호출로 KOSPI 전체 종목 OHLCV + 시가총액 조회"""
         try:
             if date is None:
@@ -1325,6 +1377,142 @@ class StockDataUpdater:
         except Exception as e:
             logger.error(f"Ultra-Fast 전체 데이터 조회 실패: {e}")
             return None
+
+def fetch_stock_data_kiwoom(self, symbol: str, start_date: str, end_date: str) -> Optional[pd.DataFrame]:
+        """키움증권 API를 통해 개별 종목 데이터 조회"""
+        if not self.kiwoom_client or not self.access_token:
+            logger.warning("키움 API 클라이언트가 초기화되지 않았습니다.")
+            return None
+
+        max_retries = self.config.get('data_collection', {}).get('max_retries', 3)
+        
+        for attempt in range(max_retries):
+            try:
+                # 키움 API는 일/주/월봉 조회 기능 제공, 여기서는 일봉 기준
+                # TR_ID: 주식일주월시분요청 (CTPF1604R)
+                response = self.kiwoom_client.get_daily_ohlcv(self.access_token, symbol, start_date, end_date)
+
+                if not response or 'output' not in response or not response['output']:
+                    logger.warning(f"[Kiwoom] 데이터 없음: {symbol} ({start_date}~{end_date})")
+                    return None
+
+                # 데이터프레임으로 변환
+                df = pd.DataFrame(response['output'])
+
+                # 컬럼명 변경 및 데이터 타입 변환
+                df = df.rename(columns={
+                    'stck_bsop_date': 'date',
+                    'stck_oprc': 'open',
+                    'stck_hgpr': 'high',
+                    'stck_lwpr': 'low',
+                    'stck_clpr': 'close',
+                    'acml_vol': 'volume',
+                    'acml_tr_pbmn': 'amount'
+                })
+
+                # 필요한 컬럼만 선택
+                df = df[['date', 'open', 'high', 'low', 'close', 'volume', 'amount']]
+
+                # 데이터 타입 변환
+                df[['open', 'high', 'low', 'close', 'volume', 'amount']] = df[['open', 'high', 'low', 'close', 'volume', 'amount']].astype(float)
+                df['date'] = pd.to_datetime(df['date'], format='%Y%m%d')
+
+                if df.empty:
+                    logger.warning(f"[Kiwoom] 데이터 없음: {symbol} ({start_date}~{end_date})")
+                    return None
+                
+                # 데이터 정리 (pykrx와 동일한 포맷으로)
+                df = df.reset_index()
+                df.columns = ['date', 'open', 'high', 'low', 'close', 'volume']
+                df['amount'] = df['close'] * df['volume']
+                df['symbol'] = symbol
+                df['date'] = pd.to_datetime(df['date'], format='mixed', errors='coerce')
+                
+                logger.debug(f"[Kiwoom] 데이터 조회 성공: {symbol} ({len(df)}건)")
+                return df
+                
+            except Exception as e:
+                logger.warning(f"[Kiwoom] 데이터 조회 실패 (시도 {attempt+1}/{max_retries}): {symbol} - {e}")
+                if attempt < max_retries - 1:
+                    time.sleep(self.api_delay * (attempt + 1))
+        
+        return None
+
+def update_all_symbol_info_with_krx(self, kospi_csv: str = "krx_sector_kospi.csv", kosdaq_csv: str = "krx_sector_kosdaq.csv"):
+        """pykrx 종목정보와 KOSPI+KOSDAQ 업종분류 csv를 병합하여 stock_info를 갱신"""
+        import pandas as pd
+        import os
+        import logging
+        logger = logging.getLogger(__name__)
+        today = datetime.now().strftime('%Y%m%d')
+        symbols = stock.get_market_ticker_list(today, market="ALL")
+        kospi_symbols = set(stock.get_market_ticker_list(today, market="KOSPI"))
+        pykrx_data = []
+        total = len(symbols)
+        for i, symbol in enumerate(symbols, 1):
+            name = stock.get_market_ticker_name(symbol)
+            market = "KOSPI" if symbol in kospi_symbols else "KOSDAQ"
+            pykrx_data.append({
+                'symbol': symbol,
+                'name': name,
+                'market': market
+            })
+            if i % 100 == 0 or i % max(1, total // 20) == 0 or i == total:
+                percent = (i / total) * 100
+                logger.info(f"  - pykrx 종목정보 수집 진행도: {i}/{total} ({percent:.1f}%) 완료")
+        df_pykrx = pd.DataFrame(pykrx_data)
+
+        # KOSPI/KOSDAQ 업종분류 csv 모두 필요
+        if not os.path.exists(kospi_csv) or not os.path.exists(kosdaq_csv):
+            logger.error("업종분류 csv 파일이 없습니다. 프로젝트 루트에 'krx_sector_kospi.csv', 'krx_sector_kosdaq.csv' 두 파일을 모두 넣어주세요. (필수 컬럼: 종목코드, 업종명)")
+            return
+        # 인코딩 자동 감지 함수
+def read_csv_auto_encoding(path):
+            try:
+                return pd.read_csv(path, dtype={'종목코드': str}, encoding='cp949')
+            except UnicodeDecodeError:
+                return pd.read_csv(path, dtype={'종목코드': str}, encoding='utf-8')
+        df_kospi = read_csv_auto_encoding(kospi_csv)
+        df_kosdaq = read_csv_auto_encoding(kosdaq_csv)
+        for df, fname in zip([df_kospi, df_kosdaq], [kospi_csv, kosdaq_csv]):
+            if '업종명' not in df.columns or '종목코드' not in df.columns:
+                logger.error(f"csv 파일에 '종목코드' 또는 '업종명' 컬럼이 없습니다: {fname}")
+                return
+            df["종목코드"] = df["종목코드"].str.zfill(6)
+        # 두 파일 병합
+        df_krx = pd.concat([df_kospi, df_kosdaq], ignore_index=True)
+        logger.info(f"csv 업종분류 데이터 사용: {kospi_csv}, {kosdaq_csv}")
+
+        # 병합: symbol <-> 종목코드
+        df_merged = pd.merge(
+            df_pykrx,
+            df_krx[["종목코드", "업종명"]],
+            left_on="symbol", right_on="종목코드", how="left"
+        )
+
+        # DB에 저장 (진행도 표시)
+        total = len(df_merged)
+        with sqlite3.connect(self.db_path) as conn:
+            for i, (_, row) in enumerate(df_merged.iterrows(), 1):
+                conn.execute('''
+                    INSERT OR REPLACE INTO stock_info (symbol, name, market, sector, updated_at)
+                    VALUES (?, ?, ?, ?, ?)
+                ''', (
+                    row['symbol'],
+                    row['name'],
+                    row['market'],
+                    row['업종명'] if pd.notnull(row['업종명']) else '',
+                    datetime.now()
+                ))
+                if i % 100 == 0 or i % max(1, total // 20) == 0 or i == total:
+                    percent = (i / total) * 100
+                    logger.info(f"  - DB 저장 진행도: {i}/{total} ({percent:.1f}%) 완료")
+        logger.info(f"병합된 종목 수: {total}")
+        logger.info("[2] DB에 저장된 stock_info 샘플:")
+        with sqlite3.connect(self.db_path) as conn:
+            sample = pd.read_sql_query("SELECT * FROM stock_info LIMIT 10", conn)
+            logger.info(f"\n{sample}")
+        return df_merged
 
 def main():
     """메인 실행 함수"""
@@ -1430,6 +1618,16 @@ def main():
         if results['failed_symbols']:
             logger.warning(f"실패 종목: {results['failed_symbols']}")
         
+        # === 업종 매핑 자동 실행 ===
+        try:
+            from src.utils.sector_mapping_tool import SectorMappingTool
+            logger.info("Ultra-Fast 데이터 업데이트 후 업종 매핑 실행...")
+            mapping_tool = SectorMappingTool()
+            mapping_report = mapping_tool.run_full_mapping(max_auto_map=999999)
+            logger.info(f"업종 매핑 결과: {mapping_report['summary']}")
+        except Exception as e:
+            logger.warning(f"업종 매핑 자동 실행 실패: {e}")
+        
         return
 
     # 전체 KOSPI 종목 업데이트 (Ultra-Fast 방식)
@@ -1458,13 +1656,15 @@ def main():
                     logger.info(f"업데이트 종목: {len(ultra_fast_data)}개")
                     logger.info(f"업데이트 날짜: {ultra_fast_data['date'].iloc[0].strftime('%Y-%m-%d')}")
                     logger.info("✅ 전체 KOSPI 종목 Ultra-Fast 업데이트 완료")
-                    
-                    # API 사용량 출력
-                    final_status = updater.get_api_usage_status()
-                    logger.info("=== API 사용량 요약 ===")
-                    logger.info(f"총 API 호출: {final_status['api_calls']}회")
-                    logger.info(f"소요 시간: {final_status['session_duration']}")
-                    
+                    # === 업종 매핑 자동 실행 ===
+                    try:
+                        from src.utils.sector_mapping_tool import SectorMappingTool
+                        logger.info("Ultra-Fast 데이터 업데이트 후 업종 매핑 실행...")
+                        mapping_tool = SectorMappingTool()
+                        mapping_report = mapping_tool.run_full_mapping(max_auto_map=999999)
+                        logger.info(f"업종 매핑 결과: {mapping_report['summary']}")
+                    except Exception as e:
+                        logger.warning(f"업종 매핑 자동 실행 실패: {e}")
                     return
                     
                 except Exception as e:
@@ -1599,7 +1799,7 @@ def main():
         logger.info(f"최적화된 업데이트 완료: {performance['successful_updates']}/{performance['total_symbols']} 성공")
         
     elif engine_type == 'parallel':
-        logger.info(f"🚀 병렬 처리 엔진 실행 (워커: {args.workers}개)")
+        logger.info(f"�� 병렬 처리 엔진 실행 (워커: {args.workers}개)")
         results = updater.update_multiple_symbols_parallel(
             symbols_to_update,
             start_date,
@@ -1633,6 +1833,15 @@ def main():
     logger.info("=== API 사용량 요약 ===")
     logger.info(f"총 API 호출: {final_status['api_calls']}회")
     logger.info(f"소요 시간: {final_status['session_duration']}")
+
+    print("\n[1] pykrx+stock_master 병합으로 stock_info 테이블 갱신...")
+    df_merged = updater.update_all_symbol_info_with_krx()
+    print(f"병합된 종목 수: {len(df_merged)}")
+    # DB에서 stock_info 출력
+    with sqlite3.connect(updater.db_path) as conn:
+        df_db = pd.read_sql_query('SELECT * FROM stock_info', conn)
+    print("\n[2] DB에 저장된 stock_info 샘플:")
+    print(df_db.head(20).to_string(index=False))
 
 if __name__ == "__main__":
     main() 

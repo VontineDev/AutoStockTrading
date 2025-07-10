@@ -34,7 +34,7 @@ class BatchConfig:
 class MemoryMonitor:
     """메모리 사용량 모니터링"""
     
-    def __init__(self, config: BatchConfig):
+def __init__(self, config: BatchConfig):
         self.config = config
         self.process = psutil.Process()
         self.max_memory_bytes = config.max_memory_usage_mb * 1024 * 1024
@@ -47,7 +47,7 @@ class MemoryMonitor:
             'memory_exceeded_count': 0
         }
     
-    def get_memory_usage(self) -> float:
+def get_memory_usage(self) -> float:
         """현재 메모리 사용량 반환 (MB)"""
         memory_mb = self.process.memory_info().rss / (1024 * 1024)
         self.stats['current_memory_mb'] = memory_mb
@@ -57,22 +57,22 @@ class MemoryMonitor:
         
         return memory_mb
     
-    def get_memory_usage_ratio(self) -> float:
+def get_memory_usage_ratio(self) -> float:
         """메모리 사용률 반환 (0-1)"""
         return self.get_memory_usage() / self.config.max_memory_usage_mb
     
-    def is_memory_exceeded(self) -> bool:
+def is_memory_exceeded(self) -> bool:
         """메모리 한계 초과 여부"""
         exceeded = self.get_memory_usage() > self.config.max_memory_usage_mb
         if exceeded:
             self.stats['memory_exceeded_count'] += 1
         return exceeded
     
-    def should_trigger_gc(self) -> bool:
+def should_trigger_gc(self) -> bool:
         """가비지 컬렉션 실행 여부"""
         return self.get_memory_usage_ratio() > self.config.auto_gc_threshold
     
-    def force_gc(self):
+def force_gc(self):
         """강제 가비지 컬렉션"""
         gc.collect()
         self.stats['gc_count'] += 1
@@ -81,7 +81,7 @@ class MemoryMonitor:
 class BatchOptimizer:
     """배치 처리 최적화"""
     
-    def __init__(self, config: BatchConfig = None):
+def __init__(self, config: BatchConfig = None):
         self.config = config or BatchConfig()
         self.memory_monitor = MemoryMonitor(self.config)
         self.current_batch_size = self.config.batch_size
@@ -100,7 +100,7 @@ class BatchOptimizer:
         
         logger.info(f"배치 최적화 시스템 초기화: 배치 크기 {self.current_batch_size}")
     
-    def create_batches(self, items: List[Any]) -> List[List[Any]]:
+def create_batches(self, items: List[Any]) -> List[List[Any]]:
         """아이템을 배치로 분할"""
         batches = []
         current_batch_size = self.current_batch_size
@@ -112,7 +112,7 @@ class BatchOptimizer:
         logger.info(f"배치 생성: {len(batches)}개 배치, 배치 크기: {current_batch_size}")
         return batches
     
-    def adaptive_batch_sizing(self, processing_time: float, batch_size: int, success_rate: float):
+def adaptive_batch_sizing(self, processing_time: float, batch_size: int, success_rate: float):
         """적응형 배치 크기 조정"""
         if not self.config.adaptive_batch_size:
             return
@@ -154,7 +154,7 @@ class BatchOptimizer:
                 self.current_batch_size = new_batch_size
                 self.stats['batch_size_changes'] += 1
     
-    def optimize_memory_usage(self):
+def optimize_memory_usage(self):
         """메모리 사용량 최적화"""
         if self.memory_monitor.should_trigger_gc():
             self.memory_monitor.force_gc()
@@ -168,7 +168,7 @@ class BatchOptimizer:
                 self.current_batch_size = new_batch_size
                 self.stats['batch_size_changes'] += 1
     
-    def process_batch_with_optimization(self, 
+def process_batch_with_optimization(self, 
                                       batch: List[Any],
                                       processor_func: callable,
                                       **kwargs) -> Dict[str, Any]:
@@ -210,7 +210,7 @@ class BatchOptimizer:
 class DataBatchLoader:
     """데이터 배치 로더"""
     
-    def __init__(self, config: BatchConfig = None):
+def __init__(self, config: BatchConfig = None):
         self.config = config or BatchConfig()
         self.data_cache = {}
         self.cache_lock = threading.Lock()
@@ -221,7 +221,7 @@ class DataBatchLoader:
             'cache_size_mb': 0
         }
     
-    def load_data_batch(self, symbols: List[str], data_source: callable) -> Dict[str, pd.DataFrame]:
+def load_data_batch(self, symbols: List[str], data_source: callable) -> Dict[str, pd.DataFrame]:
         """데이터 배치 로드"""
         loaded_data = {}
         
@@ -250,7 +250,7 @@ class DataBatchLoader:
         
         return loaded_data
     
-    def get_cache_size(self) -> float:
+def get_cache_size(self) -> float:
         """캐시 크기 반환 (MB)"""
         total_size = 0
         for symbol, data in self.data_cache.items():
@@ -260,7 +260,7 @@ class DataBatchLoader:
         self.stats['cache_size_mb'] = size_mb
         return size_mb
     
-    def clear_cache(self):
+def clear_cache(self):
         """캐시 클리어"""
         with self.cache_lock:
             self.data_cache.clear()
@@ -271,7 +271,7 @@ class DataBatchLoader:
 class BatchProcessor:
     """통합 배치 처리 시스템"""
     
-    def __init__(self, config: BatchConfig = None):
+def __init__(self, config: BatchConfig = None):
         self.config = config or BatchConfig()
         self.optimizer = BatchOptimizer(config)
         self.data_loader = DataBatchLoader(config)
@@ -279,7 +279,7 @@ class BatchProcessor:
         
         logger.info("배치 처리 시스템 초기화 완료")
     
-    def process_symbols_in_batches(self,
+def process_symbols_in_batches(self,
                                  symbols: List[str],
                                  processor_func: callable,
                                  data_source: callable = None,
@@ -349,7 +349,7 @@ class BatchProcessor:
         total_time = time.time() - start_time
         
         # 안전한 나눗셈을 위한 함수
-        def safe_divide(numerator: float, denominator: float, default: float = 0.0) -> float:
+def safe_divide(numerator: float, denominator: float, default: float = 0.0) -> float:
             """0으로 나누기 방지를 위한 안전한 나눗셈"""
             return numerator / denominator if denominator != 0 else default
         
@@ -376,7 +376,7 @@ class BatchProcessor:
             'performance_stats': performance_stats
         }
     
-    def get_performance_report(self) -> Dict[str, Any]:
+def get_performance_report(self) -> Dict[str, Any]:
         """성능 리포트 반환"""
         return {
             'batch_optimizer': self.optimizer.stats,
@@ -387,7 +387,7 @@ class BatchProcessor:
             'memory_usage_mb': self.memory_monitor.get_memory_usage()
         }
     
-    def optimize_for_system(self) -> Dict[str, Any]:
+def optimize_for_system(self) -> Dict[str, Any]:
         """시스템 최적화 권장사항"""
         total_memory_mb = psutil.virtual_memory().total / (1024 * 1024)
         available_memory_mb = psutil.virtual_memory().available / (1024 * 1024)

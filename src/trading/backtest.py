@@ -31,7 +31,7 @@ class Trade:
     slippage: float = 0.0
     
     @property
-    def return_pct(self) -> float:
+def return_pct(self) -> float:
         """수익률 계산"""
         if self.trade_type == 'LONG':
             return (self.exit_price - self.entry_price) / self.entry_price
@@ -39,12 +39,12 @@ class Trade:
             return (self.entry_price - self.exit_price) / self.entry_price
     
     @property
-    def profit_loss(self) -> float:
+def profit_loss(self) -> float:
         """손익 계산"""
         return self.quantity * (self.exit_price - self.entry_price) * (1 if self.trade_type == 'LONG' else -1)
     
     @property
-    def holding_days(self) -> int:
+def holding_days(self) -> int:
         """보유 기간"""
         return (self.exit_date - self.entry_date).days
 
@@ -61,11 +61,11 @@ class Position:
     position_type: str = 'LONG'  # 'LONG', 'SHORT'
     
     @property
-    def market_value(self) -> float:
+def market_value(self) -> float:
         """현재 시장가치"""
         return self.quantity * self.entry_price
     
-    def current_return(self, current_price: float) -> float:
+def current_return(self, current_price: float) -> float:
         """현재 수익률"""
         if self.position_type == 'LONG':
             return (current_price - self.entry_price) / self.entry_price
@@ -88,14 +88,14 @@ class BacktestConfig:
 class BacktestEngine:
     """백테스팅 엔진"""
     
-    def __init__(self, config: BacktestConfig = None):
+def __init__(self, config: BacktestConfig = None):
         """백테스팅 엔진 초기화"""
         self.config = config or BacktestConfig()
         self.reset()
         
         logger.info(f"백테스팅 엔진 초기화: 초기자본 {self.config.initial_capital:,.0f}원")
     
-    def reset(self):
+def reset(self):
         """백테스트 상태 초기화"""
         self.cash = self.config.initial_capital
         self.positions: Dict[str, Position] = {}
@@ -105,7 +105,7 @@ class BacktestEngine:
         self.current_date: Optional[datetime] = None
         self._processed_signals = set()  # 신호 처리 기록 초기화
         
-    def run_backtest(self, strategy, data: Dict[str, pd.DataFrame], 
+def run_backtest(self, strategy, data: Dict[str, pd.DataFrame], 
                      start_date: Optional[str] = None, end_date: Optional[str] = None) -> Dict[str, Any]:
         """
         백테스팅 실행
@@ -163,7 +163,7 @@ class BacktestEngine:
         
         return results
     
-    def _process_daily_signals(self, strategy, data: Dict[str, pd.DataFrame], date):
+def _process_daily_signals(self, strategy, data: Dict[str, pd.DataFrame], date):
         """일별 매매 신호 처리"""
         for symbol, df in data.items():
             # 해당 날짜의 데이터 추출
@@ -226,7 +226,7 @@ class BacktestEngine:
             except Exception as e:
                 logger.warning(f"신호 처리 중 오류 ({symbol}, {date}): {e}")
     
-    def _execute_signal(self, signal, market_data: pd.Series):
+def _execute_signal(self, signal, market_data: pd.Series):
         """매매 신호 실행"""
         symbol = signal.symbol
         current_price = market_data['close']
@@ -236,7 +236,7 @@ class BacktestEngine:
         elif signal.signal_type == 'SELL':
             self._process_sell_signal(signal, current_price, market_data)
     
-    def _process_buy_signal(self, signal, current_price: float, market_data: pd.Series):
+def _process_buy_signal(self, signal, current_price: float, market_data: pd.Series):
         """매수 신호 처리"""
         symbol = signal.symbol
         
@@ -291,7 +291,7 @@ class BacktestEngine:
         
         logger.debug(f"매수 실행: {symbol} {position_size:.2f}주 @ {current_price:,.0f}원")
     
-    def _process_sell_signal(self, signal, current_price: float, market_data: pd.Series):
+def _process_sell_signal(self, signal, current_price: float, market_data: pd.Series):
         """매도 신호 처리"""
         symbol = signal.symbol
         
@@ -302,7 +302,7 @@ class BacktestEngine:
         position = self.positions[symbol]
         self._close_position(symbol, current_price, signal.reason)
     
-    def _close_position(self, symbol: str, exit_price: float, exit_reason: str):
+def _close_position(self, symbol: str, exit_price: float, exit_reason: str):
         """포지션 청산"""
         if symbol not in self.positions:
             return
@@ -335,7 +335,7 @@ class BacktestEngine:
         
         logger.debug(f"매도 실행: {symbol} {position.quantity:.2f}주 @ {exit_price:,.0f}원, 수익률: {trade.return_pct:.2%}")
     
-    def _calculate_position_size(self, price: float, signal, market_data: pd.Series) -> float:
+def _calculate_position_size(self, price: float, signal, market_data: pd.Series) -> float:
         """포지션 크기 계산"""
         if self.config.position_size_method == 'fixed_amount':
             # 고정 금액 방식 (포트폴리오의 20%)
@@ -359,7 +359,7 @@ class BacktestEngine:
         # 기본값
         return self.cash * 0.2 / price
     
-    def _update_positions(self, data: Dict[str, pd.DataFrame], date):
+def _update_positions(self, data: Dict[str, pd.DataFrame], date):
         """포지션 업데이트 (손절/익절 체크)"""
         positions_to_close = []
         
@@ -393,7 +393,7 @@ class BacktestEngine:
         for symbol, exit_price, reason in positions_to_close:
             self._close_position(symbol, exit_price, reason)
     
-    def _close_all_positions(self, data: Dict[str, pd.DataFrame], final_date):
+def _close_all_positions(self, data: Dict[str, pd.DataFrame], final_date):
         """모든 포지션 청산 (백테스트 종료 시)"""
         for symbol in list(self.positions.keys()):
             if symbol in data:
@@ -407,7 +407,7 @@ class BacktestEngine:
                     final_price = final_data.iloc[-1]['close']
                     self._close_position(symbol, final_price, "백테스트 종료")
     
-    def _record_equity(self):
+def _record_equity(self):
         """자산 곡선 기록"""
         portfolio_value = self.get_portfolio_value()
         
@@ -427,11 +427,11 @@ class BacktestEngine:
             daily_return = (portfolio_value - prev_value) / prev_value
             self.daily_returns.append(daily_return)
     
-    def get_portfolio_value(self) -> float:
+def get_portfolio_value(self) -> float:
         """현재 포트폴리오 가치"""
         return self.cash + sum(pos.market_value for pos in self.positions.values())
     
-    def _analyze_results(self) -> Dict[str, Any]:
+def _analyze_results(self) -> Dict[str, Any]:
         """백테스팅 결과 분석"""
         if not self.trades:
             return self._empty_results()
@@ -503,7 +503,7 @@ class BacktestEngine:
         
         return results
     
-    def _empty_results(self) -> Dict[str, Any]:
+def _empty_results(self) -> Dict[str, Any]:
         """거래가 없을 때의 빈 결과"""
         return {
             'total_trades': 0,

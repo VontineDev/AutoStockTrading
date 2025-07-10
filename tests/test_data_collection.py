@@ -27,7 +27,7 @@ from src.constants import SystemConstants, DataCollectionConstants
 class TestDatabaseManager(unittest.TestCase):
     """DatabaseManager 클래스 테스트"""
     
-    def setUp(self):
+def setUp(self):
         """테스트 환경 설정"""
         # 임시 데이터베이스 파일 생성
         self.temp_dir = tempfile.mkdtemp()
@@ -45,7 +45,7 @@ class TestDatabaseManager(unittest.TestCase):
             'volume': np.random.randint(100000, 1000000, 30)
         })
     
-    def tearDown(self):
+def tearDown(self):
         """테스트 정리"""
         self.db_manager.close()
         
@@ -54,7 +54,7 @@ class TestDatabaseManager(unittest.TestCase):
             os.remove(self.test_db_path)
         os.rmdir(self.temp_dir)
     
-    def test_database_initialization(self):
+def test_database_initialization(self):
         """데이터베이스 초기화 테스트"""
         self.assertTrue(os.path.exists(self.test_db_path))
         self.assertIsNotNone(self.db_manager.connection)
@@ -69,7 +69,7 @@ class TestDatabaseManager(unittest.TestCase):
         self.assertEqual(len(tables), 1)
         self.assertEqual(tables[0][0], 'stock_data')
     
-    def test_save_stock_data(self):
+def test_save_stock_data(self):
         """주식 데이터 저장 테스트"""
         # 데이터 저장
         result = self.db_manager.save_stock_data(self.sample_data)
@@ -88,7 +88,7 @@ class TestDatabaseManager(unittest.TestCase):
         self.assertIn('close', saved_data.columns)
         self.assertIn('volume', saved_data.columns)
     
-    def test_get_stock_data_date_range(self):
+def test_get_stock_data_date_range(self):
         """날짜 범위로 데이터 조회 테스트"""
         # 데이터 저장
         self.db_manager.save_stock_data(self.sample_data)
@@ -107,7 +107,7 @@ class TestDatabaseManager(unittest.TestCase):
             self.assertTrue((filtered_data['date'] >= start_date).all())
             self.assertTrue((filtered_data['date'] <= end_date).all())
     
-    def test_get_symbols_list(self):
+def test_get_symbols_list(self):
         """종목 리스트 조회 테스트"""
         # 데이터 저장
         self.db_manager.save_stock_data(self.sample_data)
@@ -120,7 +120,7 @@ class TestDatabaseManager(unittest.TestCase):
         for symbol in expected_symbols:
             self.assertIn(symbol, symbols)
     
-    def test_get_latest_date(self):
+def test_get_latest_date(self):
         """최신 날짜 조회 테스트"""
         # 데이터 저장
         self.db_manager.save_stock_data(self.sample_data)
@@ -131,7 +131,7 @@ class TestDatabaseManager(unittest.TestCase):
         self.assertIsNotNone(latest_date)
         self.assertIsInstance(latest_date, str)
     
-    def test_data_summary(self):
+def test_data_summary(self):
         """데이터 요약 정보 테스트"""
         # 데이터 저장
         self.db_manager.save_stock_data(self.sample_data)
@@ -148,7 +148,7 @@ class TestDatabaseManager(unittest.TestCase):
         self.assertGreater(summary['total_symbols'], 0)
         self.assertGreater(summary['total_records'], 0)
     
-    def test_duplicate_data_handling(self):
+def test_duplicate_data_handling(self):
         """중복 데이터 처리 테스트"""
         # 첫 번째 저장
         result1 = self.db_manager.save_stock_data(self.sample_data)
@@ -163,7 +163,7 @@ class TestDatabaseManager(unittest.TestCase):
         data = self.db_manager.get_stock_data('005930')
         self.assertIsInstance(data, pd.DataFrame)
     
-    def test_invalid_symbol_handling(self):
+def test_invalid_symbol_handling(self):
         """잘못된 종목 코드 처리 테스트"""
         # 존재하지 않는 종목 조회
         data = self.db_manager.get_stock_data('INVALID_SYMBOL')
@@ -171,7 +171,7 @@ class TestDatabaseManager(unittest.TestCase):
         # 빈 DataFrame 또는 None 반환
         self.assertTrue(data is None or len(data) == 0)
     
-    def test_empty_data_handling(self):
+def test_empty_data_handling(self):
         """빈 데이터 처리 테스트"""
         empty_data = pd.DataFrame()
         
@@ -181,7 +181,7 @@ class TestDatabaseManager(unittest.TestCase):
         # 적절한 처리 (False 반환 또는 예외 발생)
         self.assertIsInstance(result, bool)
     
-    def test_database_connection_timeout(self):
+def test_database_connection_timeout(self):
         """데이터베이스 연결 타임아웃 테스트"""
         # 타임아웃 설정이 적용되었는지 확인
         self.assertIsNotNone(self.db_manager.connection)
@@ -195,7 +195,7 @@ class TestDatabaseManager(unittest.TestCase):
         except sqlite3.Error:
             self.fail("데이터베이스 연결 실패")
     
-    def test_transaction_rollback(self):
+def test_transaction_rollback(self):
         """트랜잭션 롤백 테스트"""
         # 잘못된 데이터로 롤백 상황 시뮬레이션
         invalid_data = pd.DataFrame({
@@ -219,7 +219,7 @@ class TestDatabaseManager(unittest.TestCase):
 class TestDataCollectionConstants(unittest.TestCase):
     """데이터 수집 상수 테스트"""
     
-    def test_constants_usage_in_database(self):
+def test_constants_usage_in_database(self):
         """데이터베이스에서 상수 활용 테스트"""
         # 임시 데이터베이스로 상수 기반 설정 테스트
         temp_dir = tempfile.mkdtemp()
@@ -243,7 +243,7 @@ class TestDataCollectionConstants(unittest.TestCase):
                 os.remove(test_db_path)
             os.rmdir(temp_dir)
     
-    def test_batch_size_constants(self):
+def test_batch_size_constants(self):
         """배치 크기 상수 테스트"""
         # 배치 크기 상수가 유효한 범위인지 확인
         self.assertGreaterEqual(
@@ -255,7 +255,7 @@ class TestDataCollectionConstants(unittest.TestCase):
             DataCollectionConstants.MAX_BATCH_SIZE
         )
     
-    def test_api_timeout_constants(self):
+def test_api_timeout_constants(self):
         """API 타임아웃 상수 테스트"""
         # API 관련 상수가 합리적인 값인지 확인
         self.assertGreater(DataCollectionConstants.API_TIMEOUT, 0)
@@ -268,20 +268,20 @@ class TestDataCollectionConstants(unittest.TestCase):
 class TestDataValidation(unittest.TestCase):
     """데이터 검증 테스트"""
     
-    def setUp(self):
+def setUp(self):
         """테스트 환경 설정"""
         self.temp_dir = tempfile.mkdtemp()
         self.test_db_path = os.path.join(self.temp_dir, "validation_test.db")
         self.db_manager = DatabaseManager(self.test_db_path)
     
-    def tearDown(self):
+def tearDown(self):
         """테스트 정리"""
         self.db_manager.close()
         if os.path.exists(self.test_db_path):
             os.remove(self.test_db_path)
         os.rmdir(self.temp_dir)
     
-    def test_ohlcv_data_validation(self):
+def test_ohlcv_data_validation(self):
         """OHLCV 데이터 유효성 검증 테스트"""
         # 유효한 OHLCV 데이터
         valid_data = pd.DataFrame({
@@ -309,7 +309,7 @@ class TestDataValidation(unittest.TestCase):
             # Volume >= 0
             self.assertGreaterEqual(row['volume'], 0)
     
-    def test_date_format_validation(self):
+def test_date_format_validation(self):
         """날짜 형식 검증 테스트"""
         # 다양한 날짜 형식으로 데이터 생성
         date_formats_data = pd.DataFrame({
@@ -336,7 +336,7 @@ class TestDataValidation(unittest.TestCase):
             dates = pd.to_datetime(saved_data['date'])
             self.assertTrue(dates.is_monotonic_increasing or dates.is_monotonic_decreasing)
     
-    def test_numeric_data_validation(self):
+def test_numeric_data_validation(self):
         """숫자 데이터 검증 테스트"""
         # 다양한 숫자 형식의 데이터
         numeric_data = pd.DataFrame({
@@ -361,7 +361,7 @@ class TestDataValidation(unittest.TestCase):
         for col in numeric_columns:
             self.assertTrue(pd.api.types.is_numeric_dtype(saved_data[col]))
     
-    def test_symbol_format_validation(self):
+def test_symbol_format_validation(self):
         """종목 코드 형식 검증 테스트"""
         # 다양한 종목 코드 형식
         symbol_data = pd.DataFrame({
@@ -385,7 +385,7 @@ class TestDataValidation(unittest.TestCase):
         for symbol in expected_symbols:
             self.assertIn(symbol, symbols)
     
-    def test_data_integrity_constraints(self):
+def test_data_integrity_constraints(self):
         """데이터 무결성 제약 조건 테스트"""
         # 기본 데이터 저장
         base_data = pd.DataFrame({
@@ -423,20 +423,20 @@ class TestDataValidation(unittest.TestCase):
 class TestPerformanceOptimization(unittest.TestCase):
     """성능 최적화 테스트"""
     
-    def setUp(self):
+def setUp(self):
         """테스트 환경 설정"""
         self.temp_dir = tempfile.mkdtemp()
         self.test_db_path = os.path.join(self.temp_dir, "performance_test.db")
         self.db_manager = DatabaseManager(self.test_db_path)
     
-    def tearDown(self):
+def tearDown(self):
         """테스트 정리"""
         self.db_manager.close()
         if os.path.exists(self.test_db_path):
             os.remove(self.test_db_path)
         os.rmdir(self.temp_dir)
     
-    def test_bulk_insert_performance(self):
+def test_bulk_insert_performance(self):
         """대량 데이터 삽입 성능 테스트"""
         # 대량 데이터 생성 (1000 레코드)
         symbols = ['SYM001', 'SYM002', 'SYM003', 'SYM004', 'SYM005']
@@ -476,7 +476,7 @@ class TestPerformanceOptimization(unittest.TestCase):
             data = self.db_manager.get_stock_data(symbol)
             self.assertEqual(len(data), 200)
     
-    def test_query_performance_with_index(self):
+def test_query_performance_with_index(self):
         """인덱스 활용 쿼리 성능 테스트"""
         # 테스트 데이터 준비
         test_data = pd.DataFrame({

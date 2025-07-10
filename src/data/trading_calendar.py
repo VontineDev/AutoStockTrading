@@ -8,19 +8,20 @@ import sqlite3
 from datetime import datetime, timedelta
 from typing import List, Optional, Dict, Any
 import pandas as pd
-from pykrx import stock
 import os
 import time
+from scripts.data_update import StockDataUpdater
 
 logger = logging.getLogger(__name__)
 
 class TradingCalendar:
     """한국 증권시장 거래일 관리 클래스"""
     
-    def __init__(self, db_path: str = 'data/trading_calendar.db'):
+def __init__(self, db_path: str = 'data/trading_calendar.db'):
         self.db_path = db_path
         self.ensure_db_directory()
         self.init_database()
+        self.updater = StockDataUpdater() # StockDataUpdater 인스턴스 추가
         
         # 2024년 한국 증권시장 휴일 (기본값)
         self.holidays = {
@@ -46,11 +47,11 @@ class TradingCalendar:
             '20241231': '연말'
         }
     
-    def ensure_db_directory(self):
+def ensure_db_directory(self):
         """데이터베이스 디렉토리 생성"""
         os.makedirs(os.path.dirname(self.db_path), exist_ok=True)
     
-    def init_database(self):
+def init_database(self):
         """거래일 캐시 데이터베이스 초기화"""
         with sqlite3.connect(self.db_path) as conn:
             conn.execute('''
@@ -73,20 +74,20 @@ class TradingCalendar:
                 )
             ''')
     
-    def is_weekend(self, date: str) -> bool:
+def is_weekend(self, date: str) -> bool:
         """주말 여부 확인"""
         date_obj = datetime.strptime(date, '%Y%m%d')
         return date_obj.weekday() >= 5  # 5: 토요일, 6: 일요일
     
-    def is_holiday(self, date: str) -> bool:
+def is_holiday(self, date: str) -> bool:
         """휴일 여부 확인"""
         return date in self.holidays
     
-    def is_trading_day_simple(self, date: str) -> bool:
+def is_trading_day_simple(self, date: str) -> bool:
         """간단한 거래일 확인 (주말/휴일 제외)"""
         return not (self.is_weekend(date) or self.is_holiday(date))
     
-    def get_latest_trading_date(self, max_days_back: int = 30) -> str:
+def get_latest_trading_date(self, max_days_back: int = 30) -> str:
         """
         최근 거래일 조회 (견고한 버전)
         
@@ -129,7 +130,7 @@ class TradingCalendar:
         logger.error(f"최종 폴백 거래일 사용: {fallback_date}")
         return fallback_date
     
-    def _get_cached_trading_date(self) -> Optional[str]:
+def _get_cached_trading_date(self) -> Optional[str]:
         """캐시된 거래일 조회"""
         try:
             with sqlite3.connect(self.db_path) as conn:
@@ -145,7 +146,7 @@ class TradingCalendar:
             logger.error(f"캐시된 거래일 조회 실패: {e}")
             return None
     
-    def _is_recent_date(self, date: str) -> bool:
+def _is_recent_date(self, date: str) -> bool:
         """최근 날짜인지 확인 (3일 이내)"""
         try:
             date_obj = datetime.strptime(date, '%Y%m%d')
@@ -154,12 +155,13 @@ class TradingCalendar:
         except:
             return False
     
-    def _verify_trading_day(self, date: str) -> bool:
-        """pykrx API로 실제 거래일 확인"""
+def _verify_trading_day(self, date: str) -> bool:
+        """StockDataUpdater를 사용하여 실제 거래일 확인"""
         try:
-            # 빠른 확인을 위해 시가총액 데이터 조회
-            df = stock.get_market_cap_by_ticker(date, market='KOSPI')
-            is_trading = not df.empty and len(df) > 0
+            # StockDataUpdater의 get_kospi_symbols를 사용하여 거래일 확인
+            # get_kospi_symbols는 해당 날짜에 거래된 종목 리스트를 반환
+            symbols = self.updater.get_kospi_symbols(date=date) # date 인자 추가 필요
+            is_trading = bool(symbols)
             
             # 결과 캐시
             self._cache_trading_day_result(date, is_trading)
@@ -169,7 +171,7 @@ class TradingCalendar:
             logger.debug(f"거래일 확인 실패 ({date}): {e}")
             return False
     
-    def _cache_trading_date(self, date: str):
+def _cache_trading_date(self, date: str):
         """거래일 캐시 저장"""
         try:
             with sqlite3.connect(self.db_path) as conn:
@@ -180,7 +182,7 @@ class TradingCalendar:
         except Exception as e:
             logger.error(f"거래일 캐시 저장 실패: {e}")
     
-    def _cache_trading_day_result(self, date: str, is_trading: bool):
+def _cache_trading_day_result(self, date: str, is_trading: bool):
         """거래일 확인 결과 캐시"""
         try:
             with sqlite3.connect(self.db_path) as conn:
@@ -191,7 +193,7 @@ class TradingCalendar:
         except Exception as e:
             logger.error(f"거래일 결과 캐시 실패: {e}")
     
-    def _get_fallback_trading_date(self) -> Optional[str]:
+def _get_fallback_trading_date(self) -> Optional[str]:
         """폴백 거래일 조회 (캐시된 데이터 중 가장 최근)"""
         try:
             with sqlite3.connect(self.db_path) as conn:
@@ -206,7 +208,7 @@ class TradingCalendar:
             logger.error(f"폴백 거래일 조회 실패: {e}")
             return None
     
-    def get_trading_dates_range(self, start_date: str, end_date: str) -> List[str]:
+def get_trading_dates_range(self, start_date: str, end_date: str) -> List[str]:
         """기간 내 거래일 목록 조회"""
         trading_dates = []
         
@@ -222,7 +224,7 @@ class TradingCalendar:
         
         return trading_dates
     
-    def get_previous_trading_date(self, date: str, days_back: int = 1) -> str:
+def get_previous_trading_date(self, date: str, days_back: int = 1) -> str:
         """이전 거래일 조회"""
         current_date = datetime.strptime(date, '%Y%m%d')
         
@@ -235,7 +237,7 @@ class TradingCalendar:
         
         return current_date.strftime('%Y%m%d')
     
-    def cache_market_data(self, date: str, market: str, data_type: str, symbols: List[str]):
+def cache_market_data(self, date: str, market: str, data_type: str, symbols: List[str]):
         """시장 데이터 캐시 저장"""
         try:
             with sqlite3.connect(self.db_path) as conn:
@@ -247,7 +249,7 @@ class TradingCalendar:
         except Exception as e:
             logger.error(f"시장 데이터 캐시 저장 실패: {e}")
     
-    def get_cached_market_data(self, date: str, market: str, data_type: str) -> Optional[List[str]]:
+def get_cached_market_data(self, date: str, market: str, data_type: str) -> Optional[List[str]]:
         """캐시된 시장 데이터 조회"""
         try:
             with sqlite3.connect(self.db_path) as conn:
@@ -263,7 +265,7 @@ class TradingCalendar:
             logger.error(f"캐시된 시장 데이터 조회 실패: {e}")
         return None
     
-    def cleanup_old_cache(self, days_old: int = 30):
+def cleanup_old_cache(self, days_old: int = 30):
         """오래된 캐시 정리"""
         try:
             with sqlite3.connect(self.db_path) as conn:

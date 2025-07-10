@@ -37,7 +37,7 @@ class StrategyConfig:
     min_data_length: int = 50
     required_indicators: List[str] = None
     
-    def __post_init__(self):
+def __post_init__(self):
         if self.parameters is None:
             self.parameters = {}
         if self.risk_management is None:
@@ -48,7 +48,7 @@ class StrategyConfig:
 class BaseStrategy(ABC):
     """스윙 트레이딩 전략 기본 클래스"""
     
-    def __init__(self, config: StrategyConfig):
+def __init__(self, config: StrategyConfig):
         """
         Args:
             config: 전략 설정
@@ -72,7 +72,7 @@ class BaseStrategy(ABC):
         logger.info(f"전략 '{self.name}' 초기화 완료")
     
     @abstractmethod
-    def calculate_indicators(self, data: pd.DataFrame) -> pd.DataFrame:
+def calculate_indicators(self, data: pd.DataFrame) -> pd.DataFrame:
         """
         전략에 필요한 기술적 지표 계산 (TA-Lib 사용)
         
@@ -85,7 +85,7 @@ class BaseStrategy(ABC):
         pass
     
     @abstractmethod
-    def generate_signals(self, data: pd.DataFrame) -> List[TradeSignal]:
+def generate_signals(self, data: pd.DataFrame) -> List[TradeSignal]:
         """
         매매 신호 생성
         
@@ -98,7 +98,7 @@ class BaseStrategy(ABC):
         pass
     
     @abstractmethod
-    def validate_signal(self, signal: TradeSignal, data: pd.DataFrame) -> bool:
+def validate_signal(self, signal: TradeSignal, data: pd.DataFrame) -> bool:
         """
         매매 신호 검증 (리스크 관리 포함)
         
@@ -111,7 +111,7 @@ class BaseStrategy(ABC):
         """
         pass
     
-    def prepare_data(self, data: pd.DataFrame) -> pd.DataFrame:
+def prepare_data(self, data: pd.DataFrame) -> pd.DataFrame:
         """데이터 전처리 및 검증"""
         if len(data) < self.config.min_data_length:
             raise ValueError(f"데이터 부족: 최소 {self.config.min_data_length}개 필요, 현재 {len(data)}개")
@@ -131,7 +131,7 @@ class BaseStrategy(ABC):
         
         return data
     
-    def run_strategy(self, data: pd.DataFrame, symbol: str = "UNKNOWN") -> List[TradeSignal]:
+def run_strategy(self, data: pd.DataFrame, symbol: str = "UNKNOWN") -> List[TradeSignal]:
         """
         전략 실행 (전체 파이프라인)
         
@@ -169,7 +169,7 @@ class BaseStrategy(ABC):
             logger.error(f"전략 실행 중 오류 발생: {e}")
             raise
     
-    def calculate_performance_metrics(self, returns: pd.Series) -> Dict[str, float]:
+def calculate_performance_metrics(self, returns: pd.Series) -> Dict[str, float]:
         """성과 지표 계산"""
         if len(returns) == 0:
             return {}
@@ -189,14 +189,14 @@ class BaseStrategy(ABC):
         self.performance_metrics = metrics
         return metrics
     
-    def _calculate_max_drawdown(self, returns: pd.Series) -> float:
+def _calculate_max_drawdown(self, returns: pd.Series) -> float:
         """최대 낙폭(MDD) 계산"""
         cumulative = (1 + returns).cumprod()
         rolling_max = cumulative.expanding().max()
         drawdown = (cumulative - rolling_max) / rolling_max
         return drawdown.min()
     
-    def apply_risk_management(self, signal: TradeSignal, current_price: float, 
+def apply_risk_management(self, signal: TradeSignal, current_price: float, 
                             portfolio_value: float) -> Tuple[float, float, float]:
         """
         리스크 관리 적용
@@ -223,7 +223,7 @@ class BaseStrategy(ABC):
         
         return position_size, stop_loss_price, take_profit_price
     
-    def get_strategy_info(self) -> Dict[str, Any]:
+def get_strategy_info(self) -> Dict[str, Any]:
         """전략 정보 반환"""
         return {
             'name': self.name,
@@ -236,7 +236,7 @@ class BaseStrategy(ABC):
             'performance_metrics': self.performance_metrics
         }
     
-    def optimize_parameters(self, data: pd.DataFrame, parameter_ranges: Dict[str, List]) -> Dict[str, Any]:
+def optimize_parameters(self, data: pd.DataFrame, parameter_ranges: Dict[str, List]) -> Dict[str, Any]:
         """
         매개변수 최적화 (그리드 서치)
         
@@ -300,7 +300,7 @@ class BaseStrategy(ABC):
             'best_metrics': best_metrics
         }
     
-    def _calculate_simple_returns(self, signals: List[TradeSignal], data: pd.DataFrame) -> pd.Series:
+def _calculate_simple_returns(self, signals: List[TradeSignal], data: pd.DataFrame) -> pd.Series:
         """간단한 수익률 계산 (매개변수 최적화용)"""
         returns = []
         

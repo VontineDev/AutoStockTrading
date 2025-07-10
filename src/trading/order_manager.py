@@ -46,7 +46,7 @@ class Order:
     filled_quantity: int = 0
     commission: float = 0.0
     
-    def __post_init__(self):
+def __post_init__(self):
         if self.created_at is None:
             self.created_at = datetime.now()
         if self.order_id is None:
@@ -55,7 +55,7 @@ class Order:
 class OrderManager:
     """주문 관리 클래스"""
     
-    def __init__(self, commission_rate: float = 0.00015, slippage_rate: float = 0.001):
+def __init__(self, commission_rate: float = 0.00015, slippage_rate: float = 0.001):
         """
         주문 관리자 초기화
         
@@ -73,7 +73,7 @@ class OrderManager:
         # 로깅
         self.logger = logging.getLogger(self.__class__.__name__)
     
-    def create_market_order(self, symbol: str, side: OrderSide, quantity: int) -> Order:
+def create_market_order(self, symbol: str, side: OrderSide, quantity: int) -> Order:
         """시장가 주문 생성"""
         order = Order(
             symbol=symbol,
@@ -86,7 +86,7 @@ class OrderManager:
         self.logger.info(f"시장가 주문 생성: {order.order_id} - {symbol} {side.value} {quantity}주")
         return order
     
-    def create_limit_order(self, symbol: str, side: OrderSide, quantity: int, price: float) -> Order:
+def create_limit_order(self, symbol: str, side: OrderSide, quantity: int, price: float) -> Order:
         """지정가 주문 생성"""
         order = Order(
             symbol=symbol,
@@ -100,7 +100,7 @@ class OrderManager:
         self.logger.info(f"지정가 주문 생성: {order.order_id} - {symbol} {side.value} {quantity}주 @ {price:,.0f}원")
         return order
     
-    def execute_order(self, order_id: str, market_price: float, available_quantity: int = None) -> bool:
+def execute_order(self, order_id: str, market_price: float, available_quantity: int = None) -> bool:
         """주문 체결 처리"""
         if order_id not in self.orders:
             self.logger.error(f"주문 ID를 찾을 수 없음: {order_id}")
@@ -161,7 +161,7 @@ class OrderManager:
         self.logger.info(f"주문 체결: {order_id} - {filled_quantity}주 @ {filled_price:,.0f}원 (수수료: {commission:,.0f}원)")
         return True
     
-    def cancel_order(self, order_id: str) -> bool:
+def cancel_order(self, order_id: str) -> bool:
         """주문 취소"""
         if order_id not in self.orders:
             self.logger.error(f"주문 ID를 찾을 수 없음: {order_id}")
@@ -179,11 +179,11 @@ class OrderManager:
         self.logger.info(f"주문 취소: {order_id}")
         return True
     
-    def get_order(self, order_id: str) -> Optional[Order]:
+def get_order(self, order_id: str) -> Optional[Order]:
         """주문 정보 조회"""
         return self.orders.get(order_id)
     
-    def get_pending_orders(self, symbol: str = None) -> List[Order]:
+def get_pending_orders(self, symbol: str = None) -> List[Order]:
         """대기 중인 주문 목록"""
         pending_orders = [
             order for order in self.orders.values() 
@@ -195,7 +195,7 @@ class OrderManager:
         
         return pending_orders
     
-    def get_filled_orders(self, symbol: str = None) -> List[Order]:
+def get_filled_orders(self, symbol: str = None) -> List[Order]:
         """체결된 주문 목록"""
         filled_orders = [
             order for order in self.order_history 
@@ -207,7 +207,7 @@ class OrderManager:
         
         return filled_orders
     
-    def get_order_summary(self) -> Dict[str, int]:
+def get_order_summary(self) -> Dict[str, int]:
         """주문 현황 요약"""
         summary = {
             'total': len(self.orders),
@@ -218,7 +218,7 @@ class OrderManager:
         }
         return summary
     
-    def clear_completed_orders(self):
+def clear_completed_orders(self):
         """완료된 주문들을 활성 주문 목록에서 제거"""
         completed_orders = [
             order_id for order_id, order in self.orders.items()
@@ -230,7 +230,7 @@ class OrderManager:
         
         self.logger.info(f"완료된 주문 {len(completed_orders)}개 정리")
     
-    def reset(self):
+def reset(self):
         """주문 관리자 초기화"""
         self.orders.clear()
         self.order_history.clear()

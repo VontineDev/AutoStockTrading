@@ -32,10 +32,10 @@ from src.constants import (
 class MockDataCollector:
     """테스트용 데이터 수집기"""
     
-    def __init__(self):
+def __init__(self):
         self.call_count = 0
     
-    def get_stock_data(self, symbol: str, days: int = 120) -> pd.DataFrame:
+def get_stock_data(self, symbol: str, days: int = 120) -> pd.DataFrame:
         """모의 주식 데이터 생성"""
         self.call_count += 1
         
@@ -68,14 +68,14 @@ class MockDataCollector:
 class MockStrategy(BaseStrategy):
     """테스트용 간단한 전략"""
     
-    def __init__(self, config: StrategyConfig = None):
+def __init__(self, config: StrategyConfig = None):
         if config is None:
             config = StrategyConfig(name="MockStrategy")
         super().__init__(config)
         self.calculation_count = 0
         self.signal_count = 0
     
-    def calculate_indicators(self, data: pd.DataFrame) -> pd.DataFrame:
+def calculate_indicators(self, data: pd.DataFrame) -> pd.DataFrame:
         """간단한 지표 계산"""
         self.calculation_count += 1
         
@@ -85,7 +85,7 @@ class MockStrategy(BaseStrategy):
         
         return data
     
-    def generate_signals(self, data: pd.DataFrame) -> list:
+def generate_signals(self, data: pd.DataFrame) -> list:
         """간단한 신호 생성"""
         self.signal_count += 1
         signals = []
@@ -110,7 +110,7 @@ class MockStrategy(BaseStrategy):
                 
         return signals
     
-    def validate_signal(self, signal: TradeSignal, data: pd.DataFrame) -> bool:
+def validate_signal(self, signal: TradeSignal, data: pd.DataFrame) -> bool:
         """모든 신호 유효하다고 가정"""
         return True
 
@@ -118,7 +118,7 @@ class MockStrategy(BaseStrategy):
 class TestOptimizedBacktestConfig(unittest.TestCase):
     """OptimizedBacktestConfig 테스트"""
     
-    def test_default_config(self):
+def test_default_config(self):
         """기본 설정 테스트"""
         config = OptimizedBacktestConfig()
         
@@ -132,7 +132,7 @@ class TestOptimizedBacktestConfig(unittest.TestCase):
         self.assertTrue(config.adaptive_batch_size)
         self.assertIsNone(config.max_workers)
     
-    def test_custom_config(self):
+def test_custom_config(self):
         """사용자 정의 설정 테스트"""
         config = OptimizedBacktestConfig(
             max_workers=8,
@@ -150,7 +150,7 @@ class TestOptimizedBacktestConfig(unittest.TestCase):
 class TestOptimizedBacktestEngine(unittest.TestCase):
     """OptimizedBacktestEngine 테스트"""
     
-    def setUp(self):
+def setUp(self):
         """테스트 환경 설정"""
         # 캐시 비활성화하여 테스트 격리
         self.config = OptimizedBacktestConfig(
@@ -170,7 +170,7 @@ class TestOptimizedBacktestEngine(unittest.TestCase):
         # 모의 전략
         self.mock_strategy = MockStrategy
     
-    def test_engine_initialization(self):
+def test_engine_initialization(self):
         """엔진 초기화 테스트"""
         self.assertIsInstance(self.engine.config, OptimizedBacktestConfig)
         self.assertIsNotNone(self.engine.parallel_engine)
@@ -180,7 +180,7 @@ class TestOptimizedBacktestEngine(unittest.TestCase):
         self.assertIn('optimization_enabled', self.engine.performance_stats)
         self.assertEqual(self.engine.performance_stats['total_runs'], 0)
     
-    def test_data_collection_optimized(self):
+def test_data_collection_optimized(self):
         """최적화된 데이터 수집 테스트"""
         symbols_data = self.engine._collect_data_optimized(self.test_symbols, days=60)
         
@@ -199,7 +199,7 @@ class TestOptimizedBacktestEngine(unittest.TestCase):
             for col in required_cols:
                 self.assertIn(col, data.columns)
     
-    def test_run_optimized_backtest_basic(self):
+def test_run_optimized_backtest_basic(self):
         """기본 최적화 백테스팅 실행 테스트"""
         results = self.engine.run_optimized_backtest(
             self.mock_strategy,
@@ -224,7 +224,7 @@ class TestOptimizedBacktestEngine(unittest.TestCase):
         self.assertIn('total_symbols', perf_analysis)
         self.assertGreater(perf_analysis['total_symbols'], 0)
     
-    def test_run_optimized_backtest_with_parameters(self):
+def test_run_optimized_backtest_with_parameters(self):
         """매개변수가 있는 백테스팅 테스트"""
         strategy_params = {
             'rsi_period': 14,
@@ -244,7 +244,7 @@ class TestOptimizedBacktestEngine(unittest.TestCase):
         # 매개변수가 전달되었는지 간접적으로 확인 (오류 없이 실행되면 성공)
         self.assertGreater(len(results['results']), 0)
     
-    def test_performance_stats_update(self):
+def test_performance_stats_update(self):
         """성능 통계 업데이트 테스트"""
         initial_runs = self.engine.performance_stats['total_runs']
         initial_symbols = self.engine.performance_stats['total_symbols']
@@ -260,7 +260,7 @@ class TestOptimizedBacktestEngine(unittest.TestCase):
         self.assertEqual(self.engine.performance_stats['total_symbols'], initial_symbols + 2)
         self.assertGreater(self.engine.performance_stats['total_time'], 0)
     
-    def test_optimization_stats(self):
+def test_optimization_stats(self):
         """최적화 통계 조회 테스트"""
         # 백테스팅 실행
         self.engine.run_optimized_backtest(
@@ -281,7 +281,7 @@ class TestOptimizedBacktestEngine(unittest.TestCase):
         self.assertIn('parallel_detailed', stats)
         self.assertIn('batch_detailed', stats)
     
-    def test_clear_caches(self):
+def test_clear_caches(self):
         """캐시 클리어 테스트"""
         # 캐시 활성화된 엔진으로 테스트
         cached_config = OptimizedBacktestConfig(enable_cache=True)
@@ -294,7 +294,7 @@ class TestOptimizedBacktestEngine(unittest.TestCase):
         except Exception as e:
             self.fail(f"캐시 클리어 중 오류 발생: {e}")
     
-    def test_benchmark_optimizations(self):
+def test_benchmark_optimizations(self):
         """최적화 벤치마크 테스트"""
         # 작은 샘플로 벤치마크 실행
         benchmark_results = self.engine.benchmark_optimizations(
@@ -319,7 +319,7 @@ class TestOptimizedBacktestEngine(unittest.TestCase):
 class TestConvenienceFunctions(unittest.TestCase):
     """편의 함수 테스트"""
     
-    def test_create_optimized_engine(self):
+def test_create_optimized_engine(self):
         """최적화 엔진 생성 함수 테스트"""
         engine = create_optimized_engine(
             max_workers=4,
@@ -332,7 +332,7 @@ class TestConvenienceFunctions(unittest.TestCase):
         self.assertTrue(engine.config.enable_cache)
         self.assertEqual(engine.config.max_memory_usage_mb, 512)
     
-    def test_create_optimized_engine_defaults(self):
+def test_create_optimized_engine_defaults(self):
         """기본값으로 엔진 생성 테스트"""
         engine = create_optimized_engine()
         
@@ -343,7 +343,7 @@ class TestConvenienceFunctions(unittest.TestCase):
         self.assertEqual(engine.config.max_memory_usage_mb, expected_memory)
     
     @patch('src.data.stock_filter.get_kospi_top')
-    def test_run_kospi_backtest_optimized(self, mock_get_kospi_top):
+def test_run_kospi_backtest_optimized(self, mock_get_kospi_top):
         """코스피 백테스팅 함수 테스트"""
         # 모의 상위 종목 반환
         mock_symbols = ["005930", "000660", "035420"]
@@ -373,11 +373,11 @@ class TestConvenienceFunctions(unittest.TestCase):
 class TestPerformanceOptimizations(unittest.TestCase):
     """성능 최적화 테스트"""
     
-    def setUp(self):
+def setUp(self):
         """테스트 환경 설정"""
         self.mock_collector = MockDataCollector()
     
-    def test_parallel_processing_benefit(self):
+def test_parallel_processing_benefit(self):
         """병렬 처리 성능 이득 테스트"""
         symbols = ["SYM1", "SYM2", "SYM3", "SYM4", "SYM5"]
         
@@ -419,7 +419,7 @@ class TestPerformanceOptimizations(unittest.TestCase):
         # (작은 샘플에서는 오버헤드로 인해 병렬 처리가 더 느릴 수 있음)
         self.assertLess(parallel_time, sequential_time * 2)  # 2배 이상 느려지지 않음
     
-    def test_batch_processing_memory_efficiency(self):
+def test_batch_processing_memory_efficiency(self):
         """배치 처리 메모리 효율성 테스트"""
         large_symbol_list = [f"SYM{i:03d}" for i in range(20)]
         
@@ -446,7 +446,7 @@ class TestPerformanceOptimizations(unittest.TestCase):
         except MemoryError:
             self.fail("배치 처리에서 메모리 오류 발생")
     
-    def test_optimization_components_integration(self):
+def test_optimization_components_integration(self):
         """최적화 컴포넌트 통합 테스트"""
         config = OptimizedBacktestConfig(
             enable_cache=True,
@@ -482,7 +482,7 @@ class TestPerformanceOptimizations(unittest.TestCase):
 class TestErrorHandling(unittest.TestCase):
     """오류 처리 테스트"""
     
-    def test_invalid_strategy_handling(self):
+def test_invalid_strategy_handling(self):
         """잘못된 전략 처리 테스트"""
         engine = create_optimized_engine(enable_cache=False)
         engine.data_collector = MockDataCollector()
@@ -491,7 +491,7 @@ class TestErrorHandling(unittest.TestCase):
         with self.assertRaises((TypeError, AttributeError)):
             engine.run_optimized_backtest(None, ["TEST"], days=20)
     
-    def test_empty_symbols_list(self):
+def test_empty_symbols_list(self):
         """빈 심볼 리스트 처리 테스트"""
         engine = create_optimized_engine(enable_cache=False)
         engine.data_collector = MockDataCollector()
@@ -501,7 +501,7 @@ class TestErrorHandling(unittest.TestCase):
         # 빈 결과 반환
         self.assertEqual(len(results['results']), 0)
     
-    def test_invalid_days_parameter(self):
+def test_invalid_days_parameter(self):
         """잘못된 일수 매개변수 테스트"""
         engine = create_optimized_engine(enable_cache=False)
         engine.data_collector = MockDataCollector()

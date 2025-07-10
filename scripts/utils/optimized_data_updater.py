@@ -71,7 +71,7 @@ class OptimizedDataUpdateConfig:
 class DataUpdateCacheManager:
     """데이터 업데이트 캐싱 매니저"""
     
-    def __init__(self, db_path: str, config: OptimizedDataUpdateConfig):
+def __init__(self, db_path: str, config: OptimizedDataUpdateConfig):
         self.db_path = db_path
         self.config = config
         self.memory_cache = {}  # 메모리 캐시
@@ -88,7 +88,7 @@ class DataUpdateCacheManager:
         
         logger.info("데이터 업데이트 캐시 매니저 초기화")
     
-    def get_symbol_update_status(self, symbol: str) -> Dict[str, Any]:
+def get_symbol_update_status(self, symbol: str) -> Dict[str, Any]:
         """종목의 업데이트 상태 확인"""
         with self.cache_lock:
             # 메모리 캐시 확인
@@ -108,7 +108,7 @@ class DataUpdateCacheManager:
             
             return status
     
-    def _query_symbol_status_from_db(self, symbol: str) -> Dict[str, Any]:
+def _query_symbol_status_from_db(self, symbol: str) -> Dict[str, Any]:
         """DB에서 종목 상태 조회"""
         try:
             with sqlite3.connect(self.db_path) as conn:
@@ -152,7 +152,7 @@ class DataUpdateCacheManager:
             logger.error(f"종목 상태 조회 실패 ({symbol}): {e}")
             return {'has_data': False, 'needs_update': True}
     
-    def _needs_update(self, latest_date: str, updated_at: str) -> bool:
+def _needs_update(self, latest_date: str, updated_at: str) -> bool:
         """업데이트 필요 여부 판단"""
         if not latest_date or not updated_at:
             return True
@@ -177,7 +177,7 @@ class DataUpdateCacheManager:
             logger.error(f"업데이트 필요 여부 판단 실패: {e}")
             return True
     
-    def get_missing_date_ranges(self, symbol: str, start_date: str, end_date: str) -> List[Tuple[str, str]]:
+def get_missing_date_ranges(self, symbol: str, start_date: str, end_date: str) -> List[Tuple[str, str]]:
         """누락된 날짜 범위 조회 (증분 업데이트용)"""
         try:
             with sqlite3.connect(self.db_path) as conn:
@@ -232,7 +232,7 @@ class DataUpdateCacheManager:
             logger.error(f"누락 날짜 범위 조회 실패 ({symbol}): {e}")
             return [(start_date, end_date)]  # 실패 시 전체 범위 반환
     
-    def should_skip_symbol(self, symbol: str) -> bool:
+def should_skip_symbol(self, symbol: str) -> bool:
         """종목 업데이트 건너뛰기 여부"""
         if not self.config.skip_existing:
             return False
@@ -245,7 +245,7 @@ class DataUpdateCacheManager:
         
         return False
     
-    def invalidate_cache(self, symbol: str = None):
+def invalidate_cache(self, symbol: str = None):
         """캐시 무효화"""
         with self.cache_lock:
             if symbol:
@@ -254,7 +254,7 @@ class DataUpdateCacheManager:
             else:
                 self.memory_cache.clear()
     
-    def get_cache_stats(self) -> Dict[str, Any]:
+def get_cache_stats(self) -> Dict[str, Any]:
         """캐시 통계 반환"""
         total_requests = self.cache_stats['hits'] + self.cache_stats['misses']
         hit_rate = self.cache_stats['hits'] / total_requests if total_requests > 0 else 0
@@ -269,7 +269,7 @@ class DataUpdateCacheManager:
 class DataUpdateBatchProcessor:
     """데이터 업데이트 배치 프로세서"""
     
-    def __init__(self, config: OptimizedDataUpdateConfig):
+def __init__(self, config: OptimizedDataUpdateConfig):
         self.config = config
         self.current_batch_size = config.batch_size
         self.memory_monitor = self._init_memory_monitor()
@@ -287,7 +287,7 @@ class DataUpdateBatchProcessor:
         
         logger.info(f"배치 프로세서 초기화: 배치 크기 {self.current_batch_size}")
     
-    def _init_memory_monitor(self):
+def _init_memory_monitor(self):
         """메모리 모니터 초기화"""
         return {
             'process': psutil.Process(),
@@ -296,7 +296,7 @@ class DataUpdateBatchProcessor:
             'gc_count': 0
         }
     
-    def create_optimized_batches(self, symbols: List[str]) -> List[List[str]]:
+def create_optimized_batches(self, symbols: List[str]) -> List[List[str]]:
         """최적화된 배치 생성"""
         # 메모리 사용량에 따른 배치 크기 조정
         current_memory_mb = self.memory_monitor['process'].memory_info().rss / (1024 * 1024)
@@ -317,7 +317,7 @@ class DataUpdateBatchProcessor:
         logger.info(f"배치 생성 완료: {len(batches)}개 배치, 배치 크기: {self.current_batch_size}")
         return batches
     
-    def process_batch_with_monitoring(self, 
+def process_batch_with_monitoring(self, 
                                     batch: List[str],
                                     processor_func: Callable,
                                     **kwargs) -> Dict[str, Any]:
@@ -356,7 +356,7 @@ class DataUpdateBatchProcessor:
             'symbols_processed': len(batch)
         }
     
-    def _optimize_memory(self):
+def _optimize_memory(self):
         """메모리 최적화"""
         current_memory_mb = self.memory_monitor['process'].memory_info().rss / (1024 * 1024)
         
@@ -373,7 +373,7 @@ class DataUpdateBatchProcessor:
             new_memory_mb = self.memory_monitor['process'].memory_info().rss / (1024 * 1024)
             logger.info(f"메모리 최적화: {current_memory_mb:.1f}MB -> {new_memory_mb:.1f}MB")
     
-    def get_performance_stats(self) -> Dict[str, Any]:
+def get_performance_stats(self) -> Dict[str, Any]:
         """성능 통계 반환"""
         return {
             **self.stats,
@@ -385,7 +385,7 @@ class DataUpdateBatchProcessor:
 class OptimizedDataUpdater:
     """최적화된 데이터 업데이터 메인 엔진"""
     
-    def __init__(self, db_path: str, config: OptimizedDataUpdateConfig = None):
+def __init__(self, db_path: str, config: OptimizedDataUpdateConfig = None):
         self.db_path = db_path
         self.config = config or OptimizedDataUpdateConfig()
         
@@ -419,7 +419,7 @@ class OptimizedDataUpdater:
         
         logger.info("최적화된 데이터 업데이터 초기화 완료")
     
-    def update_symbols_optimized(self,
+def update_symbols_optimized(self,
                                symbols: List[str],
                                start_date: str = None,
                                end_date: str = None,
@@ -468,7 +468,7 @@ class OptimizedDataUpdater:
             'total_time': total_time
         }
     
-    def _filter_symbols_by_cache(self, symbols: List[str], force_update: bool) -> List[str]:
+def _filter_symbols_by_cache(self, symbols: List[str], force_update: bool) -> List[str]:
         """캐시 기반 종목 필터링"""
         if force_update or not self.config.enable_cache:
             return symbols
@@ -488,7 +488,7 @@ class OptimizedDataUpdater:
         
         return symbols_to_process
     
-    def _process_batches_parallel(self, 
+def _process_batches_parallel(self, 
                                 batches: List[List[str]], 
                                 start_date: str, 
                                 end_date: str,
@@ -498,7 +498,7 @@ class OptimizedDataUpdater:
         all_results = {}
         batch_stats = []
         
-        def process_single_batch(batch: List[str]) -> Dict[str, Any]:
+def process_single_batch(batch: List[str]) -> Dict[str, Any]:
             """단일 배치 처리"""
             return self.batch_processor.process_batch_with_monitoring(
                 batch,
@@ -530,7 +530,7 @@ class OptimizedDataUpdater:
             'batch_stats': batch_stats
         }
     
-    def _update_batch_sequential(self, 
+def _update_batch_sequential(self, 
                                batch: List[str],
                                start_date: str = None,
                                end_date: str = None,
@@ -568,7 +568,7 @@ class OptimizedDataUpdater:
         
         return results
     
-    def _update_single_symbol_optimized(self, 
+def _update_single_symbol_optimized(self, 
                                       symbol: str, 
                                       start_date: str = None, 
                                       end_date: str = None,
@@ -605,7 +605,7 @@ class OptimizedDataUpdater:
             logger.error(f"종목 {symbol} 최적화 업데이트 실패: {e}")
             return False
     
-    def _fetch_and_save_data(self, symbol: str, start_date: str, end_date: str) -> bool:
+def _fetch_and_save_data(self, symbol: str, start_date: str, end_date: str) -> bool:
         """데이터 조회 및 저장"""
         try:
             # pykrx로 데이터 조회
@@ -623,7 +623,7 @@ class OptimizedDataUpdater:
             logger.error(f"데이터 조회/저장 실패 ({symbol}): {e}")
             return False
     
-    def _save_data_to_db(self, symbol: str, df: pd.DataFrame):
+def _save_data_to_db(self, symbol: str, df: pd.DataFrame):
         """데이터베이스에 데이터 저장"""
         try:
             with sqlite3.connect(self.db_path) as conn:
@@ -658,7 +658,7 @@ class OptimizedDataUpdater:
             logger.error(f"DB 저장 실패 ({symbol}): {e}")
             raise
     
-    def _call_progress_callback(self):
+def _call_progress_callback(self):
         """진행률 콜백 호출"""
         total = self.progress_stats['total_symbols']
         completed = (self.progress_stats['completed_symbols'] + 
@@ -674,7 +674,7 @@ class OptimizedDataUpdater:
             start_time=self.progress_stats['start_time']
         )
     
-    def _analyze_performance(self, parallel_results: Dict, total_time: float, total_symbols: int) -> Dict[str, Any]:
+def _analyze_performance(self, parallel_results: Dict, total_time: float, total_symbols: int) -> Dict[str, Any]:
         """성능 분석"""
         
         cache_stats = self.cache_manager.get_cache_stats()
@@ -704,14 +704,14 @@ class OptimizedDataUpdater:
             'api_calls': batch_stats['api_calls']
         }
     
-    def _update_performance_stats(self, symbols_count: int, total_time: float, performance_analysis: Dict):
+def _update_performance_stats(self, symbols_count: int, total_time: float, performance_analysis: Dict):
         """성능 통계 업데이트"""
         self.performance_stats['total_runs'] += 1
         self.performance_stats['total_time'] += total_time
         self.performance_stats['total_symbols_processed'] += symbols_count
         self.performance_stats['optimization_efficiency'] = performance_analysis['overall_efficiency']
     
-    def get_optimization_stats(self) -> Dict[str, Any]:
+def get_optimization_stats(self) -> Dict[str, Any]:
         """최적화 통계 반환"""
         return {
             'performance_stats': self.performance_stats,
@@ -720,7 +720,7 @@ class OptimizedDataUpdater:
             'progress_stats': self.progress_stats
         }
     
-    def clear_all_caches(self):
+def clear_all_caches(self):
         """모든 캐시 클리어"""
         self.cache_manager.invalidate_cache()
         logger.info("모든 캐시가 클리어되었습니다")

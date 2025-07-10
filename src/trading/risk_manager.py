@@ -27,7 +27,7 @@ class RiskParams:
 class RiskManager:
     """위험 관리 클래스"""
     
-    def __init__(self, risk_params: Optional[RiskParams] = None):
+def __init__(self, risk_params: Optional[RiskParams] = None):
         """
         위험 관리자 초기화
         
@@ -43,7 +43,7 @@ class RiskManager:
         
         self.logger.info("위험 관리자 초기화 완료")
     
-    def check_position_size_limit(self, symbol: str, order_amount: float, portfolio_value: float) -> bool:
+def check_position_size_limit(self, symbol: str, order_amount: float, portfolio_value: float) -> bool:
         """포지션 크기 제한 확인"""
         position_ratio = order_amount / portfolio_value
         
@@ -56,7 +56,7 @@ class RiskManager:
         
         return True
     
-    def check_max_positions_limit(self, current_positions: int) -> bool:
+def check_max_positions_limit(self, current_positions: int) -> bool:
         """최대 보유 종목 수 제한 확인"""
         if current_positions >= self.risk_params.max_positions:
             self.logger.warning(
@@ -66,7 +66,7 @@ class RiskManager:
         
         return True
     
-    def check_cash_ratio_limit(self, cash: float, portfolio_value: float) -> bool:
+def check_cash_ratio_limit(self, cash: float, portfolio_value: float) -> bool:
         """최소 현금 비율 확인"""
         cash_ratio = cash / portfolio_value
         
@@ -78,7 +78,7 @@ class RiskManager:
         
         return True
     
-    def check_daily_loss_limit(self, portfolio_value: float, initial_value: float) -> bool:
+def check_daily_loss_limit(self, portfolio_value: float, initial_value: float) -> bool:
         """일일 손실 제한 확인"""
         daily_return = (portfolio_value - initial_value) / initial_value
         
@@ -90,7 +90,7 @@ class RiskManager:
         
         return True
     
-    def check_drawdown_limit(self, current_value: float) -> bool:
+def check_drawdown_limit(self, current_value: float) -> bool:
         """최대 낙폭 제한 확인"""
         if current_value > self.max_portfolio_value:
             self.max_portfolio_value = current_value
@@ -106,7 +106,7 @@ class RiskManager:
         
         return True
     
-    def calculate_position_size(self, symbol: str, entry_price: float, portfolio_value: float, 
+def calculate_position_size(self, symbol: str, entry_price: float, portfolio_value: float, 
                               volatility: float = 0.02) -> int:
         """적정 포지션 크기 계산 (Kelly Criterion 기반)"""
         # 기본 포지션 크기 (포트폴리오 대비 비율)
@@ -131,7 +131,7 @@ class RiskManager:
         
         return quantity
     
-    def calculate_stop_loss_price(self, symbol: str, entry_price: float, side: str) -> float:
+def calculate_stop_loss_price(self, symbol: str, entry_price: float, side: str) -> float:
         """손절매 가격 계산"""
         if side.upper() == 'BUY':
             stop_price = entry_price * (1 - self.risk_params.stop_loss_pct)
@@ -141,7 +141,7 @@ class RiskManager:
         self.logger.info(f"손절매 가격 계산: {symbol} {side} - {stop_price:,.0f}원")
         return stop_price
     
-    def calculate_take_profit_price(self, symbol: str, entry_price: float, side: str) -> float:
+def calculate_take_profit_price(self, symbol: str, entry_price: float, side: str) -> float:
         """익절매 가격 계산"""
         if side.upper() == 'BUY':
             profit_price = entry_price * (1 + self.risk_params.take_profit_pct)
@@ -151,7 +151,7 @@ class RiskManager:
         self.logger.info(f"익절매 가격 계산: {symbol} {side} - {profit_price:,.0f}원")
         return profit_price
     
-    def should_stop_loss(self, symbol: str, current_price: float, entry_price: float, side: str) -> bool:
+def should_stop_loss(self, symbol: str, current_price: float, entry_price: float, side: str) -> bool:
         """손절매 조건 확인"""
         stop_price = self.calculate_stop_loss_price(symbol, entry_price, side)
         
@@ -169,7 +169,7 @@ class RiskManager:
         
         return should_stop
     
-    def should_take_profit(self, symbol: str, current_price: float, entry_price: float, side: str) -> bool:
+def should_take_profit(self, symbol: str, current_price: float, entry_price: float, side: str) -> bool:
         """익절매 조건 확인"""
         profit_price = self.calculate_take_profit_price(symbol, entry_price, side)
         
@@ -187,7 +187,7 @@ class RiskManager:
         
         return should_profit
     
-    def evaluate_portfolio_risk(self, positions: Dict[str, Any], market_data: Dict[str, float]) -> Dict[str, float]:
+def evaluate_portfolio_risk(self, positions: Dict[str, Any], market_data: Dict[str, float]) -> Dict[str, float]:
         """포트폴리오 위험도 평가"""
         total_value = 0
         total_risk = 0
@@ -225,7 +225,7 @@ class RiskManager:
         self.logger.info(f"포트폴리오 위험도: {portfolio_risk:.2%}")
         return risk_metrics
     
-    def check_correlation_risk(self, symbols: List[str], sector_map: Dict[str, str] = None) -> bool:
+def check_correlation_risk(self, symbols: List[str], sector_map: Dict[str, str] = None) -> bool:
         """상관관계 위험 확인 (같은 섹터 비중 제한)"""
         if not sector_map:
             return True  # 섹터 정보가 없으면 통과
@@ -249,7 +249,7 @@ class RiskManager:
         
         return True
     
-    def get_risk_summary(self) -> Dict[str, Any]:
+def get_risk_summary(self) -> Dict[str, Any]:
         """위험 관리 현황 요약"""
         return {
             'risk_params': {
@@ -267,7 +267,7 @@ class RiskManager:
             }
         }
     
-    def update_daily_pnl(self, date: datetime, pnl: float):
+def update_daily_pnl(self, date: datetime, pnl: float):
         """일일 손익 업데이트"""
         self.daily_pnl.append((date, pnl))
         
@@ -275,7 +275,7 @@ class RiskManager:
         if len(self.daily_pnl) > 30:
             self.daily_pnl = self.daily_pnl[-30:]
     
-    def reset(self):
+def reset(self):
         """위험 관리자 초기화"""
         self.daily_pnl.clear()
         self.max_portfolio_value = 0.0

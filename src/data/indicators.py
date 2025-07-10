@@ -26,7 +26,7 @@ SWING_TRADING_PARAMS = {
 class TALibIndicators:
     """TA-Lib 기반 기술적 분석 지표 계산 클래스"""
     
-    def __init__(self, data: pd.DataFrame):
+def __init__(self, data: pd.DataFrame):
         """
         Args:
             data: OHLCV 데이터프레임 (컬럼: open, high, low, close, volume)
@@ -34,7 +34,7 @@ class TALibIndicators:
         self.data = data.copy()
         self.validate_data()
         
-    def validate_data(self) -> None:
+def validate_data(self) -> None:
         """OHLCV 데이터 유효성 검증"""
         required_columns = ['open', 'high', 'low', 'close', 'volume']
         missing_columns = [col for col in required_columns if col not in self.data.columns]
@@ -45,7 +45,7 @@ class TALibIndicators:
         if len(self.data) < 50:
             logger.warning("데이터가 부족합니다. 최소 50개 이상의 데이터를 권장합니다.")
 
-    def calculate_trend_indicators(self) -> pd.DataFrame:
+def calculate_trend_indicators(self) -> pd.DataFrame:
         """추세 지표 계산"""
         df = self.data.copy()
         
@@ -76,7 +76,7 @@ class TALibIndicators:
         
         return df
     
-    def calculate_momentum_indicators(self) -> pd.DataFrame:
+def calculate_momentum_indicators(self) -> pd.DataFrame:
         """모멘텀 지표 계산"""
         df = self.data.copy()
         
@@ -107,7 +107,7 @@ class TALibIndicators:
         
         return df
     
-    def calculate_volatility_indicators(self) -> pd.DataFrame:
+def calculate_volatility_indicators(self) -> pd.DataFrame:
         """변동성 지표 계산"""
         df = self.data.copy()
         
@@ -131,7 +131,7 @@ class TALibIndicators:
         
         return df
     
-    def calculate_volume_indicators(self) -> pd.DataFrame:
+def calculate_volume_indicators(self) -> pd.DataFrame:
         """거래량 지표 계산"""
         df = self.data.copy()
         
@@ -146,7 +146,7 @@ class TALibIndicators:
         
         return df
     
-    def calculate_all_indicators(self) -> pd.DataFrame:
+def calculate_all_indicators(self) -> pd.DataFrame:
         """모든 지표를 한번에 계산"""
         try:
             df = self.data.copy()
@@ -172,7 +172,7 @@ class TALibIndicators:
             logger.error(f"지표 계산 중 오류 발생: {e}")
             raise
     
-    def get_trading_signals(self, df: pd.DataFrame = None) -> pd.DataFrame:
+def get_trading_signals(self, df: pd.DataFrame = None) -> pd.DataFrame:
         """스윙 트레이딩 매매 신호 생성"""
         if df is None:
             df = self.calculate_all_indicators()
@@ -285,10 +285,10 @@ def detect_candlestick_patterns(data: pd.DataFrame) -> pd.DataFrame:
 class TechnicalIndicators:
     """호환성을 위한 기술적 지표 계산 클래스 (stock_data_manager.py 호환용)"""
     
-    def __init__(self):
+def __init__(self):
         pass
     
-    def calculate_roc(self, df: pd.DataFrame, period: int) -> pd.Series:
+def calculate_roc(self, df: pd.DataFrame, period: int) -> pd.Series:
         """ROC (Rate of Change) 계산"""
         try:
             return talib.ROC(df['close'], timeperiod=period)
@@ -296,7 +296,7 @@ class TechnicalIndicators:
             # TA-Lib 사용 불가 시 pandas로 대체
             return df['close'].pct_change(periods=period) * 100
     
-    def calculate_moving_average(self, df: pd.DataFrame, window: int) -> pd.Series:
+def calculate_moving_average(self, df: pd.DataFrame, window: int) -> pd.Series:
         """이동평균 계산"""
         try:
             return talib.SMA(df['close'], timeperiod=window)

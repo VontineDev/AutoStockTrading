@@ -5,8 +5,7 @@
 - OAuth 인증
 """
 
-from .kiwoom_client import KiwoomClient
+from .kiwoom_client import KiwoomApiClient as KiwoomClient
 from .websocket_client import WebSocketClient
-from .auth import KiwoomAuth
 
-__all__ = ['KiwoomClient', 'WebSocketClient', 'KiwoomAuth'] 
+__all__ = ['KiwoomClient', 'WebSocketClient'] 

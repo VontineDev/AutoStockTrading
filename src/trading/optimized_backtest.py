@@ -11,6 +11,7 @@ import pandas as pd
 import numpy as np
 from dataclasses import dataclass
 import sys
+from datetime import datetime, timedelta
 
 # 프로젝트 루트 설정
 PROJECT_ROOT = Path(__file__).parent.parent.parent
@@ -26,7 +27,7 @@ from src.constants import (
 from src.trading.parallel_backtest import ParallelBacktestEngine, ParallelBacktestConfig
 from src.trading.cache_manager import BacktestCacheManager, CacheConfig, get_cache_manager
 from src.trading.batch_optimizer import BatchProcessor, BatchConfig, create_optimized_batch_processor
-from src.data.collector import StockCollector
+from scripts.data_update import StockDataUpdater
 from src.strategies.base_strategy import BaseStrategy
 
 logger = logging.getLogger(__name__)
@@ -59,7 +60,7 @@ class OptimizedBacktestConfig:
 class OptimizedBacktestEngine:
     """최적화된 백테스팅 엔진"""
     
-    def __init__(self, config: OptimizedBacktestConfig = None):
+def __init__(self, config: OptimizedBacktestConfig = None):
         self.config = config or OptimizedBacktestConfig()
         
         # 성능 최적화 컴포넌트 초기화
@@ -82,7 +83,7 @@ class OptimizedBacktestEngine:
         
         logger.info("최적화된 백테스팅 엔진 초기화 완료")
     
-    def _init_components(self):
+def _init_components(self):
         """성능 최적화 컴포넌트 초기화"""
         
         # 1. 병렬 처리 초기화
@@ -111,12 +112,12 @@ class OptimizedBacktestEngine:
         )
         self.batch_processor = BatchProcessor(batch_config)
         
-        # 데이터 수집기
-        self.data_collector = StockCollector()
+        # 데이터 업데이터
+        self.data_updater = StockDataUpdater()
         
         logger.info("성능 최적화 컴포넌트 초기화 완료")
     
-    def run_optimized_backtest(self,
+def run_optimized_backtest(self,
                               strategy_class,
                               symbols: List[str],
                               strategy_params: Dict = None,
@@ -199,28 +200,41 @@ class OptimizedBacktestEngine:
             'total_time': total_time
         }
     
-    def _collect_data_optimized(self, symbols: List[str], days: int) -> Dict[str, pd.DataFrame]:
+def _collect_data_optimized(self, symbols: List[str], days: int) -> Dict[str, pd.DataFrame]:
         """배치 최적화를 적용한 데이터 수집"""
         
-        def data_loader(symbol: str) -> pd.DataFrame:
-            """개별 심볼 데이터 로더"""
-            try:
-                return self.data_collector.get_stock_data(symbol, days=days)
-            except Exception as e:
-                logger.error(f"데이터 수집 실패 ({symbol}): {e}")
-                return pd.DataFrame()
+        # StockDataUpdater의 update_symbol 메서드를 사용하여 데이터 수집 및 저장
+        # update_symbol은 내부적으로 데이터베이스에 저장하므로 별도의 저장 로직 불필요
+        # 여기서는 force_update=False로 설정하여 이미 최신 데이터가 있으면 건너뛰도록 함
         
-        # 배치 처리로 데이터 수집
-        batch_result = self.batch_processor.process_symbols_in_batches(
-            symbols, 
-            lambda batch, **kwargs: {
-                symbol: data_loader(symbol) for symbol in batch
-            }
+        # 데이터 수집 및 저장
+        results = self.data_updater.update_multiple_symbols_parallel(
+            symbols=symbols,
+            start_date=(datetime.now() - timedelta(days=days + 30)).strftime('%Y%m%d'), # 백테스팅 기간 + 여유분
+            end_date=datetime.now().strftime('%Y%m%d'),
+            force_update=False, # 이미 최신 데이터가 있으면 업데이트하지 않음
+            max_workers=self.config.max_workers or 5 # 병렬 워커 수
         )
-        
-        return batch_result['results']
+
+        # 데이터베이스에서 수집된 데이터 로드
+        symbols_data = {}
+        for symbol, success in results.items():
+            if success:
+                # StockDataManager를 사용하여 데이터베이스에서 데이터 로드
+                # StockDataManager는 db_path를 필요로 함
+                from src.data.stock_data_manager import StockDataManager
+                dm = StockDataManager(db_path=self.data_updater.db_path)
+                df = dm.get_latest_data(symbol, days=days)
+                if not df.empty:
+                    symbols_data[symbol] = df
+                else:
+                    logger.warning(f"데이터베이스에서 {symbol} 데이터 로드 실패")
+            else:
+                logger.warning(f"{symbol} 데이터 수집 실패")
+
+        return symbols_data
     
-    def _filter_cached_symbols(self, 
+def _filter_cached_symbols(self, 
                               strategy_class,
                               symbols_data: Dict[str, pd.DataFrame],
                               strategy_params: Dict = None) -> tuple:
@@ -253,7 +267,7 @@ class OptimizedBacktestEngine:
         
         return symbols_to_process, cached_results
     
-    def _cache_results(self,
+def _cache_results(self,
                       strategy_class,
                       results: Dict[str, Any],
                       symbols_data: Dict[str, pd.DataFrame],
@@ -272,7 +286,7 @@ class OptimizedBacktestEngine:
                     result, strategy_params
                 )
     
-    def _analyze_performance(self, 
+def _analyze_performance(self, 
                            results: Dict[str, Any],
                            total_time: float,
                            total_symbols: int,
@@ -321,7 +335,7 @@ class OptimizedBacktestEngine:
         
         return analysis
     
-    def _update_stats(self, symbols_count: int, total_time: float, performance_analysis: Dict):
+def _update_stats(self, symbols_count: int, total_time: float, performance_analysis: Dict):
         """성능 통계 업데이트"""
         
         self.performance_stats['total_runs'] += 1
@@ -353,7 +367,7 @@ class OptimizedBacktestEngine:
                     self.config.max_memory_usage_mb / memory_stats['peak_memory_mb'] * 100
                 ))
     
-    def get_optimization_stats(self) -> Dict[str, Any]:
+def get_optimization_stats(self) -> Dict[str, Any]:
         """최적화 통계 반환"""
         
         stats = self.performance_stats.copy()
@@ -375,7 +389,7 @@ class OptimizedBacktestEngine:
         
         return stats
     
-    def benchmark_optimizations(self, 
+def benchmark_optimizations(self, 
                               strategy_class,
                               sample_symbols: List[str],
                               days: int = DataCollectionConstants.DEFAULT_BACKTEST_DAYS) -> Dict[str, Any]:
@@ -428,7 +442,7 @@ class OptimizedBacktestEngine:
         logger.info(f"벤치마크 완료: {speedup:.2f}x 성능 향상")
         return benchmark_results
     
-    def clear_all_caches(self):
+def clear_all_caches(self):
         """모든 캐시 클리어"""
         if self.config.enable_cache:
             self.cache_manager.clear_cache()
@@ -513,7 +527,7 @@ def progress_callback_with_eta(progress: float, completed: int, total: int, star
 # 성능 프로파일링 데코레이터
 def profile_performance(func):
     """성능 프로파일링 데코레이터"""
-    def wrapper(*args, **kwargs):
+def wrapper(*args, **kwargs):
         start_time = time.time()
         result = func(*args, **kwargs)
         end_time = time.time()

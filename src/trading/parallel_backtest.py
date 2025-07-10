@@ -35,7 +35,7 @@ class ParallelBacktestConfig:
 class ParallelBacktestEngine:
     """고성능 병렬 백테스팅 엔진"""
     
-    def __init__(self, config: ParallelBacktestConfig = None):
+def __init__(self, config: ParallelBacktestConfig = None):
         self.config = config or ParallelBacktestConfig()
         self.cpu_cores = multiprocessing.cpu_count()
         
@@ -55,7 +55,7 @@ class ParallelBacktestEngine:
         
         logger.info(f"병렬 백테스팅 엔진 초기화: {self.config.max_workers}개 워커")
     
-    def run_parallel_backtest(self, 
+def run_parallel_backtest(self, 
                             strategy_class,
                             symbols_data: Dict[str, pd.DataFrame],
                             strategy_params: Dict = None,
@@ -158,7 +158,7 @@ class ParallelBacktestEngine:
             'success_rate': self.performance_stats['successful_backtests'] / self.performance_stats['total_symbols'] * 100
         }
     
-    def _create_symbol_chunks(self, symbols: List[str]) -> List[List[str]]:
+def _create_symbol_chunks(self, symbols: List[str]) -> List[List[str]]:
         """심볼을 청크로 분할"""
         chunk_size = self.config.chunk_size
         chunks = []
@@ -170,7 +170,7 @@ class ParallelBacktestEngine:
         logger.info(f"심볼 청크 생성: {len(chunks)}개 청크, 청크당 최대 {chunk_size}개 종목")
         return chunks
     
-    def get_performance_report(self) -> Dict[str, Any]:
+def get_performance_report(self) -> Dict[str, Any]:
         """성능 리포트 반환"""
         stats = self.performance_stats.copy()
         

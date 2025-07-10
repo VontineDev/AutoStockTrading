@@ -43,13 +43,13 @@ class MovingAverageConfig(StrategyConfig):
 class MovingAverageStrategy(BaseStrategy):
     """이동평균 기반 스윙 트레이딩 전략"""
     
-    def __init__(self, config: Optional[MovingAverageConfig] = None):
+def __init__(self, config: Optional[MovingAverageConfig] = None):
         super().__init__(config or MovingAverageConfig())
         self.config: MovingAverageConfig = self.config
         logger.info(f"이동평균 전략 초기화: fast={self.config.fast_period}, "
                    f"slow={self.config.slow_period}, long={self.config.long_period}")
     
-    def calculate_indicators(self, df: pd.DataFrame) -> pd.DataFrame:
+def calculate_indicators(self, df: pd.DataFrame) -> pd.DataFrame:
         """기술적 지표 계산"""
         # 이동평균선들
         df['SMA_fast'] = talib.SMA(df['close'], timeperiod=self.config.fast_period)
@@ -100,7 +100,7 @@ class MovingAverageStrategy(BaseStrategy):
         
         return df
     
-    def _assess_risk_level(self, current_row: pd.Series, confidence: float) -> str:
+def _assess_risk_level(self, current_row: pd.Series, confidence: float) -> str:
         """리스크 레벨 평가"""
         ma_distance = abs(current_row.get('ma_distance', 0))
         atr_ratio = current_row.get('atr_ratio', 0.02)
@@ -114,7 +114,7 @@ class MovingAverageStrategy(BaseStrategy):
         else:
             return 'MEDIUM'
     
-    def _generate_buy_signals(self, df: pd.DataFrame) -> List[TradeSignal]:
+def _generate_buy_signals(self, df: pd.DataFrame) -> List[TradeSignal]:
         """매수 신호 생성"""
         signals = []
         
@@ -222,7 +222,7 @@ class MovingAverageStrategy(BaseStrategy):
         
         return signals
     
-    def _generate_sell_signals(self, df: pd.DataFrame) -> List[TradeSignal]:
+def _generate_sell_signals(self, df: pd.DataFrame) -> List[TradeSignal]:
         """매도 신호 생성"""
         signals = []
         
@@ -330,7 +330,7 @@ class MovingAverageStrategy(BaseStrategy):
         
         return signals
     
-    def generate_signals(self, df: pd.DataFrame) -> List[TradeSignal]:
+def generate_signals(self, df: pd.DataFrame) -> List[TradeSignal]:
         """매매 신호 생성 (메인 로직)"""
         # 지표 계산
         df = self.calculate_indicators(df)
@@ -346,7 +346,7 @@ class MovingAverageStrategy(BaseStrategy):
         logger.info(f"이동평균 전략으로 {len(all_signals)}개 신호 생성")
         return all_signals
     
-    def validate_signal(self, signal: TradeSignal, data: pd.DataFrame) -> bool:
+def validate_signal(self, signal: TradeSignal, data: pd.DataFrame) -> bool:
         """신호 검증"""
         # 기본 검증: 가격과 신뢰도 확인
         if signal.price <= 0 or signal.confidence < 50:

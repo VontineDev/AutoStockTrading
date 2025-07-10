@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 class MACDStrategy(BaseStrategy):
     """MACD 기반 스윙 트레이딩 전략"""
     
-    def __init__(self, config: StrategyConfig = None):
+def __init__(self, config: StrategyConfig = None):
         """MACD 전략 초기화"""
         if config is None:
             config = self._create_default_macd_config()
@@ -45,7 +45,7 @@ class MACDStrategy(BaseStrategy):
         
         logger.info(f"MACD 전략 초기화: fast={self.fast_period}, slow={self.slow_period}, signal={self.signal_period}")
     
-    def _create_default_macd_config(self) -> StrategyConfig:
+def _create_default_macd_config(self) -> StrategyConfig:
         """기본 MACD 전략 설정 생성"""
         return create_default_config(
             strategy_name="MACD_SwingTrading",
@@ -66,7 +66,7 @@ class MACDStrategy(BaseStrategy):
             }
         )
     
-    def calculate_indicators(self, data: pd.DataFrame) -> pd.DataFrame:
+def calculate_indicators(self, data: pd.DataFrame) -> pd.DataFrame:
         """MACD 및 보조 지표 계산"""
         df = data.copy()
         
@@ -104,7 +104,7 @@ class MACDStrategy(BaseStrategy):
         
         return df
     
-    def generate_signals(self, data: pd.DataFrame) -> List[TradeSignal]:
+def generate_signals(self, data: pd.DataFrame) -> List[TradeSignal]:
         """MACD 기반 매매 신호 생성"""
         signals = []
         
@@ -206,7 +206,7 @@ class MACDStrategy(BaseStrategy):
         logger.info(f"MACD 전략으로 {len(signals)}개 신호 생성")
         return signals
     
-    def _apply_buy_filters(self, row: pd.Series) -> bool:
+def _apply_buy_filters(self, row: pd.Series) -> bool:
         """매수 신호 추가 필터 (완화된 버전)"""
         filters_passed = []
         
@@ -229,7 +229,7 @@ class MACDStrategy(BaseStrategy):
         
         return all(filters_passed) if filters_passed else True
     
-    def _apply_sell_filters(self, row: pd.Series) -> bool:
+def _apply_sell_filters(self, row: pd.Series) -> bool:
         """매도 신호 추가 필터 (완화된 버전)"""
         filters_passed = []
         
@@ -252,7 +252,7 @@ class MACDStrategy(BaseStrategy):
         
         return all(filters_passed) if filters_passed else True
     
-    def _calculate_buy_confidence(self, row: pd.Series) -> float:
+def _calculate_buy_confidence(self, row: pd.Series) -> float:
         """매수 신호 신뢰도 계산"""
         indicators = {
             'MACD': row['MACD'],
@@ -273,7 +273,7 @@ class MACDStrategy(BaseStrategy):
         
         return min(1.0, base_confidence)
     
-    def _calculate_sell_confidence(self, row: pd.Series) -> float:
+def _calculate_sell_confidence(self, row: pd.Series) -> float:
         """매도 신호 신뢰도 계산"""
         indicators = {
             'MACD': row['MACD'],
@@ -294,7 +294,7 @@ class MACDStrategy(BaseStrategy):
         
         return min(1.0, base_confidence)
     
-    def _assess_risk_level(self, row: pd.Series, confidence: float) -> str:
+def _assess_risk_level(self, row: pd.Series, confidence: float) -> str:
         """리스크 레벨 평가"""
         risk_factors = []
         
@@ -321,7 +321,7 @@ class MACDStrategy(BaseStrategy):
         else:
             return "LOW"
     
-    def validate_signal(self, signal: TradeSignal, data: pd.DataFrame) -> bool:
+def validate_signal(self, signal: TradeSignal, data: pd.DataFrame) -> bool:
         """신호 유효성 검증 (완화된 버전)"""
         # 기본 검증 (완화됨)
         if signal.confidence < 0.2:  # 0.3에서 0.2로 완화
@@ -340,7 +340,7 @@ class MACDStrategy(BaseStrategy):
         
         return True
     
-    def get_optimization_ranges(self) -> Dict[str, List]:
+def get_optimization_ranges(self) -> Dict[str, List]:
         """매개변수 최적화 범위 반환"""
         return {
             'fast_period': [8, 10, 12, 14],

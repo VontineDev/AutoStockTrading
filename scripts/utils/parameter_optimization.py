@@ -29,12 +29,12 @@ logger = logging.getLogger(__name__)
 class ParameterOptimizer:
     """매개변수 최적화 클래스"""
     
-    def __init__(self, results_dir='optimization_results'):
+def __init__(self, results_dir='optimization_results'):
         self.results_dir = Path(results_dir)
         self.results_dir.mkdir(exist_ok=True)
         self.timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
         
-    def get_optimization_grids(self) -> Dict[str, Dict[str, List]]:
+def get_optimization_grids(self) -> Dict[str, Dict[str, List]]:
         """전략별 최적화 파라미터 그리드 정의"""
         return {
             'MACDStrategy': {
@@ -63,7 +63,7 @@ class ParameterOptimizer:
             }
         }
     
-    def generate_parameter_combinations(self, strategy_name: str) -> List[Dict[str, Any]]:
+def generate_parameter_combinations(self, strategy_name: str) -> List[Dict[str, Any]]:
         """파라미터 조합 생성"""
         grids = self.get_optimization_grids()
         
@@ -83,7 +83,7 @@ class ParameterOptimizer:
         logger.info(f"📊 {strategy_name}: {len(combinations)}개 파라미터 조합 생성")
         return combinations
     
-    def validate_parameters(self, strategy_name: str, params: Dict[str, Any]) -> bool:
+def validate_parameters(self, strategy_name: str, params: Dict[str, Any]) -> bool:
         """파라미터 유효성 검증"""
         try:
             if strategy_name == 'MACDStrategy':
@@ -98,7 +98,7 @@ class ParameterOptimizer:
         except KeyError:
             return False
     
-    def run_single_optimization(self, strategy_name: str, params: Dict[str, Any], 
+def run_single_optimization(self, strategy_name: str, params: Dict[str, Any], 
                               test_symbols: List[str], test_days: int = 120) -> Dict[str, Any]:
         """단일 파라미터 조합 백테스팅"""
         try:
@@ -130,7 +130,7 @@ class ParameterOptimizer:
                 'error': str(e)
             }
     
-    def simulate_backtest(self, strategy_name: str, params: Dict[str, Any], 
+def simulate_backtest(self, strategy_name: str, params: Dict[str, Any], 
                          test_symbols: List[str], test_days: int) -> Dict[str, float]:
         """백테스팅 시뮬레이션 (실제 구현 대체용)"""
         import random
@@ -160,7 +160,7 @@ class ParameterOptimizer:
             'total_trades': random.randint(10, 100)
         }
     
-    def optimize_strategy(self, strategy_name: str, test_symbols: List[str], 
+def optimize_strategy(self, strategy_name: str, test_symbols: List[str], 
                          test_days: int = 120, max_workers: int = 4) -> Dict[str, Any]:
         """전략별 매개변수 최적화"""
         logger.info(f"🚀 {strategy_name} 매개변수 최적화 시작")
@@ -205,7 +205,7 @@ class ParameterOptimizer:
             'all_results': optimization_results
         }
     
-    def analyze_optimization_results(self, results: List[Dict[str, Any]]) -> Dict[str, Any]:
+def analyze_optimization_results(self, results: List[Dict[str, Any]]) -> Dict[str, Any]:
         """최적화 결과 분석 및 최적 파라미터 선택"""
         valid_results = [r for r in results if r.get('valid', False)]
         
@@ -213,7 +213,7 @@ class ParameterOptimizer:
             return {'error': 'No valid results'}
         
         # 복합 점수 계산 (샤프 비율 + 수익률 - 최대 낙폭)
-        def calculate_score(result):
+def calculate_score(result):
             metrics = result['results']
             return (
                 metrics['sharpe_ratio'] * 0.4 +
@@ -240,7 +240,7 @@ class ParameterOptimizer:
             }
         }
     
-    def save_optimization_results(self, results: Dict[str, Any]):
+def save_optimization_results(self, results: Dict[str, Any]):
         """최적화 결과 저장"""
         filename = f"optimization_{results['strategy']}_{self.timestamp}.json"
         filepath = self.results_dir / filename
@@ -250,7 +250,7 @@ class ParameterOptimizer:
         
         logger.info(f"💾 최적화 결과 저장: {filepath}")
     
-    def run_multi_strategy_optimization(self, strategies: List[str], 
+def run_multi_strategy_optimization(self, strategies: List[str], 
                                       test_symbols: List[str] = None,
                                       test_days: int = 120) -> Dict[str, Any]:
         """다중 전략 동시 최적화"""
@@ -286,7 +286,7 @@ class ParameterOptimizer:
         
         return summary
     
-    def create_optimization_summary(self, all_results: Dict[str, Any]) -> Dict[str, Any]:
+def create_optimization_summary(self, all_results: Dict[str, Any]) -> Dict[str, Any]:
         """최적화 결과 요약 생성"""
         summary = {
             'timestamp': self.timestamp,

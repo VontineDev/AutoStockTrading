@@ -13,193 +13,50 @@ from plotly.subplots import make_subplots
 from typing import Dict, List, Any, Optional
 import logging
 from datetime import datetime, timedelta
-import itertools
-from concurrent.futures import ThreadPoolExecutor, as_completed
-import time
+import sqlite3
+from pathlib import Path
+from src.utils.common import load_config
+
+from src.optimization.optimizer import ParameterOptimizer, get_parameter_ranges, get_strategy_class, load_sample_data
 
 logger = logging.getLogger(__name__)
-
-class ParameterOptimizer:
-    """매개변수 최적화 클래스"""
-    
-    def __init__(self):
-        self.optimization_results = []
-        self.best_params = {}
-        self.optimization_history = []
-    
-    def run_grid_search(self, strategy_class, data: Dict[str, pd.DataFrame], 
-                       param_ranges: Dict[str, List], 
-                       metric: str = 'sharpe_ratio',
-                       max_combinations: int = 100) -> Dict[str, Any]:
-        """
-        그리드 서치 최적화 실행
-        
-        Args:
-            strategy_class: 전략 클래스
-            data: 백테스팅 데이터
-            param_ranges: 매개변수 범위
-            metric: 최적화 기준 지표
-            max_combinations: 최대 조합 수
-            
-        Returns:
-            최적화 결과
-        """
-        from ..trading.backtest import BacktestEngine, BacktestConfig
-        
-        # 매개변수 조합 생성
-        param_names = list(param_ranges.keys())
-        param_values = list(param_ranges.values())
-        combinations = list(itertools.product(*param_values))
-        
-        # 조합 수 제한
-        if len(combinations) > max_combinations:
-            combinations = combinations[:max_combinations]
-            st.warning(f"조합 수가 많아 {max_combinations}개로 제한합니다.")
-        
-        st.info(f"총 {len(combinations)}개 조합을 테스트합니다.")
-        
-        # 진행 상황 표시
-        progress_bar = st.progress(0)
-        status_text = st.empty()
-        results_container = st.empty()
-        
-        best_score = -float('inf')
-        best_params = None
-        results = []
-        
-        # 백테스팅 설정
-        backtest_config = BacktestConfig(initial_capital=1000000)
-        
-        for i, combination in enumerate(combinations):
-            try:
-                # 현재 매개변수 조합
-                current_params = dict(zip(param_names, combination))
-                
-                # 전략 생성
-                strategy = strategy_class()
-                strategy.parameters.update(current_params)
-                
-                # 백테스팅 실행
-                engine = BacktestEngine(backtest_config)
-                result = engine.run_backtest(strategy, data)
-                
-                # 결과 저장
-                score = result.get(metric, 0)
-                result_record = {
-                    'parameters': current_params.copy(),
-                    'score': score,
-                    'total_return': result.get('total_return', 0),
-                    'sharpe_ratio': result.get('sharpe_ratio', 0),
-                    'max_drawdown': result.get('max_drawdown', 0),
-                    'win_rate': result.get('win_rate', 0),
-                    'total_trades': result.get('total_trades', 0)
-                }
-                results.append(result_record)
-                
-                # 최고 성과 업데이트
-                if score > best_score:
-                    best_score = score
-                    best_params = current_params.copy()
-                
-                # 진행 상황 업데이트
-                progress = (i + 1) / len(combinations)
-                progress_bar.progress(progress)
-                status_text.text(f"진행: {i+1}/{len(combinations)} - 현재 최고 {metric}: {best_score:.4f}")
-                
-                # 중간 결과 표시 (10개마다)
-                if (i + 1) % 10 == 0:
-                    self._update_intermediate_results(results_container, results, metric)
-                
-            except Exception as e:
-                logger.error(f"매개변수 조합 {current_params}에서 오류: {e}")
-                continue
-        
-        # 최종 결과 정리
-        self.optimization_results = sorted(results, key=lambda x: x['score'], reverse=True)
-        self.best_params = best_params
-        
-        # 결과 반환
-        optimization_result = {
-            'best_parameters': best_params,
-            'best_score': best_score,
-            'all_results': self.optimization_results,
-            'total_combinations': len(combinations),
-            'metric_used': metric
-        }
-        
-        status_text.text("최적화 완료!")
-        return optimization_result
-    
-    def _update_intermediate_results(self, container, results: List[Dict], metric: str):
-        """중간 결과 업데이트"""
-        if not results:
-            return
-        
-        with container.container():
-            st.subheader("🔄 실시간 최적화 결과")
-            
-            # 상위 5개 결과
-            top_results = sorted(results, key=lambda x: x['score'], reverse=True)[:5]
-            
-            cols = st.columns(3)
-            
-            with cols[0]:
-                st.metric("최고 성과", f"{top_results[0]['score']:.4f}")
-            
-            with cols[1]:
-                st.metric("테스트 완료", f"{len(results)}개")
-            
-            with cols[2]:
-                st.metric("평균 성과", f"{np.mean([r['score'] for r in results]):.4f}")
-            
-            # 상위 결과 테이블
-            if top_results:
-                df_top = pd.DataFrame([{
-                    **r['parameters'],
-                    metric: r['score'],
-                    '총수익률': f"{r['total_return']:.2%}",
-                    '샤프비율': f"{r['sharpe_ratio']:.3f}",
-                    '승률': f"{r['win_rate']:.2%}"
-                } for r in top_results])
-                
-                st.dataframe(df_top, use_container_width=True)
 
 def render_optimization_ui():
     """매개변수 최적화 UI 렌더링"""
     st.title("🎯 매개변수 최적화")
     st.markdown("TA-Lib 기반 스윙 트레이딩 전략의 매개변수를 최적화합니다.")
     
-    # 사이드바: 최적화 설정
-    st.sidebar.header("최적화 설정")
-    
-    # 전략 선택
-    strategy_type = st.sidebar.selectbox(
-        "전략 선택",
-        ["MACD", "RSI", "볼린저밴드", "이동평균"],
-        key="strategy_select"
-    )
-    
-    # 최적화 기준
-    optimization_metric = st.sidebar.selectbox(
-        "최적화 기준",
-        ["sharpe_ratio", "total_return", "win_rate", "max_drawdown"],
-        format_func=lambda x: {
-            "sharpe_ratio": "샤프 비율",
-            "total_return": "총 수익률", 
-            "win_rate": "승률",
-            "max_drawdown": "최대 낙폭 (역순)"
-        }[x]
-    )
-    
-    # 백테스팅 기간
-    st.sidebar.subheader("백테스팅 기간")
-    col1, col2 = st.sidebar.columns(2)
-    
-    with col1:
-        start_date = st.date_input("시작일", value=datetime.now() - timedelta(days=365))
-    
-    with col2:
-        end_date = st.date_input("종료일", value=datetime.now())
+    # 최적화 설정 (페이지 타이틀 바로 아래, expander로 접근성 개선)
+    with st.expander("⚙️ 최적화 설정", expanded=True):
+        col1, col2, col3, col4 = st.columns([2, 2, 1.5, 1.5])
+        
+        with col1:
+            # 전략 선택
+            strategy_type = st.selectbox(
+                "전략 선택",
+                ["MACD", "RSI", "볼린저밴드", "이동평균"],
+                key="strategy_select"
+            )
+        
+        with col2:
+            # 최적화 기준
+            optimization_metric = st.selectbox(
+                "최적화 기준",
+                ["sharpe_ratio", "total_return", "win_rate", "max_drawdown"],
+                format_func=lambda x: {
+                    "sharpe_ratio": "샤프 비율",
+                    "total_return": "총 수익률", 
+                    "win_rate": "승률",
+                    "max_drawdown": "최대 낙폭 (역순)"
+                }[x]
+            )
+        
+        with col3:
+            # 백테스팅 기간
+            start_date = st.date_input("시작일", value=datetime.now() - timedelta(days=365))
+        
+        with col4:
+            end_date = st.date_input("종료일", value=datetime.now())
     
     # 메인 화면
     tab1, tab2, tab3 = st.tabs(["📊 매개변수 설정", "🚀 최적화 실행", "📈 결과 분석"])
@@ -390,11 +247,28 @@ def render_optimization_execution(strategy_type: str, metric: str, start_date, e
         )
         
         if data_source == "로컬 데이터베이스":
-            symbols = st.multiselect(
-                "분석할 종목 (최대 10개)",
-                ["005930", "000660", "035420", "051910", "028260"],  # 예시 종목
-                default=["005930", "000660"]
+            # 업종별 종목 선택 기능 추가
+            st.write("**종목 선택 방법:**")
+            selection_method = st.radio(
+                "선택 방법",
+                ["직접 선택", "업종별 선택", "사전 정의된 그룹"],
+                horizontal=True,
+                help="종목을 선택하는 방법을 선택하세요."
             )
+            
+            if selection_method == "직접 선택":
+                symbols = st.multiselect(
+                    "분석할 종목 (최대 10개)",
+                    ["005930", "000660", "035420", "051910", "028260"],  # 예시 종목
+                    default=["005930", "000660"],
+                    help="종목 코드를 직접 선택합니다."
+                )
+                
+            elif selection_method == "업종별 선택":
+                symbols = render_sector_based_selection()
+                
+            else:  # 사전 정의된 그룹
+                symbols = render_predefined_groups_selection()
     
     with col2:
         max_combinations = st.number_input(
@@ -615,62 +489,174 @@ def render_parameter_analysis(results: Dict[str, Any]):
         )
         st.plotly_chart(fig, use_container_width=True)
 
-# 유틸리티 함수들
-
-def get_parameter_ranges(strategy_type: str) -> Dict[str, List]:
-    """전략별 매개변수 범위 반환"""
-    if strategy_type == "MACD":
-        return st.session_state.get('macd_params', {})
-    elif strategy_type == "RSI":
-        return st.session_state.get('rsi_params', {})
-    elif strategy_type == "볼린저밴드":
-        return st.session_state.get('bb_params', {})
-    elif strategy_type == "이동평균":
-        return st.session_state.get('ma_params', {})
-    return {}
-
-def get_strategy_class(strategy_type: str):
-    """전략 타입에 따른 클래스 반환"""
-    # 실제 구현에서는 실제 전략 클래스를 import해서 반환
-    class DummyStrategy:
-        def __init__(self):
-            self.name = strategy_type
-            self.parameters = {}
-            self.config = type('config', (), {'min_data_length': 50})()
+def render_sector_based_selection() -> List[str]:
+    """업종별 종목 선택 UI"""
+    try:
+        from src.api.sector_classifier import SectorClassifier
+        config = load_config()
+        project_root = Path(config.get('paths', {}).get('project_root', '.'))
+        db_path = project_root / 'data' / 'trading.db'
+        # 종목명 매핑 dict 생성
+        symbol_name_dict = {}
+        try:
+            with sqlite3.connect(db_path) as conn:
+                rows = conn.execute("SELECT symbol, name FROM stock_info").fetchall()
+                symbol_name_dict = {row[0]: row[1] for row in rows}
+        except Exception:
+            pass
+        classifier = SectorClassifier()
         
-        def run_strategy(self, data, symbol):
+        # 시장 선택
+        market = st.selectbox(
+            "시장 선택",
+            ["KOSPI", "KOSDAQ", "전체"],
+            help="분석할 시장을 선택하세요."
+        )
+        
+        market_filter = None if market == "전체" else market
+        
+        # 업종 그룹 선택
+        groups = classifier.get_sector_groups_for_optimization(market_filter or "KOSPI")
+        
+        if not groups:
+            st.warning("업종 그룹 정보가 없습니다. 먼저 업종 매핑을 실행해주세요.")
             return []
-    
-    return DummyStrategy
+        
+        # 업종 그룹별 선택
+        st.write("**업종 그룹 선택:**")
+        
+        selected_symbols = []
+        
+        for group_name, sectors in groups.items():
+            with st.expander(f"📂 {group_name} ({len(sectors)}개 업종)", expanded=False):
+                # 그룹 내 모든 종목 모으기
+                group_stocks = []
+                for sector_stocks in sectors.values():
+                    group_stocks.extend(sector_stocks)
+                # 그룹 종목 미리보기 문자열 생성
+                preview = ', '.join([f"{s}({symbol_name_dict.get(s, '')})" for s in group_stocks[:3]])
+                if len(group_stocks) > 3:
+                    preview += '...'
+                # 그룹 전체 선택 체크박스
+                group_key = f"group_{group_name}_{market}"
+                select_all_group = st.checkbox(
+                    f"{group_name} 전체 선택",
+                    key=group_key,
+                    help=f"종목: {preview}"
+                )
+                
+                for sector_name, stocks in sectors.items():
+                    sector_key = f"sector_{sector_name}_{market}"
+                    
+                    col1, col2 = st.columns([3, 1])
+                    
+                    with col1:
+                        # 업종별 체크박스
+                        sector_selected = st.checkbox(
+                            f"{sector_name} ({len(stocks)}개 종목)",
+                            value=select_all_group,
+                            key=sector_key,
+                            help=f"종목: {', '.join([f'{s}({symbol_name_dict.get(s, "")})' for s in stocks[:3]])}{'...' if len(stocks) > 3 else ''}"
+                        )
+                    
+                    with col2:
+                        # 종목 상세 보기
+                        if st.button(f"상세", key=f"detail_{sector_key}"):
+                            st.write(f"**{sector_name} 종목들:**")
+                            for i, stock in enumerate(stocks):
+                                st.write(f"{i+1}. {stock} ({symbol_name_dict.get(stock, "")})")
+                    
+                    # 선택된 업종의 종목들 추가
+                    if sector_selected or select_all_group:
+                        selected_symbols.extend(stocks)
+        
+        # 중복 제거 및 제한
+        unique_symbols = list(dict.fromkeys(selected_symbols))  # 순서 유지하며 중복 제거
+        
+        if len(unique_symbols) > 10:
+            st.warning(f"선택된 종목이 {len(unique_symbols)}개입니다. 처음 10개만 사용됩니다.")
+            unique_symbols = unique_symbols[:10]
+        
+        # 선택된 종목 미리보기
+        if unique_symbols:
+            st.success(f"✅ 선택된 종목: {len(unique_symbols)}개")
+            
+            with st.expander("선택된 종목 목록 보기"):
+                cols = st.columns(5)
+                for i, symbol in enumerate(unique_symbols):
+                    with cols[i % 5]:
+                        st.write(f"• {symbol} ({symbol_name_dict.get(symbol, "")})")
+        else:
+            st.info("업종을 선택해주세요.")
+        
+        return unique_symbols
+        
+    except ImportError:
+        st.error("업종 분류 모듈을 찾을 수 없습니다.")
+        return []
+    except Exception as e:
+        st.error(f"업종별 선택 중 오류 발생: {e}")
+        return []
 
-def load_sample_data(symbols: List[str], start_date, end_date) -> Dict[str, pd.DataFrame]:
-    """샘플 데이터 로드 (실제 구현에서는 실제 데이터 로드)"""
-    # 임시 샘플 데이터 생성
-    data = {}
+def render_predefined_groups_selection() -> List[str]:
+    """사전 정의된 그룹 선택 UI"""
+    st.write("**사전 정의된 종목 그룹:**")
     
-    for symbol in symbols:
-        dates = pd.date_range(start=start_date, end=end_date, freq='D')
-        np.random.seed(42)  # 재현 가능한 결과
-        
-        price = 10000
-        prices = [price]
-        
-        for _ in range(len(dates) - 1):
-            price *= (1 + np.random.normal(0, 0.02))
-            prices.append(price)
-        
-        df = pd.DataFrame({
-            'date': dates,
-            'open': prices,
-            'high': [p * (1 + abs(np.random.normal(0, 0.01))) for p in prices],
-            'low': [p * (1 - abs(np.random.normal(0, 0.01))) for p in prices],
-            'close': prices,
-            'volume': [np.random.randint(100000, 1000000) for _ in prices]
-        })
-        
-        data[symbol] = df
+    # 대표적인 종목 그룹들
+    predefined_groups = {
+        "🏆 대형주 Top 5": ["005930", "000660", "035420", "051910", "005380"],  # 삼성전자, SK하이닉스, NAVER, LG화학, 현대차
+        "💰 금융주": ["055550", "105560", "086790", "032830", "024110"],        # 신한지주, KB금융, 하나금융지주, 삼성생명, 기업은행
+        "🔌 전기전자": ["005930", "000660", "006400", "012330", "207940"],      # 삼성전자, SK하이닉스, 삼성SDI, 현대모비스, 삼성바이오로직스
+        "🚗 자동차": ["005380", "000270", "012330", "161390", "214320"],        # 현대차, 기아, 현대모비스, 한국타이어, 에이치엘비
+        "🧪 화학": ["051910", "090430", "028260", "034020", "011170"],          # LG화학, 아모레퍼시픽, 삼성물산, 두산, 롯데케미칼
+        "☁️ IT/테크": ["035420", "035720", "017670", "030200", "066570"],       # NAVER, 카카오, SK텔레콤, KT, LG전자
+        "🏥 바이오": ["068270", "207940", "326030", "145020", "196170"],        # 셀트리온, 삼성바이오로직스, 에이비엘바이오, 휴젤, 알테오젠
+        "🏢 건설": ["000720", "006360", "047040", "023350", "009150"],         # 현대건설, GS건설, 대우건설, 한화시스템, 삼성중공업
+        "🛒 유통/소비재": ["028260", "004170", "161890", "108230", "192820"],   # 삼성물산, 신세계, 한국콜마, 신한금융지주, 코스맥스 이엔티
+        "⚡ 에너지": ["010950", "267250", "096770", "079550", "267260"]         # S-Oil, HD현대중공업, SK이노베이션, LG에너지솔루션, HD현대일렉트릭
+    }
     
-    return data
+    # 그룹 선택
+    selected_groups = st.multiselect(
+        "종목 그룹 선택 (최대 3개 그룹)",
+        list(predefined_groups.keys()),
+        help="미리 정의된 업종별 대표 종목 그룹을 선택합니다."
+    )
+    
+    # 선택된 그룹의 종목들 수집
+    all_symbols = []
+    for group_name in selected_groups:
+        symbols = predefined_groups[group_name]
+        all_symbols.extend(symbols)
+        
+        # 그룹별 종목 표시
+        with st.expander(f"{group_name} 종목 목록"):
+            cols = st.columns(5)
+            for i, symbol in enumerate(symbols):
+                with cols[i % 5]:
+                    st.write(f"• {symbol}")
+    
+    # 중복 제거 및 제한
+    unique_symbols = list(dict.fromkeys(all_symbols))
+    
+    if len(unique_symbols) > 10:
+        st.warning(f"선택된 종목이 {len(unique_symbols)}개입니다. 처음 10개만 사용됩니다.")
+        unique_symbols = unique_symbols[:10]
+    
+    # 최종 선택 종목 표시
+    if unique_symbols:
+        st.success(f"✅ 최종 선택된 종목: {len(unique_symbols)}개")
+        st.write("**최종 종목 리스트:**")
+        
+        # 5열로 표시
+        cols = st.columns(5)
+        for i, symbol in enumerate(unique_symbols):
+            with cols[i % 5]:
+                st.write(f"• {symbol}")
+    else:
+        st.info("종목 그룹을 선택해주세요.")
+    
+    return unique_symbols
 
 if __name__ == "__main__":
     render_optimization_ui() 

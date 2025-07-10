@@ -20,12 +20,12 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 class BackupManager:
-    def __init__(self, backup_dir='backups'):
+def __init__(self, backup_dir='backups'):
         self.backup_dir = Path(backup_dir)
         self.backup_dir.mkdir(exist_ok=True)
         self.timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
         
-    def backup_database(self):
+def backup_database(self):
         """SQLite 데이터베이스 백업"""
         try:
             source_db = Path('data/trading.db')
@@ -49,7 +49,7 @@ class BackupManager:
             logger.error(f"❌ 데이터베이스 백업 실패: {e}")
             return False
     
-    def backup_logs(self):
+def backup_logs(self):
         """로그 파일 백업 및 아카이브"""
         try:
             logs_dir = Path('logs')
@@ -70,7 +70,7 @@ class BackupManager:
             logger.error(f"❌ 로그 파일 백업 실패: {e}")
             return False
     
-    def backup_config(self):
+def backup_config(self):
         """설정 파일 백업"""
         try:
             config_files = [
@@ -94,7 +94,7 @@ class BackupManager:
             logger.error(f"❌ 설정 파일 백업 실패: {e}")
             return False
     
-    def backup_historical_data(self):
+def backup_historical_data(self):
         """과거 데이터 백업"""
         try:
             historical_dir = Path('data/historical')
@@ -118,7 +118,7 @@ class BackupManager:
             logger.error(f"❌ 과거 데이터 백업 실패: {e}")
             return False
     
-    def cleanup_old_backups(self, keep_days=30):
+def cleanup_old_backups(self, keep_days=30):
         """오래된 백업 파일 정리"""
         try:
             current_time = datetime.now()
@@ -142,7 +142,7 @@ class BackupManager:
         except Exception as e:
             logger.error(f"❌ 백업 정리 실패: {e}")
     
-    def create_full_backup(self):
+def create_full_backup(self):
         """전체 백업 실행"""
         logger.info(f"🚀 전체 백업 시작 - {self.timestamp}")
         
