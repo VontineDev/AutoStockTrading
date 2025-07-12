@@ -1,6 +1,7 @@
 import pandas as pd
 from typing import Any
 
+
 def check_date_column_or_index(df: pd.DataFrame, verbose: bool = True) -> bool:
     """
     데이터프레임에 날짜 정보가 컬럼 또는 인덱스로 존재하는지 확인
@@ -10,7 +11,7 @@ def check_date_column_or_index(df: pd.DataFrame, verbose: bool = True) -> bool:
     Returns:
         날짜 정보가 있으면 True, 없으면 False
     """
-    date_candidates = ['date', '일자', '날짜', 'datetime', 'dt']
+    date_candidates = ["date", "일자", "날짜", "datetime", "dt"]
     has_date_col = any(col.lower() in date_candidates for col in df.columns)
     is_index_date = pd.api.types.is_datetime64_any_dtype(df.index)
     is_index_named_date = df.index.name and df.index.name.lower() in date_candidates
@@ -28,6 +29,7 @@ def check_date_column_or_index(df: pd.DataFrame, verbose: bool = True) -> bool:
 
     return has_date_col or is_index_date or is_index_named_date
 
+
 def standardize_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     """
     컬럼명 표준화 및 날짜 컬럼 보장
@@ -41,21 +43,24 @@ def standardize_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     df.columns = [col.strip().lower() for col in df.columns]
     rename_map = {}
     for col in df.columns:
-        if col in ['종가', 'close', 'close_price', 'c'] and col != 'close':
-            rename_map[col] = 'close'
-        if col in ['거래량', 'volume', 'vol', 'v'] and col != 'volume':
-            rename_map[col] = 'volume'
-        if col in ['시가', 'open', 'o'] and col != 'open':
-            rename_map[col] = 'open'
-        if col in ['고가', 'high', 'h'] and col != 'high':
-            rename_map[col] = 'high'
-        if col in ['저가', 'low', 'l'] and col != 'low':
-            rename_map[col] = 'low'
-        if col in ['일자', '날짜', 'datetime', 'dt'] and col != 'date':
-            rename_map[col] = 'date'
+        if col in ["종가", "close", "close_price", "c"] and col != "close":
+            rename_map[col] = "close"
+        if col in ["거래량", "volume", "vol", "v"] and col != "volume":
+            rename_map[col] = "volume"
+        if col in ["시가", "open", "o"] and col != "open":
+            rename_map[col] = "open"
+        if col in ["고가", "high", "h"] and col != "high":
+            rename_map[col] = "high"
+        if col in ["저가", "low", "l"] and col != "low":
+            rename_map[col] = "low"
+        if col in ["일자", "날짜", "datetime", "dt"] and col != "date":
+            rename_map[col] = "date"
     df = df.rename(columns=rename_map)
     # 날짜 컬럼이 없고, 인덱스가 날짜라면 컬럼으로 추가
-    if 'date' not in df.columns:
-        if pd.api.types.is_datetime64_any_dtype(df.index) or (df.index.name and df.index.name.lower() in ['date', '일자', '날짜', 'datetime', 'dt']):
-            df['date'] = df.index
-    return df 
+    if "date" not in df.columns:
+        if pd.api.types.is_datetime64_any_dtype(df.index) or (
+            df.index.name
+            and df.index.name.lower() in ["date", "일자", "날짜", "datetime", "dt"]
+        ):
+            df["date"] = df.index
+    return df

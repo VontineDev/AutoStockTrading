@@ -178,30 +178,6 @@ backtesting:
     - "profit_factor"
     - "volatility"
 
-# 매개변수 최적화 설정
-optimization:
-  # 기본 설정
-  method: "grid_search"       # grid_search, random_search, bayesian
-  max_combinations: 100       # 최대 테스트 조합 수
-  n_jobs: -1                  # 병렬 처리 (-1: 모든 코어 사용)
-  
-  # 교차 검증
-  cross_validation:
-    method: "time_series_split"
-    n_splits: 5
-    test_size: 0.2
-    
-  # 과최적화 방지
-  overfitting_protection:
-    out_of_sample_ratio: 0.3  # 아웃오브샘플 비율
-    min_trades: 30            # 최소 거래 수
-    stability_threshold: 0.8   # 안정성 임계값
-    
-  # 최적화 대상 지표
-  target_metrics:
-    primary: "sharpe_ratio"
-    secondary: ["total_return", "max_drawdown"]
-
 # 실시간 매매 설정 (키움 API)
 trading:
   # 매매 실행 설정

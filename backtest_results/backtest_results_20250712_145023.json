@@ -1,0 +1,25 @@
+{
+  "macd": {
+    "results": {
+      "portfolio": {
+        "total_trades": 0,
+        "winning_trades": 0,
+        "losing_trades": 0,
+        "win_rate": 0,
+        "total_return": 0,
+        "avg_return_per_trade": 0,
+        "avg_winning_return": 0,
+        "avg_losing_return": 0,
+        "max_drawdown": 0,
+        "sharpe_ratio": 0,
+        "volatility": 0,
+        "avg_holding_days": 0,
+        "max_holding_days": 0,
+        "total_commission": 0,
+        "equity_curve": "Empty DataFrame\nColumns: []\nIndex: []",
+        "daily_returns": "Series([], dtype: object)",
+        "trades": "Empty DataFrame\nColumns: []\nIndex: []"
+      }
+    }
+  }
+}

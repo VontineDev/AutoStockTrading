@@ -14,9 +14,9 @@ from .rsi_strategy import RSIStrategy
 from .macd_strategy import MACDStrategy
 
 __all__ = [
-    'BaseStrategy',
-    'MovingAverageStrategy', 
-    'BollingerBandStrategy',
-    'RSIStrategy',
-    'MACDStrategy'
-] 
+    "BaseStrategy",
+    "MovingAverageStrategy",
+    "BollingerBandStrategy",
+    "RSIStrategy",
+    "MACDStrategy",
+]
