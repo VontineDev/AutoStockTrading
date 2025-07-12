@@ -24,6 +24,15 @@ python scripts/utils/backup.py
 - 압축 및 날짜별 버전 관리
 - 자동 정리 (30일 이상 파일 삭제)
 
+### ⚡ parameter_optimization.py - 고급 매개변수 최적화
+```bash
+python scripts/utils/parameter_optimization.py --strategy MACD --symbols 005930,035720
+```
+- 병렬 그리드 서치 최적화
+- 멀티 전략 동시 최적화
+- 베이지안 최적화 지원
+- 결과 자동 저장 및 시각화
+
 ## 🎯 사용 시나리오
 
 ### 초기 환경 설정
@@ -42,6 +51,9 @@ python src/main.py backtest --symbols 005930 --strategy macd
 ```bash
 # 주기적 백업
 python scripts/utils/backup.py
+
+# 매개변수 최적화
+python scripts/utils/parameter_optimization.py --strategy RSI
 ```
 
 ## 📝 vs 메인 스크립트들
@@ -51,6 +63,7 @@ python scripts/utils/backup.py
 | **메인** | `scripts/data_update.py` | 일상 데이터 업데이트 | `main.py`에서 호출 |
 | **유틸** | `scripts/utils/setup.py` | 초기 환경 설정 | 독립 실행 |
 | **유틸** | `scripts/utils/backup.py` | 백업 및 유지보수 | 독립 실행 |
+| **유틸** | `scripts/utils/parameter_optimization.py` | 고급 최적화 | 독립 실행 |
 
 ## ⚠️ 주의사항
 - 모든 스크립트는 프로젝트 루트에서 실행해야 합니다

@@ -130,13 +130,19 @@ AutoStockTrading/
 - **거래량 지표**: OBV, A/D Line, ADOSC
 - **패턴 인식**: 150+ 캔들스틱 패턴 자동 감지
 
-### 3. 스윙 트레이딩 전략
+### 3. 매개변수 최적화
+- **백테스팅 기반**: 과거 데이터를 통한 최적 파라미터 탐색
+- **그리드 서치**: 지표별 최적 기간 및 임계값 자동 탐색
+- **성과 지표**: 수익률, 샤프 비율, 최대 낙폭 기반 평가
+- **오버피팅 방지**: 아웃오브샘플 테스트로 검증
+
+### 4. 스윙 트레이딩 전략
 - **권장 설정**: 스윙 트레이딩에 최적화된 기본 파라미터
 - **다중 시간프레임**: 일봉 위주, 시간봉 보조 활용
 - **리스크 관리**: 100만원 규모에 적합한 포지션 사이징
 - **분산투자**: 상관관계 낮은 종목 조합
 
-### 4. 실시간 모니터링
+### 5. 실시간 모니터링
 - 실시간 시세 차트 (Plotly 인터랙티브 차트)
 - 포트폴리오 현황 대시보드
 - 매매 신호 실시간 알림
@@ -191,6 +197,43 @@ def calculate_indicators(df: pd.DataFrame) -> pd.DataFrame:
     )
     
     return df
+```
+
+### 매개변수 최적화
+```python
+def optimize_rsi_strategy(data: pd.DataFrame) -> dict:
+    """RSI 전략 매개변수 최적화"""
+    
+    best_params = {'period': 14, 'oversold': 30, 'overbought': 70}
+    best_return = 0
+    
+    for period in range(7, 30):
+        for oversold in range(20, 40, 5):
+            for overbought in range(60, 80, 5):
+                rsi = talib.RSI(data['close'], timeperiod=period)
+                returns = backtest_rsi_strategy(data, rsi, oversold, overbought)
+                
+                if returns > best_return:
+                    best_return = returns
+                    best_params = {
+                        'period': period,
+                        'oversold': oversold, 
+                        'overbought': overbought
+                    }
+    
+    return best_params
+```
+
+### 스윙 트레이딩 권장 설정
+```python
+# 스윙 트레이딩 최적화 파라미터
+SWING_TRADING_PARAMS = {
+    'RSI': {'period': 14, 'oversold': 30, 'overbought': 70},
+    'MACD': {'fast': 12, 'slow': 26, 'signal': 9},
+    'BB': {'period': 20, 'deviation': 2.0},
+    'STOCH': {'k_period': 14, 'd_period': 3},
+    'ATR': {'period': 14}
+}
 ```
 
 ## 📚 데이터 및 지표 가이드
