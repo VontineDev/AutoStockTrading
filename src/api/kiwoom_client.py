@@ -2,13 +2,16 @@ import logging
 from typing import Optional, Dict, Any
 import requests
 
+
 class KiwoomApiClient:
-def __init__(self, api_key: str, api_secret: str):
+    def __init__(self, api_key: str, api_secret: str):
         self.api_key = api_key
         self.api_secret = api_secret
         self.logger = logging.getLogger(self.__class__.__name__)
 
-def get_account_info(self, access_token: str, timeout: int = 30) -> Optional[Dict[str, Any]]:
+    def get_account_info(
+        self, access_token: str, timeout: int = 30
+    ) -> Optional[Dict[str, Any]]:
         """
         키움 REST API 계좌평가현황요청(kt00004)
         """
@@ -18,11 +21,11 @@ def get_account_info(self, access_token: str, timeout: int = 30) -> Optional[Dic
             "authorization": f"Bearer {access_token}",
             "api-id": "kt00004",
             "cont-yn": "N",
-            "next-key": ""
+            "next-key": "",
         }
         data = {
             "qry_tp": "0",  # 0:전체, 1:상장폐지종목제외
-            "dmst_stex_tp": "KRX"  # KRX:한국거래소, NXT:넥스트트레이드
+            "dmst_stex_tp": "KRX",  # KRX:한국거래소, NXT:넥스트트레이드
         }
         try:
             self.logger.info("계좌평가현황요청(kt00004) API 호출")
@@ -35,7 +38,14 @@ def get_account_info(self, access_token: str, timeout: int = 30) -> Optional[Dic
             self.logger.error(f"계좌 정보 조회 실패: {e}")
             return None
 
-def get_daily_ohlcv(self, access_token: str, symbol: str, start_date: str, end_date: str, timeout: int = 30) -> Optional[Dict[str, Any]]:
+    def get_daily_ohlcv(
+        self,
+        access_token: str,
+        symbol: str,
+        start_date: str,
+        end_date: str,
+        timeout: int = 30,
+    ) -> Optional[Dict[str, Any]]:
         """
         키움 REST API 주식일주월시분요청(CTPF1604R)
         """
@@ -45,26 +55,29 @@ def get_daily_ohlcv(self, access_token: str, symbol: str, start_date: str, end_d
             "authorization": f"Bearer {access_token}",
             "api-id": "CTPF1604R",
             "cont-yn": "N",
-            "next-key": ""
+            "next-key": "",
         }
         data = {
             "symbol": symbol,
             "from_dt": start_date,
             "to_dt": end_date,
-            "period_tp": "D", # D:일, W:주, M:월
-            "prc_tp": "1", # 1:수정주가, 2:원주가
-            "vol_adj_tp": "1" # 1:거래량, 2:거래대금
+            "period_tp": "D",  # D:일, W:주, M:월
+            "prc_tp": "1",  # 1:수정주가, 2:원주가
+            "vol_adj_tp": "1",  # 1:거래량, 2:거래대금
         }
         try:
             self.logger.info(f"주식일봉데이터요청({symbol}) API 호출")
             response = requests.post(url, headers=headers, json=data, timeout=timeout)
             response.raise_for_status()
             result = response.json()
-            self.logger.info(f"주식일봉데이터({symbol}) 조회 성공: {len(result.get('output', []))}건")
+            self.logger.info(
+                f"주식일봉데이터({symbol}) 조회 성공: {len(result.get('output', []))}건"
+            )
             return result
         except requests.exceptions.RequestException as e:
             self.logger.error(f"주식일봉데이터({symbol}) 조회 실패: {e}")
             return None
+
 
 if __name__ == "__main__":
     import os
@@ -73,11 +86,11 @@ if __name__ == "__main__":
 
     logging.basicConfig(
         level=logging.INFO,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         handlers=[
-            logging.FileHandler('logs/kiwoom_client.log', encoding='utf-8'),
-            logging.StreamHandler()
-        ]
+            logging.FileHandler("logs/kiwoom_client.log", encoding="utf-8"),
+            logging.StreamHandler(),
+        ],
     )
 
     client = KiwoomApiClient(API_KEY, API_SECRET)
@@ -90,4 +103,4 @@ if __name__ == "__main__":
         print("[SUCCESS] 계좌 정보:")
         print(account_info)
     else:
-        print("[ERROR] 계좌 정보 조회 실패.") 
+        print("[ERROR] 계좌 정보 조회 실패.")
