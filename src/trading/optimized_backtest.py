@@ -38,7 +38,7 @@ from src.trading.batch_optimizer import (
     BatchConfig,
     create_optimized_batch_processor,
 )
-from scripts.data_update import StockDataUpdater
+from src.data.updater import StockDataUpdater
 from src.strategies.base_strategy import BaseStrategy
 
 logger = logging.getLogger(__name__)

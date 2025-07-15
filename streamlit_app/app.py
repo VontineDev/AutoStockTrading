@@ -4,260 +4,35 @@ TA-Lib 스윙 트레이딩 자동매매 시스템 Streamlit 앱
 pykrx + TA-Lib 기반의 100만원 규모 스윙 트레이딩 웹 인터페이스
 """
 
-import streamlit as st
-import pandas as pd
-import numpy as np
-import plotly.graph_objects as go
-import plotly.express as px
-from plotly.subplots import make_subplots
-import sqlite3
-import sys
-from pathlib import Path
-from datetime import datetime, timedelta
-import yaml
-import os
-from typing import Optional, Tuple, Dict, Any
-from src.utils.constants import PROJECT_ROOT
-from src.utils.logging_utils import setup_logging
-
-setup_logging()
-
-# 프로젝트 루트 경로 설정
-sys.path.insert(0, str(PROJECT_ROOT))
-
-# 페이지 설정
-st.set_page_config(page_title="AutoStockTrading", layout="wide")
-
-# 스타일 설정
-st.markdown(
-    """
-<style>
-.main-header {
-    font-size: 3rem;
-    color: #1f77b4;
-    text-align: center;
-    margin-bottom: 2rem;
-}
-.metric-card {
-    background-color: #f0f2f6;
-    padding: 1rem;
-    border-radius: 10px;
-    margin: 0.5rem 0;
-}
-.success-metric {
-    background-color: #d4edda;
-    color: #155724;
-}
-.warning-metric {
-    background-color: #fff3cd;
-    color: #856404;
-}
-.danger-metric {
-    background-color: #f8d7da;
-    color: #721c24;
-}
-</style>
-""",
-    unsafe_allow_html=True,
-)
-
-# --- Kiwoom API 연동 관련 import ---
-sys.path.append(str(PROJECT_ROOT / "src"))
-from src.api.auth import get_kiwoom_env, get_access_token
-from src.api.kiwoom_client import KiwoomApiClient
-
-# --- 항상 먼저 최신 환경정보를 가져온다 ---
-kiwoom_env = get_kiwoom_env()
 
 
-@st.cache_data(show_spinner=False)
-def get_account_info_cached() -> Tuple[Optional[dict], str]:
-    """
-    키움 API를 통해 계좌 정보를 조회합니다.
-    Returns:
-        (계좌정보 dict 또는 None, 상태 메시지)
-    """
-    try:
-        token = get_access_token(
-            kiwoom_env["api_key"],
-            kiwoom_env["api_secret"],
-            base_url=kiwoom_env["base_url"],
-        )
-        if not token:
-            return None, "토큰 발급 실패"
-        client = KiwoomApiClient(kiwoom_env["api_key"], kiwoom_env["api_secret"])
-        info = client.get_account_info(token)
-        if info and info.get("return_code") == 0:
-            return info, "성공"
-        else:
-            return None, (
-                info.get("return_msg", "계좌정보 조회 실패")
-                if info
-                else "계좌정보 조회 실패"
-            )
-    except Exception as e:
-        return None, str(e)
 
+from src.data.stock_data_manager import StockDataManager
 
-# --- 사이드바 최상단에 이름 추가 (중복 방지) ---
-if "sidebar_title_shown" not in st.session_state:
-    st.sidebar.markdown("**TA-Lib 스윙 트레이딩 설정 & 네비게이션**")
-    st.sidebar.markdown("---")
-    st.session_state["sidebar_title_shown"] = True
-
-# --- 투자 환경 및 계좌정보 섹션 (간소화) ---
-with st.sidebar:
-    # 1. 프로젝트 타이틀
-    st.markdown("## 📈 TA-Lib 스윙 트레이딩")
-    st.markdown("---")
-
-    # 2. 투자 환경/계좌정보
-    st.markdown("#### 투자 환경")
-    env_options = {"모의투자": True, "실전투자": False}
-    kiwoom_env = get_kiwoom_env()
-    selected_env = st.radio(
-        "키움 투자 환경 선택",
-        list(env_options.keys()),
-        index=0 if kiwoom_env["env_type"] == "모의투자" else 1,
-    )
-    if (
-        "USE_KIWOOM_MOCK" not in st.session_state
-        or st.session_state["USE_KIWOOM_MOCK"] != env_options[selected_env]
-    ):
-        st.session_state["USE_KIWOOM_MOCK"] = env_options[selected_env]
-        st.cache_data.clear()
-        st.info("투자 환경이 변경되었습니다. 계좌정보가 새로고침됩니다.")
-
-    account_info, account_status = get_account_info_cached()
-    if account_info:
-        st.success(f"계좌명: {account_info.get('acnt_nm', '-')}")
-    st.markdown("---")
-
-    # 4. 네비게이션(페이지 선택 등) - 필요시 여기에 추가
-
+# 데이터베이스 경로 설정
+DB_PATH = str(PROJECT_ROOT / "data" / "trading.db")
 
 @st.cache_data
-def load_config() -> Dict[str, Any]:
-    """
-    설정 파일(config.yaml) 로드
-    Returns:
-        설정 딕셔너리
-    """
-    config_path = PROJECT_ROOT / "config.yaml"
-    try:
-        if config_path.exists():
-            with open(config_path, "r", encoding="utf-8") as f:
-                return yaml.safe_load(f)
-    except Exception as e:
-        st.error(f"설정 파일 로드 실패: {e}")
-
-    return {"project": {"name": "TA-Lib 스윙 트레이딩", "version": "1.0.0"}}
-
+def get_data_manager():
+    """StockDataManager 인스턴스를 반환합니다."""
+    return StockDataManager(db_path=DB_PATH)
 
 @st.cache_data
 def load_stock_data(symbols: list, limit: int = 500) -> Dict[str, pd.DataFrame]:
-    """
-    주식 데이터 로드
-    Args:
-        symbols: 종목 리스트
-        limit: 데이터 개수
-    Returns:
-        {symbol: DataFrame} 딕셔너리
-    """
-    db_path = PROJECT_ROOT / "data" / "trading.db"
-
-    if not db_path.exists():
-        return {}
-
+    """주식 데이터 로드"""
+    dm = get_data_manager()
     data = {}
-    try:
-        with sqlite3.connect(db_path) as conn:
-            for symbol in symbols:
-                query = """
-                SELECT date, open, high, low, close, volume
-                FROM stock_data 
-                WHERE symbol = ?
-                ORDER BY date DESC
-                LIMIT ?
-                """
-                df = pd.read_sql_query(query, conn, params=(symbol, limit))
-
-                if not df.empty:
-                    df["date"] = pd.to_datetime(
-                        df["date"], format="mixed", errors="coerce"
-                    )
-                    df = df.sort_values("date").reset_index(drop=True)
-                    data[symbol] = df
-
-    except Exception as e:
-        st.error(f"데이터 로드 실패: {e}")
-
+    today = datetime.now()
+    start_date = today - timedelta(days=limit * 1.5) # 데이터 여유있게 가져오기
+    
+    for symbol in symbols:
+        df = dm.get_stock_data(symbol, start_date.strftime('%Y-%m-%d'), today.strftime('%Y-%m-%d'))
+        if not df.empty:
+            data[symbol] = df.tail(limit) # 마지막 limit 개수만큼만 사용
     return data
 
 
-@st.cache_data
-def get_symbol_info() -> pd.DataFrame:
-    """
-    종목 정보 조회
-    Returns:
-        종목 정보 DataFrame
-    """
-    db_path = PROJECT_ROOT / "data" / "trading.db"
 
-    if not db_path.exists():
-        return pd.DataFrame()
-
-    try:
-        with sqlite3.connect(db_path) as conn:
-            query = """
-            SELECT symbol, name, market
-            FROM stock_info
-            ORDER BY symbol
-            """
-            return pd.read_sql_query(query, conn)
-    except Exception:
-        return pd.DataFrame()
-
-
-@st.cache_data
-def get_available_symbols_for_backtest() -> pd.DataFrame:
-    """
-    백테스팅용 종목 목록 조회 (데이터가 있는 종목만)
-    Returns:
-        종목 정보 DataFrame
-    """
-    db_path = PROJECT_ROOT / "data" / "trading.db"
-
-    if not db_path.exists():
-        return pd.DataFrame()
-
-    try:
-        with sqlite3.connect(db_path) as conn:
-            # 실제 데이터가 있는 종목만 조회
-            query = """
-            SELECT DISTINCT si.symbol, si.name, si.market,
-                   COUNT(sd.date) as data_count,
-                   MAX(sd.date) as latest_date,
-                   MIN(sd.date) as earliest_date
-            FROM stock_info si
-            INNER JOIN stock_data sd ON si.symbol = sd.symbol
-            GROUP BY si.symbol, si.name, si.market
-            HAVING COUNT(sd.date) >= 30  -- 최소 30일 데이터가 있는 종목만
-            ORDER BY data_count DESC, si.symbol
-            """
-            df = pd.read_sql_query(query, conn)
-
-            # 추가 정보 포맷팅
-            if not df.empty:
-                df["display_name"] = df.apply(
-                    lambda row: f"{row['symbol']} ({row['name']}) - {row['data_count']}일",
-                    axis=1,
-                )
-
-            return df
-    except Exception as e:
-        st.error(f"종목 정보 조회 실패: {e}")
-        return pd.DataFrame()
 
 
 def calculate_ta_indicators(df: pd.DataFrame) -> pd.DataFrame:
@@ -307,52 +82,20 @@ def run_backtest_ui(
 ) -> Optional[dict]:
     """
     Streamlit UI에서 백테스팅 실행
-    Args:
-        symbols: 테스트할 종목 리스트
-        start_date: 시작날짜 (YYYY-MM-DD)
-        end_date: 종료날짜 (YYYY-MM-DD)
-        initial_capital: 초기 자본
-        strategy_name: 전략 이름
-    Returns:
-        백테스팅 결과 dict 또는 None
     """
     try:
-        import sys
-
-        sys.path.append(str(PROJECT_ROOT / "src"))
-
         from src.strategies.macd_strategy import MACDStrategy
         from src.strategies.rsi_strategy import RSIStrategy
         from src.strategies.bollinger_band_strategy import BollingerBandStrategy
         from src.strategies.moving_average_strategy import MovingAverageStrategy
         from src.trading.backtest import BacktestEngine, BacktestConfig
-        import sqlite3
 
-        # 데이터 로드
-        db_path = PROJECT_ROOT / "data" / "trading.db"
-        if not db_path.exists():
-            st.error("데이터베이스가 없습니다. 먼저 데이터를 업데이트하세요.")
-            return None
-
+        dm = get_data_manager()
         data = {}
-        with sqlite3.connect(db_path) as conn:
-            for symbol in symbols:
-                query = """
-                SELECT date, open, high, low, close, volume
-                FROM stock_data 
-                WHERE symbol = ?
-                ORDER BY date
-                """
-                df = pd.read_sql_query(query, conn, params=(symbol,))
-
-                if not df.empty:
-                    # 날짜 형식 문제 해결: 다양한 날짜 형식을 자동으로 처리
-                    df["date"] = pd.to_datetime(
-                        df["date"], format="mixed", errors="coerce"
-                    )
-                    df = df.dropna(subset=["date"])  # 날짜 파싱 실패한 행 제거
-                    df.set_index("date", inplace=True)
-                    data[symbol] = df
+        for symbol in symbols:
+            df = dm.get_stock_data(symbol, start_date, end_date)
+            if not df.empty:
+                data[symbol] = df
 
         if not data:
             st.error("백테스팅할 데이터가 없습니다.")

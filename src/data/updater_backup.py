@@ -99,17 +99,17 @@ except ImportError as e:
 
 
 # 기존 imports 아래에 추가
-try:
-    from scripts.utils.optimized_data_updater import (
-        create_optimized_data_updater,
-        progress_callback_with_eta,
-        OptimizedDataUpdateConfig,
-    )
-
-    OPTIMIZED_ENGINE_AVAILABLE = True
-except ImportError as e:
-    logger.warning(f"최적화 엔진을 불러올 수 없습니다: {e}")
-    OPTIMIZED_ENGINE_AVAILABLE = False
+# try:
+#     from scripts.utils.optimized_data_updater import (
+#         create_optimized_data_updater,
+#         progress_callback_with_eta,
+#         OptimizedDataUpdateConfig,
+#     )
+# 
+#     OPTIMIZED_ENGINE_AVAILABLE = True
+# except ImportError as e:
+#     logger.warning(f"최적화 엔진을 불러올 수 없습니다: {e}")
+#     OPTIMIZED_ENGINE_AVAILABLE = False
 
 
 class StockDataUpdater:
@@ -231,6 +231,7 @@ class StockDataUpdater:
                         low REAL,
                         close REAL,
                         volume BIGINT,
+                        amount BIGINT, -- 거래대금 추가
                         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                         PRIMARY KEY (index_name, date)
                     )
@@ -1196,60 +1197,97 @@ class StockDataUpdater:
 
         return results
 
-    def update_market_indices(self, start_date: str = None, end_date: str = None):
+    def update_market_indices(self, start_date: str = None, end_date: str = None, indices: List[str] = None):
         """시장 지수 업데이트"""
-        indices = self.config["data_collection"]["market_indices"]
+        indices_to_update = indices if indices is not None else self.config.get("data_collection", {}).get("market_indices", ["KOSPI", "KOSDAQ"])
 
         if not start_date:
             start_date = (datetime.now() - timedelta(days=30)).strftime("%Y%m%d")
         if not end_date:
             end_date = datetime.now().strftime("%Y%m%d")
 
-        for index_name in indices:
+        for index_name in indices_to_update:
             try:
-                if index_name == "KOSPI":
-                    df = stock.get_index_ohlcv(
-                        start_date, end_date, "1001"
-                    )  # KOSPI 지수
-                elif index_name == "KOSDAQ":
-                    df = stock.get_index_ohlcv(
-                        start_date, end_date, "2001"
-                    )  # KOSDAQ 지수
+                index_name_upper = index_name.upper()
+                if index_name_upper == "KOSPI":
+                    df = stock.get_index_ohlcv(start_date, end_date, "1001")
+                elif index_name_upper == "KOSDAQ":
+                    df = stock.get_index_ohlcv(start_date, end_date, "2001")
                 else:
+                    logger.warning(f"알 수 없는 지수: {index_name}")
                     continue
 
                 if not df.empty:
                     df = df.reset_index()
                     df.columns = ["date", "open", "high", "low", "close", "volume"]
-                    df["index_name"] = index_name
-                    df["date"] = pd.to_datetime(
-                        df["date"], format="mixed", errors="coerce"
-                    )
+                    df["index_name"] = index_name_upper
+                    df["date"] = pd.to_datetime(df["date"], format="mixed", errors="coerce").dt.strftime('%Y-%m-%d')
+                    
+                    # amount 컬럼 추가 (없을 경우)
+                    if "amount" not in df.columns:
+                        df["amount"] = 0
+
+                    data_to_save = [tuple(x) for x in df.to_records(index=False)]
 
                     with sqlite3.connect(self.db_path) as conn:
-                        df.to_sql(
-                            "market_indices", conn, if_exists="append", index=False
-                        )
-
-                        # 중복 제거
-                        conn.execute(
+                        conn.executemany(
                             """
-                                DELETE FROM market_indices 
-                                WHERE rowid NOT IN (
-                                    SELECT MIN(rowid) 
-                                    FROM market_indices 
-                                    GROUP BY index_name, date
-                                )
-                            """
+                                INSERT OR REPLACE INTO market_indices 
+                                (date, open, high, low, close, volume, index_name, amount)
+                                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                            """,
+                            data_to_save,
                         )
                         conn.commit()
 
-                    logger.info(f"시장 지수 업데이트 완료: {index_name}")
+                    logger.info(f"시장 지수 업데이트 완료: {index_name_upper}")
 
                 time.sleep(self.api_delay)
 
             except Exception as e:
                 logger.error(f"시장 지수 업데이트 실패: {index_name} - {e}")
+
+    def update_data_by_keyword(self, keyword: str, start_date: str, end_date: str, force_update: bool = False, parallel: bool = False, workers: int = 5):
+        """키워드에 따라 적절한 데이터 업데이트 수행"""
+        keyword_upper = keyword.upper()
+        logger.info(f"키워드 '{keyword}'에 대한 데이터 업데이트 시작...")
+
+        if keyword_upper in ["KOSPI", "KOSDAQ"]:
+            logger.info(f"{keyword_upper} 지수 데이터 업데이트")
+            self.update_market_indices(start_date, end_date, indices=[keyword_upper])
+            return {keyword_upper: True}
+
+        elif keyword_upper == "KOSPI_ALL":
+            logger.info("코스피 전체 종목 데이터 업데이트")
+            symbols = self.get_kospi_symbols(date=end_date)
+            if parallel:
+                return self.update_multiple_symbols_parallel(symbols, start_date, end_date, force_update, max_workers=workers)
+            else:
+                return self.update_multiple_symbols(symbols, start_date, end_date, force_update)
+
+        elif keyword_upper == "KOSDAQ_ALL":
+            logger.info("코스닥 전체 종목 데이터 업데이트")
+            symbols = self.get_kosdaq_symbols(date=end_date)
+            if parallel:
+                return self.update_multiple_symbols_parallel(symbols, start_date, end_date, force_update, max_workers=workers)
+            else:
+                return self.update_multiple_symbols(symbols, start_date, end_date, force_update)
+
+        elif keyword_upper == "ALL":
+            logger.info("코스피 및 코스닥 전체 종목 데이터 업데이트")
+            kospi_symbols = self.get_kospi_symbols(date=end_date)
+            kosdaq_symbols = self.get_kosdaq_symbols(date=end_date)
+            all_symbols = kospi_symbols + kosdaq_symbols
+            if parallel:
+                return self.update_multiple_symbols_parallel(all_symbols, start_date, end_date, force_update, max_workers=workers)
+            else:
+                return self.update_multiple_symbols(all_symbols, start_date, end_date, force_update)
+
+        else:
+            # 일반 종목 코드로 처리
+            logger.info(f"개별 종목 '{keyword}' 데이터 업데이트")
+            success = self.update_symbol(keyword, start_date, end_date, force_update)
+            return {keyword: success}
 
     def get_data_summary(self) -> Dict:
         """데이터베이스 현황 요약"""
@@ -1434,117 +1472,132 @@ class StockDataUpdater:
 
         # 대상 종목 결정
         if use_kospi_top:
-            symbols = self.get_kospi_top_symbols(top_limit)
-            logger.info(f"코스피 상위 {top_limit}개 종목의 전날 데이터 업데이트")
-        elif not symbols:
-            # 기본적으로 DB에 있는 모든 종목
-            with sqlite3.connect(self.db_path) as conn:
-                cursor = conn.execute("SELECT DISTINCT symbol FROM stock_data")
-                symbols = [row[0] for row in cursor.fetchall()]
-            logger.info(f"기존 등록된 {len(symbols)}개 종목의 전날 데이터 업데이트")
+            logger.info(f"코스피 상위 {top_limit}개 종목의 전날 데이터 업데이트 (Ultra-Fast)")
+            results = self._update_full_market_daily(yesterday, market="KOSPI")
+            # Ultra-Fast는 전체를 가져오므로, 통계는 실제 처리된 종목 수를 반영
+            logger.info(f"Ultra-Fast로 KOSPI 전체 데이터 가져옴. 실제 처리된 종목 수: {results['success_count']}개")
+            return results
+        elif symbols is None:
+            logger.info(f"전체 시장(코스피+코스닥) 전날 데이터 업데이트 (Ultra-Fast)")
+            kospi_results = self._update_full_market_daily(yesterday, market="KOSPI")
+            logger.info(f"KOSPI 전날 데이터 업데이트 결과: 성공 {kospi_results['success_count']}개, 실패 {kospi_results['failed_count']}개")
 
-        logger.info(f"전날 거래일: {yesterday}")
+            kosdaq_results = self._update_full_market_daily(yesterday, market="KOSDAQ")
+            logger.info(f"KOSDAQ 전날 데이터 업데이트 결과: 성공 {kosdaq_results['success_count']}개, 실패 {kosdaq_results['failed_count']}개")
+            
+            # 결과 합산
+            results = {
+                "date": yesterday,
+                "total_symbols": kospi_results["total_symbols"] + kosdaq_results["total_symbols"],
+                "success_count": kospi_results["success_count"] + kosdaq_results["success_count"],
+                "failed_count": kospi_results["failed_count"] + kosdaq_results["failed_count"],
+                "new_data_count": kospi_results["new_data_count"] + kosdaq_results["new_data_count"],
+                "duplicate_count": kospi_results["duplicate_count"] + kosdaq_results["duplicate_count"],
+                "failed_symbols": kospi_results["failed_symbols"] + kosdaq_results["failed_symbols"],
+            }
+            return results
+        else:
+            # 특정 종목 리스트 업데이트 (기존 방식 유지)
+            logger.info(f"지정된 {len(symbols)}개 종목의 전날 데이터 업데이트")
+            results = {
+                "date": yesterday,
+                "total_symbols": len(symbols),
+                "success_count": 0,
+                "failed_count": 0,
+                "new_data_count": 0,
+                "duplicate_count": 0,
+                "failed_symbols": [],
+            }
 
-        # 결과 저장용
-        results = {
-            "date": yesterday,
-            "total_symbols": len(symbols),
-            "success_count": 0,
-            "failed_count": 0,
-            "new_data_count": 0,
-            "duplicate_count": 0,
-            "failed_symbols": [],
-        }
+            for i, symbol in enumerate(symbols):
+                try:
+                    # API 호출 추적
+                    self._track_api_call()
 
-        for i, symbol in enumerate(symbols):
-            try:
-                # API 호출 추적
-                self._track_api_call()
+                    # 전날 하루만 조회 (효율적)
+                    df = stock.get_market_ohlcv(yesterday, yesterday, symbol)
 
-                # 전날 하루만 조회 (효율적)
-                df = stock.get_market_ohlcv(yesterday, yesterday, symbol)
+                    if df.empty:
+                        logger.warning(f"데이터 없음: {symbol} ({yesterday})")
+                        results["failed_count"] += 1
+                        results["failed_symbols"].append(symbol)
+                        continue
 
-                if df.empty:
-                    logger.warning(f"데이터 없음: {symbol} ({yesterday})")
-                    results["failed_count"] += 1
-                    results["failed_symbols"].append(symbol)
-                    continue
-
-                # 데이터 정리 및 컬럼명 변경
-                df = df.reset_index()
-                df.rename(
-                    columns={
-                        "날짜": "date",
-                        "시가": "open",
-                        "고가": "high",
-                        "저가": "low",
-                        "종가": "close",
-                        "거래량": "volume",
-                        "거래대금": "amount",
-                        "등락률": "change_rate",
-                    },
-                    inplace=True,
-                )
-
-                # 필요한 컬럼만 선택 (amount가 없는 경우 volume * close로 계산)
-                if "amount" not in df.columns:
-                    df["amount"] = df["close"] * df["volume"]
-
-                df = df[["date", "open", "high", "low", "close", "volume", "amount"]]
-                df["date"] = pd.to_datetime(df["date"], format="%Y%m%d")
-                logger.debug(f"정리된 컬럼: {list(df.columns)} ({symbol})")
-
-                df["symbol"] = symbol
-                df["date"] = pd.to_datetime(df["date"], format="mixed", errors="coerce")
-
-                # 중복 체크
-                with sqlite3.connect(self.db_path) as conn:
-                    existing = pd.read_sql_query(
-                        "SELECT COUNT(*) as count FROM stock_data WHERE symbol = ? AND DATE(date) = ?",
-                        conn,
-                        params=(symbol, df.iloc[0]["date"].strftime("%Y-%m-%d")),
+                    # 데이터 정리 및 컬럼명 변경
+                    df = df.reset_index()
+                    df.rename(
+                        columns={
+                            "날짜": "date",
+                            "시가": "open",
+                            "고가": "high",
+                            "저가": "low",
+                            "종가": "close",
+                            "거래량": "volume",
+                            "거래대금": "amount",
+                            "등락률": "change_rate",
+                        },
+                        inplace=True,
                     )
 
-                    if existing.iloc[0]["count"] > 0:
-                        logger.debug(f"중복 데이터 건너뜀: {symbol} ({yesterday})")
-                        results["duplicate_count"] += 1
-                        results["success_count"] += 1  # 중복도 처리 성공으로 간주
-                        continue
-                    else:
-                        # 새 데이터 저장
-                        df.to_sql("stock_data", conn, if_exists="append", index=False)
-                        results["new_data_count"] += 1
-                        logger.debug(
-                            f"새 데이터 저장: {symbol} - 종가 {df.iloc[0]['close']:,}"
+                    # 필요한 컬럼만 선택 (amount가 없는 경우 volume * close로 계산)
+                    if "amount" not in df.columns:
+                        df["amount"] = df["close"] * df["volume"]
+
+                    df = df[["date", "open", "high", "low", "close", "volume", "amount"]]
+                    df["date"] = pd.to_datetime(df["date"], format="%Y%m%d")
+                    logger.debug(f"정리된 컬럼: {list(df.columns)} ({symbol})")
+
+                    df["symbol"] = symbol
+                    df["date"] = pd.to_datetime(df["date"], format="mixed", errors="coerce")
+
+                    # 중복 체크
+                    with sqlite3.connect(self.db_path) as conn:
+                        existing = pd.read_sql_query(
+                            "SELECT COUNT(*) as count FROM stock_data WHERE symbol = ? AND DATE(date) = ?",
+                            conn,
+                            params=(symbol, df.iloc[0]["date"].strftime("%Y-%m-%d")),
                         )
 
-                results["success_count"] += 1
+                        if existing.iloc[0]["count"] > 0:
+                            logger.debug(f"중복 데이터 건너뜀: {symbol} ({yesterday})")
+                            results["duplicate_count"] += 1
+                            results["success_count"] += 1  # 중복도 처리 성공으로 간주
+                            continue
+                        else:
+                            # 새 데이터 저장
+                            df.to_sql("stock_data", conn, if_exists="append", index=False)
+                            results["new_data_count"] += 1
+                            logger.debug(
+                                f"새 데이터 저장: {symbol} - 종가 {df.iloc[0]['close']:,}"
+                            )
 
-                # 진행률 표시
-                if (i + 1) % 20 == 0 or (i + 1) == len(symbols):
-                    logger.info(
-                        f"진행률: {i+1}/{len(symbols)} ({(i+1)/len(symbols)*100:.1f}%)"
-                    )
+                    results["success_count"] += 1
 
-                # API 호출 제한
-                time.sleep(self.api_delay)
+                    # 진행률 표시
+                    if (i + 1) % 20 == 0 or (i + 1) == len(symbols):
+                        logger.info(
+                            f"진행률: {i+1}/{len(symbols)} ({(i+1)/len(symbols)*100:.1f}%)"
+                        )
 
-            except Exception as e:
-                logger.error(f"전날 데이터 수집 실패: {symbol} - {e}")
-                results["failed_count"] += 1
-                results["failed_symbols"].append(symbol)
+                    # API 호출 제한
+                    time.sleep(self.api_delay)
 
-        # 결과 요약
-        logger.info("=== 전날 데이터 업데이트 완료 ===")
-        logger.info(f"날짜: {yesterday}")
-        logger.info(f"처리 종목: {results['success_count']}/{results['total_symbols']}")
-        logger.info(f"신규 데이터: {results['new_data_count']}건")
-        logger.info(f"중복 건너뜀: {results['duplicate_count']}건")
+                except Exception as e:
+                    logger.error(f"전날 데이터 수집 실패: {symbol} - {e}")
+                    results["failed_count"] += 1
+                    results["failed_symbols"].append(symbol)
 
-        if results["failed_symbols"]:
-            logger.warning(f"실패 종목: {results['failed_symbols']}")
+            # 결과 요약
+            logger.info("=== 전날 데이터 업데이트 완료 ===")
+            logger.info(f"날짜: {yesterday}")
+            logger.info(f"처리 종목: {results['success_count']}/{results['total_symbols']}")
+            logger.info(f"신규 데이터: {results['new_data_count']}건")
+            logger.info(f"중복 건너뜀: {results['duplicate_count']}건")
 
-        return results
+            if results["failed_symbols"]:
+                logger.warning(f"실패 종목: {results['failed_symbols']}")
+
+            return results
 
     def _get_last_trading_day(self) -> str:
         """마지막 거래일 조회 (주말/공휴일 고려)"""
@@ -1562,20 +1615,28 @@ class StockDataUpdater:
 
     def get_all_kospi_data_ultra_fast(self, date: str = None) -> Optional[pd.DataFrame]:
         """Ultra-Fast: 한번의 API 호출로 KOSPI 전체 종목 OHLCV + 시가총액 조회"""
+        return self._get_full_market_data_ultra_fast(date, market="KOSPI")
+
+    def get_all_kosdaq_data_ultra_fast(self, date: str = None) -> Optional[pd.DataFrame]:
+        """Ultra-Fast: 한번의 API 호출로 KOSDAQ 전체 종목 OHLCV + 시가총액 조회"""
+        return self._get_full_market_data_ultra_fast(date, market="KOSDAQ")
+
+    def _get_full_market_data_ultra_fast(self, date: str = None, market: str = "KOSPI") -> Optional[pd.DataFrame]:
+        """Ultra-Fast: 한번의 API 호출로 특정 시장 전체 종목 OHLCV + 시가총액 조회"""
         try:
             if date is None:
                 date = datetime.now().strftime("%Y%m%d")
 
-            logger.info(f"Ultra-Fast 전체 KOSPI 데이터 조회: {date}")
+            logger.info(f"Ultra-Fast 전체 {market} 데이터 조회: {date}")
 
             # API 호출 추적
             self._track_api_call()
 
             # 한번에 모든 데이터 조회
-            all_data = stock.get_market_ohlcv_by_ticker(date, market="KOSPI")
+            all_data = stock.get_market_ohlcv_by_ticker(date, market=market)
 
             if all_data.empty:
-                logger.error(f"KOSPI 데이터 조회 실패: {date}")
+                logger.error(f"{market} 데이터 조회 실패: {date}")
                 return None
 
             # 데이터 정리 및 표준화
@@ -1599,20 +1660,55 @@ class StockDataUpdater:
                     df.rename(columns={kor_col: eng_col}, inplace=True)
 
             # 날짜 컬럼 추가
-            df["date"] = pd.to_datetime(date, format="mixed", errors="coerce")
+            df["date"] = pd.to_datetime(date, format="%Y%m%d", errors="coerce")
 
             # 거래량이 있는 활성 종목만 필터링
             active_df = df[df["volume"] > 0].copy()
 
-            logger.info(
-                f"Ultra-Fast 조회 완료: 전체 {len(df)}개, 활성 {len(active_df)}개 종목"
-            )
+            logger.info(f"Ultra-Fast 조회 완료: 전체 {len(df)}개, 활성 {len(active_df)}개 종목 ({market})")
 
             return active_df
 
         except Exception as e:
-            logger.error(f"Ultra-Fast 전체 데이터 조회 실패: {e}")
+            logger.error(f"Ultra-Fast 전체 {market} 데이터 조회 실패: {e}")
             return None
+
+    def _update_full_market_daily(self, date: str, market: str) -> Dict:
+        """Ultra-Fast 방식으로 특정 시장의 하루치 전체 종목 데이터를 업데이트"""
+        results = {
+            "date": date,
+            "market": market,
+            "total_symbols": 0,
+            "success_count": 0,
+            "failed_count": 0,
+            "new_data_count": 0,
+            "duplicate_count": 0,
+            "failed_symbols": [],
+        }
+        
+        try:
+            df = self._get_full_market_data_ultra_fast(date, market)
+            if df is None or df.empty:
+                logger.warning(f"업데이트할 {market} 데이터 없음: {date}")
+                return results
+
+            results["total_symbols"] = len(df)
+
+            # 데이터베이스에 저장
+            # save_stock_data는 DataFrame을 받으므로, df에 symbol 컬럼이 있어야 함
+            # _get_full_market_data_ultra_fast에서 이미 symbol 컬럼이 추가됨
+            self.save_stock_data(df)
+            results["success_count"] = len(df)
+            results["new_data_count"] = len(df) # Ultra-Fast는 중복 체크를 여기서 하지 않으므로 모두 신규로 간주
+
+            logger.info(f"✅ Ultra-Fast {market} 데이터 업데이트 완료: {len(df)}건")
+
+        except Exception as e:
+            logger.error(f"❌ Ultra-Fast {market} 데이터 업데이트 실패: {e}")
+            results["failed_count"] = results["total_symbols"]
+            results["failed_symbols"] = [f"Error fetching {market} data"]
+
+        return results
 
     def fetch_stock_data_kiwoom(
         self, symbol: str, start_date: str, end_date: str
@@ -1998,101 +2094,3 @@ def main():
                 except Exception as e:
                     logger.error(f"Ultra-Fast 데이터 저장 실패: {e}")
                     logger.warning("❌ Ultra-Fast 데이터 저장 실패, 기존 방식으로 전환")
-            else:
-                logger.error("Ultra-Fast 조회 실패, 기존 방식으로 전환")
-
-            # Ultra-Fast 실패시 기존 방식으로 폴백
-            symbols_to_update = updater.get_kospi_symbols(
-                args.limit, date=end_date_to_use
-            )
-            logger.info(
-                f"기존 방식으로 전체 KOSPI {len(symbols_to_update)}개 종목 업데이트"
-            )
-
-    # 전체 KOSDAQ 종목 업데이트
-    elif args.all_kosdaq:
-        logger.info("=== 전체 KOSDAQ 종목 업데이트 시작 ===")
-        symbols_to_update = updater.get_kosdaq_symbols(args.limit, date=end_date_to_use)
-        logger.info(f"전체 KOSDAQ {len(symbols_to_update)}개 종목 선택됨")
-
-    # 업데이트할 종목 결정
-    else:
-        symbols_to_update = []
-
-        if args.symbols:
-            symbols_to_update = args.symbols
-        elif hasattr(args, "top_kospi") and args.top_kospi:
-            # 코스피 상위 종목 (명령줄에서 --top-kospi가 사용된 경우)
-            symbols_to_update = updater.get_kospi_top_symbols(args.top_kospi)
-            logger.info(f"코스피 상위 {args.top_kospi}개 종목 선택됨")
-        elif args.kospi:
-            symbols_to_update = updater.get_kospi_symbols(
-                args.limit, date=end_date_to_use
-            )
-        elif args.kosdaq:
-            symbols_to_update = updater.get_kosdaq_symbols(args.limit)
-        else:
-            # 기본 종목들
-            default_symbols = updater.config["data_collection"]["default_symbols"]
-            symbols_to_update = default_symbols
-
-    if not symbols_to_update:
-        logger.warning("업데이트할 종목이 없습니다. 스크립트를 종료합니다.")
-        return
-
-    # 엔진 선택 로직
-    num_symbols = len(symbols_to_update)
-    if args.optimized:
-        engine_type = "Optimized"
-    elif args.parallel:
-        engine_type = "Parallel"
-    elif num_symbols >= 100 and OPTIMIZED_ENGINE_AVAILABLE:
-        engine_type = "Optimized"
-    elif num_symbols >= 10:
-        engine_type = "Parallel"
-    else:
-        engine_type = "Sequential"
-
-    logger.info(f"선택된 엔진: {engine_type} ({num_symbols}개 종목)")
-
-    if engine_type == "Optimized":
-        if not OPTIMIZED_ENGINE_AVAILABLE:
-            logger.error("최적화 엔진을 사용할 수 없습니다. 순차 처리로 전환합니다.")
-            engine_type = "Sequential"
-        else:
-            logger.info("최적화 엔진을 사용하여 데이터 업데이트를 시작합니다.")
-            updater_config = OptimizedDataUpdateConfig(
-                symbols=symbols_to_update,
-                start_date=args.start_date,
-                end_date=args.end_date,
-                force_update=args.force,
-                max_workers=args.workers,
-                db_path=updater.db_path,
-                api_delay=updater.api_delay,
-                max_retries=updater.config["data_collection"]["max_retries"],
-            )
-            optimized_updater = create_optimized_data_updater(updater_config)
-            optimized_updater.run_update()
-            logger.info("최적화 엔진 데이터 업데이트 완료.")
-            return  # 최적화 엔진이 모든 처리를 담당하므로 여기서 종료
-
-    if engine_type == "Parallel":
-        logger.info("병렬 처리 엔진을 사용하여 데이터 업데이트를 시작합니다.")
-        updater.update_multiple_symbols_parallel(
-            symbols_to_update,
-            args.start_date,
-            args.end_date,
-            args.force,
-            max_workers=args.workers,
-        )
-    else:  # sequential
-        logger.info("순차 처리 엔진을 사용하여 데이터 업데이트를 시작합니다.")
-        updater.update_multiple_symbols(
-            symbols_to_update, args.start_date, args.end_date, args.force
-        )
-
-    logger.info("데이터 업데이트 스크립트 실행 완료.")
-
-
-if __name__ == "__main__":
-    main()

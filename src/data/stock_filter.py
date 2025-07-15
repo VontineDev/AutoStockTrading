@@ -11,7 +11,7 @@ import logging
 from functools import lru_cache
 import time
 from .trading_calendar import trading_calendar
-from scripts.data_update import StockDataUpdater
+from src.data.updater import StockDataUpdater
 
 logger = logging.getLogger(__name__)
 

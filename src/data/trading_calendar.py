@@ -10,7 +10,7 @@ from typing import List, Optional, Dict, Any
 import pandas as pd
 import os
 import time
-from scripts.data_update import StockDataUpdater
+from src.data.updater import StockDataUpdater
 
 logger = logging.getLogger(__name__)
 

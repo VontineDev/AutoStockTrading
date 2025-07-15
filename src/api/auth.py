@@ -1,65 +1,15 @@
-import os
-import sys
 import requests
 import logging
-from dotenv import load_dotenv
 from typing import Optional
 
-try:
-    import streamlit as st
+# 프로젝트 루트를 sys.path에 추가
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-    STREAMLIT_MODE = True
-except ImportError:
-    STREAMLIT_MODE = False
+from src.config_loader import get_kiwoom_env
 
-load_dotenv()
-
-
-def get_kiwoom_env():
-    """
-    실전/모의투자 환경에 따라 API 키, 시크릿, 계좌번호, API URL을 반환
-    - Streamlit 환경이면 st.session_state['USE_KIWOOM_MOCK'] 우선 적용
-    - 환경변수 USE_KIWOOM_MOCK이 '1' 또는 'true'면 모의투자, 아니면 실전투자
-    - 각각의 url은 KIWOOM_API_BASE_URL, KIWOOM_MOCK_API_BASE_URL에서 읽음(없으면 기본값)
-    """
-    use_mock = False
-    if (
-        STREAMLIT_MODE
-        and hasattr(st, "session_state")
-        and "USE_KIWOOM_MOCK" in st.session_state
-    ):
-        use_mock = st.session_state["USE_KIWOOM_MOCK"]
-    else:
-        use_mock = os.getenv("USE_KIWOOM_MOCK", "0").lower() in ("1", "true", "yes")
-    if use_mock:
-        api_key = os.getenv("KIWOOM_MOCK_API_KEY")
-        api_secret = os.getenv("KIWOOM_MOCK_API_SECRET")
-        account = os.getenv("KIWOOM_MOCK_ACCOUNT")
-        base_url = os.getenv("KIWOOM_MOCK_API_BASE_URL", "https://mockapi.kiwoom.com")
-        env_type = "모의투자"
-    else:
-        api_key = os.getenv("KIWOOM_API_KEY")
-        api_secret = os.getenv("KIWOOM_API_SECRET")
-        account = os.getenv("KIWOOM_ACCOUNT")
-        base_url = os.getenv("KIWOOM_API_BASE_URL", "https://api.kiwoom.com")
-        env_type = "실전투자"
-    return {
-        "api_key": api_key,
-        "api_secret": api_secret,
-        "account": account,
-        "base_url": base_url,
-        "env_type": env_type,
-    }
-
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    handlers=[
-        logging.FileHandler("logs/auth.log", encoding="utf-8"),
-        logging.StreamHandler(),
-    ],
-)
+logger = logging.getLogger(__name__)
 
 
 def get_access_token(

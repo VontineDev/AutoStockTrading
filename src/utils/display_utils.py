@@ -1,6 +1,6 @@
 import logging
 from typing import Dict, Any
-from scripts.data_update import StockDataUpdater
+from src.data.updater import StockDataUpdater
 
 logger = logging.getLogger(__name__)
 

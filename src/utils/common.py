@@ -5,7 +5,7 @@ import yaml
 import numpy as np
 import plotly.graph_objects as go
 from src.utils.dataframe_utils import standardize_dataframe
-from scripts.data_update import StockDataUpdater
+from src.data.updater import StockDataUpdater
 from src.data.stock_data_manager import StockDataManager  # StockDataManager 추가 임포트
 from datetime import datetime, timedelta
 import sqlite3

@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 import logging
 import os
 from src.data.database import DatabaseManager
-from scripts.data_update import StockDataUpdater
+from src.data.updater import StockDataUpdater
 from src.data.indicators import TechnicalIndicators
 
 from src.utils.constants import PROJECT_ROOT  # PROJECT_ROOT 임포트 추가
@@ -146,35 +146,79 @@ class StockDataManager:
             )
         return True
 
-    def get_latest_data(self, stock_code, days=30):
-        """최근 N일 데이터 조회"""
-        return self.db.fetchdf(
-            """
-            SELECT d.*, t.roc_14, t.ma_20, t.ma_slope_20
-            FROM stock_data d
-            LEFT JOIN technical_indicators t ON d.symbol = t.stock_code AND d.date = t.date
-            WHERE d.symbol = ?
-            ORDER BY d.date DESC
-            LIMIT ?
-            """,
-            (stock_code, days),
-        )
+    def get_stock_data(self, symbol: str, start_date: str, end_date: str) -> pd.DataFrame:
+        """특정 기간의 특정 종목 데이터를 데이터베이스에서 조회합니다."""
+        query = """
+        SELECT date, open, high, low, close, volume
+        FROM stock_data 
+        WHERE symbol = ? AND date BETWEEN ? AND ?
+        ORDER BY date
+        """
+        df = self.db.fetchdf(query, params=(symbol, start_date, end_date))
+        if not df.empty:
+            df['date'] = pd.to_datetime(df['date'])
+            df.set_index('date', inplace=True)
+        return df
 
-    def get_data_summary(self):
-        """데이터 현황 요약"""
-        return self.db.fetchdf(
-            """
-            SELECT 
-                s.stock_code,
-                s.stock_name,
-                COUNT(d.date) as total_days,
-                MIN(d.date) as start_date,
-                MAX(d.date) as end_date
-            FROM stocks s
-            LEFT JOIN stock_data d ON s.stock_code = d.symbol
-            GROUP BY s.stock_code, s.stock_name
-            """
-        )
+    def get_all_symbols(self) -> list:
+        """데이터베이스에 저장된 모든 고유 종목 코드를 반환합니다."""
+        query = "SELECT DISTINCT symbol FROM stock_data ORDER BY symbol"
+        results = self.db.fetchall(query)
+        return [row[0] for row in results]
+
+    def get_available_symbols_for_backtest(self, min_data_days: int = 30) -> pd.DataFrame:
+        """
+        백테스팅에 사용 가능한 종목 목록을 데이터 수, 기간 등과 함께 반환합니다.
+        Args:
+            min_data_days (int): 백테스팅에 필요한 최소 데이터 일수
+        Returns:
+            pd.DataFrame: 사용 가능한 종목 정보
+        """
+        query = f"""
+        SELECT 
+            si.symbol, 
+            si.name, 
+            si.market,
+            COUNT(sd.date) as data_count,
+            MIN(sd.date) as earliest_date,
+            MAX(sd.date) as latest_date
+        FROM stock_info si
+        JOIN stock_data sd ON si.symbol = sd.symbol
+        GROUP BY si.symbol
+        HAVING data_count >= ?
+        ORDER BY data_count DESC
+        """
+        df = self.db.fetchdf(query, params=(min_data_days,))
+        if not df.empty:
+            df['display_name'] = df.apply(
+                lambda row: f"{row['symbol']} ({row['name']}) - {row['data_count']}일",
+                axis=1
+            )
+        return df
+
+    def get_top_market_cap_symbols(self, top_n: int, market: str = 'KOSPI'):
+        """시가총액 상위 N개 종목 코드를 반환합니다."""
+        return self.updater.get_kospi_top_symbols(top_n) # 혹은 get_kosdaq_top_symbols
+
+    def update_and_calculate_indicators(self, symbols: list, start_date: str, end_date: str, force_update: bool = False):
+        """데이터 업데이트와 기술적 지표 계산을 함께 수행합니다."""
+        logging.info("=== 데이터 업데이트 및 지표 계산 시작 ===")
+        results = self.updater.update_multiple_symbols(symbols, start_date, end_date, force_update)
+        
+        success_count = sum(1 for success in results.values() if success)
+        logging.info(f"데이터 업데이트 성공: {success_count}/{len(symbols)} 종목")
+
+        indicator_success_count = 0
+        for symbol, updated in results.items():
+            if updated:
+                try:
+                    if self.calculate_and_save_indicators(symbol):
+                        indicator_success_count += 1
+                except Exception as e:
+                    logging.error(f"{symbol} 지표 계산 실패: {e}")
+        
+        logging.info(f"기술적 지표 계산 성공: {indicator_success_count}/{success_count} 종목")
+        return results
 
 
 # 사용 예시
