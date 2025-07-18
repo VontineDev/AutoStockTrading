@@ -25,13 +25,13 @@ def render_data_collection() -> None:
         try:
             with sqlite3.connect(db_path) as conn:
                 total_count = conn.execute(
-                    "SELECT COUNT(*) FROM stock_data"
+                    "SELECT COUNT(*) FROM stock_ohlcv"
                 ).fetchone()[0]
                 symbol_count = conn.execute(
-                    "SELECT COUNT(DISTINCT symbol) FROM stock_data"
+                    "SELECT COUNT(DISTINCT symbol) FROM stock_ohlcv"
                 ).fetchone()[0]
                 latest_date = conn.execute(
-                    "SELECT MAX(date) FROM stock_data"
+                    "SELECT MAX(date) FROM stock_ohlcv"
                 ).fetchone()[0]
                 col1, col2, col3 = st.columns(3)
                 with col1:
@@ -67,15 +67,15 @@ def render_data_collection() -> None:
                 query = """
                 SELECT si.symbol, si.name, si.market, 
                        COUNT(*) as data_count,
-                       MAX(sd.date) as latest_date,
-                       MIN(sd.date) as earliest_date
+                       MAX(so.date) as latest_date,
+                       MIN(so.date) as earliest_date
                 FROM stock_info si
-                JOIN stock_data sd ON si.symbol = sd.symbol
+                JOIN stock_ohlcv so ON si.symbol = so.symbol
                 GROUP BY si.symbol, si.name, si.market
                 ORDER BY latest_date DESC
                 LIMIT 10
                 """
-                dm = DatabaseManager(db_path=db_path)
+                dm = DatabaseManager(db_path=str(db_path))
                 df = dm.fetchdf(query)
                 st.dataframe(df, use_container_width=True)
         except Exception as e:

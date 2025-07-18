@@ -30,22 +30,7 @@
 *   **역할:** 데이터베이스 파일과 필요한 테이블 스키마를 초기화합니다.
 *   **매개변수:** 없음.
 *   **반환값:** 없음 (`None`).
-*   **세부 동작:** `os.makedirs`로 DB 파일이 저장될 디렉토리를 확인/생성하고, `sqlite3`를 이용해 `api_usage` 테이블이 없으면 생성하는 SQL을 실행합니다.
-
-##### **`_load_api_calls_today(self) -> int`**
-
-*   **역할:** DB에서 오늘 날짜의 API 호출 횟수를 가져옵니다.
-*   **매개변수:** 없음.
-*   **반환값:**
-    *   `int`: 오늘 실행된 API 호출 횟수. 기록이 없으면 0을 반환합니다.
-*   **세부 동작:** `api_usage` 테이블에서 `date`가 오늘 날짜인 행의 `call_count` 값을 조회합니다.
-
-##### **`_increment_api_call(self)`**
-
-*   **역할:** `pykrx` API 호출 카운트를 1 증가시키고 DB에 기록합니다.
-*   **매개변수:** 없음.
-*   **반환값:** 없음 (`None`).
-*   **세부 동작:** `self.api_calls_today` 변수를 1 증가시키고, `api_usage` 테이블의 오늘 날짜 `call_count`를 업데이트합니다.
+*   **세부 동작:** `os.makedirs`로 DB 파일이 저장될 디렉토리를 확인/생성하고, `sqlite3`를 이용해 `stock_info` (market_cap 컬럼 포함) 및 `stock_ohlcv` 테이블이 없으면 생성하는 SQL을 실행합니다.
 
 ##### **`save_symbol_info(self, symbol_info: Dict)`**
 
@@ -68,31 +53,6 @@
     2.  두 개의 CSV 파일에서 업종 정보를 읽어옵니다.
     3.  `pykrx` 정보와 CSV 정보를 '종목코드' 기준으로 병합합니다.
     4.  병합된 데이터를 `stock_info` 테이블에 저장합니다.
-
-##### **`get_all_tickers(self) -> List[str]`**
-
-*   **역할:** 데이터베이스에 저장된 모든 고유 종목 코드를 가져옵니다.
-*   **매개변수:** 없음.
-*   **반환값:**
-    *   `List[str]`: 모든 종목 코드(티커)를 담은 리스트.
-*   **세부 동작:** `stock_info` 또는 `stock_data` 테이블에서 `DISTINCT symbol` SQL 쿼리를 실행하여 결과를 반환합니다. (현재 코드에서는 경고만 출력하고 실제 구현은 없음)
-
-##### **`get_kospi_top_symbols(self, limit: int) -> List[str]`**
-
-*   **역할:** 시가총액 기준 KOSPI 상위 N개 종목 코드를 가져옵니다.
-*   **매개변수:**
-    *   `limit` (int): 가져올 상위 종목의 개수.
-*   **반환값:**
-    *   `List[str]`: KOSPI 상위 종목 코드 리스트.
-*   **세부 동작:** `pykrx.stock.get_market_cap_by_ticker`를 사용하여 특정 날짜의 시가총액 순위를 가져와 상위 `limit`개의 종목 코드를 반환합니다. (현재 코드에서는 경고만 출력하고 실제 구현은 없음)
-
-##### **`get_api_usage_status(self) -> Dict`**
-
-*   **역할:** 현재 세션의 API 사용량 통계를 반환합니다.
-*   **매개변수:** 없음.
-*   **반환값:**
-    *   `Dict`: API 호출 횟수, 일일 한도, 남은 호출 가능 횟수 등을 담은 딕셔너리.
-*   **세부 동작:** `self.api_calls_today`와 설정된 한도 값을 바탕으로 통계 정보를 생성합니다.
 
 ##### **`update_daily_market_data(self, date_str: str)`**
 
@@ -120,6 +80,16 @@
     *   `end_date_str` (str): 종료 날짜 ('YYYYMMDD').
 *   **반환값:** 없음 (`None`).
 *   **세부 동작:** 모든 종목 코드를 가져온 뒤, 각 종목에 대해 `update_specific_stock_data`를 반복 호출합니다.
+
+##### **`update_market_cap_data(self, date_str: str = None)`**
+
+*   **역할:** 특정일의 전체 시장 시가총액 데이터를 `stock_info` 테이블에 업데이트합니다.
+*   **매개변수:**
+    *   `date_str` (str, Optional): 데이터를 가져올 날짜 (형식: 'YYYYMMDD'). 기본값은 `None`이며, 이 경우 오늘 날짜를 사용합니다.
+*   **반환값:** 없음 (`None`).
+*   **세부 동작:**
+    1.  `pykrx.stock.get_market_cap` API를 호출하여 특정일의 전체 시장 시가총액 데이터를 가져옵니다.
+    2.  가져온 데이터를 순회하며 각 종목의 시가총액 정보를 `stock_info` 테이블의 `market_cap` 컬럼에 업데이트합니다.
 
 #### **2. `main()` 함수**
 

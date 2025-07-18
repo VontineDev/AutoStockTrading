@@ -7,9 +7,27 @@ import sys
 import os
 
 # 프로젝트 루트를 sys.path에 추가
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".")))
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.abspath(os.path.join(current_dir, ".."))
+sys.path.insert(0, project_root)
+sys.path.insert(0, current_dir)
 
-from cli import main as cli_main
+try:
+    from src.cli import main as cli_main
+except ImportError:
+    try:
+        from cli import main as cli_main
+    except ImportError:
+        # 실행파일 환경에서의 대안
+        import importlib.util
+        cli_path = os.path.join(current_dir, "cli.py")
+        spec = importlib.util.spec_from_file_location("cli", cli_path)
+        if spec and spec.loader:
+            cli_module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(cli_module)
+            cli_main = cli_module.main
+        else:
+            raise ImportError("Unable to load cli module")
 
 if __name__ == "__main__":
     cli_main()

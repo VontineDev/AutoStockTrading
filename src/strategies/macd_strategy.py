@@ -98,46 +98,30 @@ class MACDStrategy(BaseStrategy):
         )
 
     def calculate_indicators(self, data: pd.DataFrame) -> pd.DataFrame:
-        """MACD 및 보조 지표 계산"""
-        df = data.copy()
+        """
+        MACD 전략에 필요한 지표 계산 (base_strategy의 통합 지표 계산 활용)
+        """
+        # 통합 지표 계산 활용 - 모든 표준 지표를 한번에 계산
+        df = self.calculate_all_indicators(data)
 
-        # MACD 계산
-        df["MACD"], df["MACD_signal"], df["MACD_hist"] = talib.MACD(
-            df["close"],
-            fastperiod=self.fast_period,
-            slowperiod=self.slow_period,
-            signalperiod=self.signal_period,
-        )
+        # MACD 특화 추가 지표 (이미 MACD는 통합 지표에서 계산됨)
+        if 'MACD' in df.columns and 'MACD_signal' in df.columns:
+            # MACD 히스토그램 변화량
+            df["MACD_hist_change"] = df["MACD_hist"] - df["MACD_hist"].shift(1)
+            
+            # MACD 제로라인 크로스
+            df["MACD_bullish_zero"] = (df["MACD"] > 0) & (df["MACD"].shift(1) <= 0)
+            df["MACD_bearish_zero"] = (df["MACD"] < 0) & (df["MACD"].shift(1) >= 0)
+            
+            # MACD 신호 강도
+            df["MACD_strength"] = abs(df["MACD"] - df["MACD_signal"])
 
-        # 추세 필터용 이동평균
-        if self.trend_filter:
-            df["SMA_50"] = talib.SMA(df["close"], timeperiod=50)
-            df["EMA_20"] = talib.EMA(df["close"], timeperiod=20)
-
-        # RSI (과매수/과매도 필터)
-        df["RSI"] = talib.RSI(df["close"], timeperiod=self.parameters.get("rsi_period", 14))
-
-        # 거래량 필터
-        if self.volume_filter:
-            df["volume_ma"] = talib.SMA(
-                df["volume"], timeperiod=self.parameters.get("volume_ma_period", 20)
-            )
-            df["volume_ratio"] = df["volume"] / df["volume_ma"]
-
-        # MACD 변화율 계산
-        df["MACD_change"] = df["MACD"].diff()
-        df["hist_change"] = df["MACD_hist"].diff()
-
-        # 신호선 교차 감지 (NaN 처리 포함)
-        macd_above_signal = (df["MACD"] > df["MACD_signal"]).fillna(False).astype(bool)
-        prev_macd_above = macd_above_signal.shift(1, fill_value=False)
-        df["macd_above_signal"] = macd_above_signal
-        df["macd_cross_above"] = macd_above_signal & (~prev_macd_above)
-        df["macd_cross_below"] = (~macd_above_signal) & prev_macd_above
-
+        # 기존 코드에서 중복 제거 - 통합 지표를 활용
+        # RSI, SMA, EMA, volume 지표들은 이미 계산됨
+        
         return df
 
-    def generate_signals(self, data: pd.DataFrame) -> list:
+    def generate_signals(self, data: pd.DataFrame, symbol: str = "UNKNOWN") -> list:
         """MACD 신호 생성: 데이터 컬럼 체크 및 예외 발생 시 빈 리스트 반환, 상세 로깅"""
         logger.debug(f"[MACDStrategy] 입력 데이터 shape: {data.shape}, 컬럼: {list(data.columns)}")
         required_cols = ['close']
@@ -148,19 +132,25 @@ class MACDStrategy(BaseStrategy):
         try:
             import talib
             df = data.copy()
-            macd, macdsignal, macdhist = talib.MACD(df['close'], fastperiod=12, slowperiod=26, signalperiod=9)
+            # talib.MACD 계산 및 컬럼명 통일
+            macd, macd_signal, macd_hist = talib.MACD(df['close'], fastperiod=12, slowperiod=26, signalperiod=9)
             df['MACD'] = macd
-            df['MACD_SIGNAL'] = macdsignal
-            df['MACD_HIST'] = macdhist
+            df['MACD_signal'] = macd_signal
+            df['MACD_hist'] = macd_hist
+            # 신호 생성에 필요한 컬럼 추가
+            df['macd_cross_above'] = (df['MACD'] > df['MACD_signal']) & (df['MACD'].shift(1) <= df['MACD_signal'].shift(1))
+            df['macd_cross_below'] = (df['MACD'] < df['MACD_signal']) & (df['MACD'].shift(1) >= df['MACD_signal'].shift(1))
+            df['hist_change'] = df['MACD_hist'] - df['MACD_hist'].shift(1)
+            df['MACD_change'] = df['MACD'] - df['MACD'].shift(1)
             logger.debug(f"[MACDStrategy] MACD 컬럼 생성 여부: {'MACD' in df.columns}, 첫 5개: {df['MACD'].head().tolist()}")
             signals = []
 
-            for i in range(len(data)):
+            for i in range(len(df)):
                 if i < 2:  # 최소 데이터 필요
                     continue
 
-                current_row = data.iloc[i]
-                prev_row = data.iloc[i - 1]
+                current_row = df.iloc[i]
+                prev_row = df.iloc[i - 1]
 
                 # 필수 값 확인
                 if pd.isna(current_row["MACD"]) or pd.isna(current_row["MACD_signal"]):
@@ -174,11 +164,12 @@ class MACDStrategy(BaseStrategy):
                 buy_conditions = []
 
                 # 1. MACD 골든크로스
-                if current_row["macd_cross_above"]:
+                if "macd_cross_above" in current_row and current_row["macd_cross_above"]:
                     buy_conditions.append("MACD 골든크로스")
 
                 # 2. MACD 히스토그램 상승 전환
                 if (
+                    "MACD_hist" in current_row and "hist_change" in current_row and
                     current_row["MACD_hist"] > self.histogram_threshold
                     and prev_row["MACD_hist"] <= self.histogram_threshold
                     and current_row["hist_change"] > 0
@@ -187,6 +178,7 @@ class MACDStrategy(BaseStrategy):
 
                 # 3. MACD 라인이 0선 위에서 상승
                 if (
+                    "MACD" in current_row and "MACD_change" in current_row and "MACD_signal" in current_row and
                     current_row["MACD"] > 0
                     and current_row["MACD_change"] > 0
                     and current_row["MACD"] > current_row["MACD_signal"]
@@ -197,11 +189,12 @@ class MACDStrategy(BaseStrategy):
                 sell_conditions = []
 
                 # 1. MACD 데드크로스
-                if current_row["macd_cross_below"]:
+                if "macd_cross_below" in current_row and current_row["macd_cross_below"]:
                     sell_conditions.append("MACD 데드크로스")
 
                 # 2. MACD 히스토그램 하락 전환
                 if (
+                    "MACD_hist" in current_row and "hist_change" in current_row and
                     current_row["MACD_hist"] < -self.histogram_threshold
                     and prev_row["MACD_hist"] >= -self.histogram_threshold
                     and current_row["hist_change"] < 0
@@ -210,6 +203,7 @@ class MACDStrategy(BaseStrategy):
 
                 # 3. MACD 라인이 0선 아래에서 하락
                 if (
+                    "MACD" in current_row and "MACD_change" in current_row and "MACD_signal" in current_row and
                     current_row["MACD"] < 0
                     and current_row["MACD_change"] < 0
                     and current_row["MACD"] < current_row["MACD_signal"]
@@ -249,10 +243,10 @@ class MACDStrategy(BaseStrategy):
                     confidence=confidence,
                     reason=reason,
                     indicators={
-                        "MACD": current_row["MACD"],
-                        "MACD_signal": current_row["MACD_signal"],
-                        "MACD_hist": current_row["MACD_hist"],
-                        "RSI": current_row["RSI"],
+                        "MACD": current_row.get("MACD", np.nan),
+                        "MACD_signal": current_row.get("MACD_signal", np.nan),
+                        "MACD_hist": current_row.get("MACD_hist", np.nan),
+                        "RSI": current_row.get("RSI", np.nan),
                         "volume_ratio": current_row.get("volume_ratio", 1.0),
                     },
                     risk_level=self._assess_risk_level(current_row, confidence),
@@ -436,10 +430,12 @@ class MACDStrategy(BaseStrategy):
         return MACDStrategy(config)
 
     def run_strategy(self, data: pd.DataFrame, symbol: str) -> List[TradeSignal]:
-        """MACD 전략 실행 및 신호 생성"""
-        # 기졸 run_strategy 코드에서 symbol 인자를 추가로 받도록 수정
-        # symbol 인자가 필요 없으면 무시해도 됨
-        # ... 기졸 run_strategy 코드 ...
+        """MACD 전략 실행 및 신호 생성 (generate_signals 래핑)"""
+        try:
+            return self.generate_signals(data, symbol)
+        except Exception as e:
+            logger.error(f"run_strategy 예외: {e}")
+            return []
 
 
 if __name__ == "__main__":

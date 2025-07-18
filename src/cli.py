@@ -12,6 +12,7 @@ import logging
 import json
 from pathlib import Path
 from datetime import datetime, timedelta
+from typing import Optional
 
 # 프로젝트 루트를 sys.path에 추가하여 src.config_loader 등을 임포트할 수 있도록 함
 # 이 코드는 다른 모듈 임포트 전에 위치해야 함
@@ -66,7 +67,7 @@ def show_available_commands():
     """사용 가능한 명령어 목록 표시"""
     commands = {
         "check-deps": "필수 패키지 설치 확인",
-        "check-data": "종합 데이터 상태 확인 (백테스팅 적합성 분석)",
+        "check-data": "데이터베이스 상태 확인",
         "update-data": "주식 데이터 업데이트",
         "backtest": "백테스팅 실행",
         "web": "Streamlit 웹 인터페이스 실행",
@@ -88,23 +89,19 @@ def show_command_help(command: str):
         "check-deps": ["python src/main.py check-deps"],
         "check-data": [
             "python src/main.py check-data",
-            "python src/main.py check-data --days-back 90 --min-days 45",
-            "python src/main.py check-data --top-limit 30",
         ],
         "update-data": [
             "python src/main.py update-data",
             "python src/main.py update-data --symbols 005930 000660",
-            "python src/main.py update-data --top-kospi 50",
-            "python src/main.py update-data --all-kospi",
-            "python src/main.py update-data --all-kospi --parallel --workers 8",
-            "python src/main.py update-data --days 180",
             "python src/main.py update-data --period 6m",
             "python src/main.py update-data --period 2y",
             "python src/main.py update-data --start-date 2024-01-01",
             "python src/main.py update-data --yesterday-only",
-            "python src/main.py update-data --all-kospi --yesterday-only",
-            "python src/main.py update-data --summary",
-            "python src/main.py update-data --api-status",
+            "python src/main.py update-data --daily-market today",
+            "python src/main.py update-data --daily-market yesterday",
+            "python src/main.py update-data --daily-market 2024-01-15",
+            "python src/main.py update-data --market-cap",
+            "python src/main.py update-data --update-symbols",
         ],
         "backtest": [
             "python src/main.py backtest",
@@ -136,7 +133,7 @@ def show_command_help(command: str):
         show_available_commands()
 
 
-def get_current_command_from_args() -> str:
+def get_current_command_from_args() -> Optional[str]:
     """현재 실행된 명령어 추출"""
     import sys
 
@@ -187,13 +184,11 @@ def main():
 사용 예시:
   python src/main.py check-deps           # 패키지 설치 확인
   
-  # 데이터 상태 확인 (통합된 check_data_status.py 기능)
-  python src/main.py check-data           # 종합 데이터 상태 및 백테스팅 적합성 분석
-  python src/main.py check-data --days-back 90 --min-days 45  # 사용자 정의 분석 조건
+  # 데이터 상태 확인
+  python src/main.py check-data           # 데이터베이스 상태 확인
   
   # 데이터 업데이트 (기본: 전체 시장 1년 데이터)
   python src/main.py update-data          # 전체 시장(코스피, 코스닥) 1년 데이터 업데이트
-  python src/main.py update-data --top-kospi 50  # 코스피 상위 50종목 1년 데이터
   python src/main.py update-data --symbols 005930 000660  # 특정 종목 1년 데이터
   
   # 날짜 범위 지정
@@ -201,16 +196,16 @@ def main():
   python src/main.py update-data --period 6m   # 최근 6개월 데이터
   python src/main.py update-data --period 2y   # 최근 2년 데이터
   python src/main.py update-data --start-date 2024-01-01 --end-date 2024-06-30  # 특정 기간
-  python src/main.py update-data --start-date 20240101  # 2024년 1월 1일부터 오늘까지
+  python src/main.py update-data --start-date 20240101  # 2024년 1월 1일부터 오늘까지 
   
-  # 빠른 업데이트 (Ultra-Fast)
-  python src/main.py update-data --yesterday-only  # 전날 데이터만 (4-5초 완료)
-  python src/main.py update-data -y --top-kospi 30  # 코스피 상위 30종목 전날 데이터
+  # 특정일 전체 시장 데이터 업데이트
+  python src/main.py update-data --daily-market today      # 오늘 전체 시장 데이터
+  python src/main.py update-data --daily-market yesterday  # 어제 전체 시장 데이터
+  python src/main.py update-data --daily-market 2024-01-15 # 특정일 전체 시장 데이터
   
-  # 상태 확인
-  python src/main.py update-data --summary     # 기본 데이터베이스 현황 확인
-  python src/main.py update-data --summary --backtest-analysis  # 백테스팅 분석 포함 상세 현황
-  python src/main.py update-data --api-status  # API 사용량 확인
+  # 기타 업데이트
+  python src/main.py update-data --market-cap     # 시가총액 정보 업데이트
+  python src/main.py update-data --update-symbols # 종목 정보 업데이트
   
   # 백테스팅 (기본)
   python src/main.py backtest                  # 삼성전자 180일 백테스팅 (MACD 전략)
@@ -219,12 +214,11 @@ def main():
   python src/main.py backtest --start-date 2024-01-01 --end-date 2024-06-30  # 기간 지정
   
   # 대규모 백테스팅 (병렬 처리)
-  python src/main.py backtest --top-kospi 10 --parallel  # 코스피 상위 10종목 병렬 백테스팅
-  python src/main.py backtest --all-kospi --parallel --workers 8  # 코스피 전체 병렬 백테스팅
-  python src/main.py backtest --strategy all --top-kospi 50 --parallel  # 모든 전략 테스트
+  python src/main.py backtest --parallel --workers 8     # 병렬 백테스팅
+  python src/main.py backtest --strategy all --parallel  # 모든 전략 테스트
   
   # 결과 저장 (기본값, 비활성화는 --no-save-results 사용)
-  python src/main.py backtest --all-kospi --parallel  # 결과 자동 저장
+  python src/main.py backtest --parallel             # 결과 자동 저장
   python src/main.py backtest --symbols 005930 --no-save-results  # 결과 저장하지 않음
   
   # 웹 인터페이스
@@ -243,104 +237,53 @@ def main():
     # 패키지 확인 명령어
     subparsers.add_parser("check-deps", help="필수 패키지 설치 확인")
 
-    # 데이터 상태 확인 명령어 (통합된 check_data_status.py 기능)
+    # 데이터 상태 확인 명령어
     check_parser = subparsers.add_parser(
-        "check-data", help="종합 데이터 상태 확인 (백테스팅 적합성 분석)"
-    )
-    check_parser.add_argument(
-        "--days-back",
-        type=int,
-        default=60,
-        help="분석 기간 (현재부터 N일 전, 기본: 60일)",
-    )
-    check_parser.add_argument(
-        "--min-days",
-        type=int,
-        default=30,
-        help="백테스팅 최소 데이터 요구 일수 (기본: 30일)",
-    )
-    check_parser.add_argument(
-        "--top-limit", type=int, default=20, help="상위 종목 표시 개수 (기본: 20개)"
+        "check-data", help="데이터베이스 상태 확인"
     )
 
     # 데이터 업데이트 명령어
     update_parser = subparsers.add_parser("update-data", help="주식 데이터 업데이트")
     update_parser.add_argument("--symbols", nargs="+", help="업데이트할 종목 코드들")
-    update_parser.add_argument(
-        "--top-kospi",
-        type=int,
-        dest="top_kospi",
-        help="코스피 상위 N개 종목. 지정하지 않으면 전체 시장을 업데이트합니다.",
-    )
-    update_parser.add_argument(
-        "--all-kospi",
-        action="store_true",
-        dest="all_kospi",
-        help="코스피 전체 종목 업데이트 (~962개)",
-    )
     update_parser.add_argument("--force", action="store_true", help="강제 업데이트")
     update_parser.add_argument(
-        "--summary", action="store_true", help="데이터베이스 현황 보기"
+        "--update-symbols",
+        action="store_true",
+        help="전체 종목의 기본 정보(종목코드, 종목명, 시장, 섹터)를 업데이트합니다.",
     )
     update_parser.add_argument(
-        "--backtest-analysis",
-        action="store_true",
-        dest="backtest_analysis",
-        help="백테스팅 적합성 분석 포함 (--summary와 함께 사용)",
+        "--market-cap", action="store_true", help="시가총액 정보 업데이트"
     )
     update_parser.add_argument(
-        "--api-status",
-        action="store_true",
-        dest="api_status",
-        help="API 사용량 현황 보기",
+        "--yesterday-only", "-y", action="store_true", help="어제 데이터만 업데이트 (Ultra-Fast)"
     )
     update_parser.add_argument(
-        "--yesterday-only",
-        "-y",
-        action="store_true",
-        dest="yesterday_only",
-        help="전날 데이터만 업데이트 (효율적)",
+        "--daily-market", type=str, help="특정일의 전체 시장 데이터 업데이트 (today/yesterday/YYYY-MM-DD)"
     )
-
-    # 날짜 범위 옵션 추가
-    date_group = update_parser.add_argument_group("날짜 범위 설정")
-    date_group.add_argument(
-        "--days", type=int, help="현재부터 N일 전까지 데이터 수집 (예: 180)"
-    )
-    date_group.add_argument(
-        "--start-date", help="시작 날짜 (YYYY-MM-DD 또는 YYYYMMDD 형식)"
-    )
-    date_group.add_argument(
-        "--end-date", help="종료 날짜 (YYYY-MM-DD 또는 YYYYMMDD 형식, 기본: 오늘)"
-    )
-    date_group.add_argument(
+    
+    # 날짜 및 기간 옵션
+    update_parser.add_argument("--days", type=int, help="수집할 일수 (기본값: 365일)")
+    update_parser.add_argument("--start-date", help="시작 날짜 (YYYY-MM-DD)")
+    update_parser.add_argument("--end-date", help="종료 날짜 (YYYY-MM-DD)")
+    update_parser.add_argument(
         "--period",
         choices=["1w", "1m", "3m", "6m", "1y", "2y"],
-        default="1y",
-        help="기본 수집 기간 (기본: 1y=1년)",
+        help="미리 정의된 기간 (예: 6m = 6개월)",
     )
-
-    # 병렬 처리 옵션 추가
-    parallel_group = update_parser.add_argument_group("병렬 처리 설정")
-    parallel_group.add_argument(
-        "--parallel",
-        "-p",
-        action="store_true",
-        help="병렬 처리로 데이터 수집 (빠른 속도)",
-    )
-    parallel_group.add_argument(
-        "--workers", type=int, default=5, help="병렬 처리 워커 수 (기본: 5)"
-    )
+    
+    # 성능 최적화 옵션
+    update_parser.add_argument("--parallel", action="store_true", help="병렬 처리 활성화")
+    update_parser.add_argument("--max-workers", type=int, default=4, help="병렬 처리 워커 수 (기본값: 4)")
+    update_parser.add_argument("--batch-size", type=int, default=30, help="배치 처리 크기 (기본값: 30)")
+    update_parser.add_argument("--enable-cache", action="store_true", default=True, help="캐싱 활성화 (기본값: True)")
+    update_parser.add_argument("--api-delay", type=float, default=0.3, help="API 호출 간격 (초, 기본값: 0.3)")
+    
+    # 호환성을 위한 기존 옵션들
+    update_parser.add_argument("--incremental", action="store_true", default=True, help="증분 업데이트 활성화 (기본값: True)")
 
     # 백테스팅 명령어
     backtest_parser = subparsers.add_parser("backtest", help="백테스팅 실행")
     backtest_parser.add_argument("--symbols", nargs="+", help="백테스팅할 종목 코드들")
-    backtest_parser.add_argument(
-        "--top-kospi", type=int, help="코스피 상위 N개 종목 백테스팅"
-    )
-    backtest_parser.add_argument(
-        "--all-kospi", action="store_true", help="코스피 전체 종목 백테스팅 (962개)"
-    )
     backtest_parser.add_argument(
         "--start-date", dest="start_date", help="백테스팅 시작날짜 (YYYY-MM-DD)"
     )

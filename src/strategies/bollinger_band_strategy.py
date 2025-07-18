@@ -61,50 +61,31 @@ class BollingerBandStrategy(BaseStrategy):
             f"deviation={self.config.bb_deviation}"
         )
 
-    def calculate_indicators(self, df: pd.DataFrame) -> pd.DataFrame:
-        """기술적 지표 계산"""
-        # 볼린저 밴드 계산
-        df["BB_upper"], df["BB_middle"], df["BB_lower"] = talib.BBANDS(
-            df["close"],
-            timeperiod=self.config.bb_period,
-            nbdevup=self.config.bb_deviation,
-            nbdevdn=self.config.bb_deviation,
-        )
+    def calculate_indicators(self, data: pd.DataFrame) -> pd.DataFrame:
+        """
+        볼린저 밴드 전략에 필요한 지표 계산 (base_strategy의 통합 지표 계산 활용)
+        """
+        # 통합 지표 계산 활용 - 모든 표준 지표를 한번에 계산
+        df = self.calculate_all_indicators(data)
 
-        # 볼린저 밴드 관련 지표
-        df["BB_width"] = (df["BB_upper"] - df["BB_lower"]) / df["BB_middle"]
-        df["BB_position"] = (df["close"] - df["BB_lower"]) / (
-            df["BB_upper"] - df["BB_lower"]
-        )
+        # 볼린저 밴드 특화 추가 지표 (이미 BB는 통합 지표에서 계산됨)
+        if 'BB_upper' in df.columns and 'BB_lower' in df.columns and 'BB_middle' in df.columns:
+            # 밴드 폭 계산
+            df["BB_width"] = (df["BB_upper"] - df["BB_lower"]) / df["BB_middle"] * 100
+            
+            # 가격의 밴드 내 위치 (%B)
+            df["BB_percent"] = (df["close"] - df["BB_lower"]) / (df["BB_upper"] - df["BB_lower"])
+            
+            # 밴드 수축/확장 감지
+            df["BB_squeeze"] = df["BB_width"] < df["BB_width"].rolling(window=20).mean() * 0.8
+            
+            # 밴드 터치 감지
+            df["BB_touch_upper"] = df["close"] >= df["BB_upper"] * 0.98
+            df["BB_touch_lower"] = df["close"] <= df["BB_lower"] * 1.02
 
-        # 밴드 터치/돌파 확인
-        df["touching_upper"] = df["close"] >= df["BB_upper"] * 0.98
-        df["touching_lower"] = df["close"] <= df["BB_lower"] * 1.02
-        df["breaking_upper"] = df["close"] > df["BB_upper"]
-        df["breaking_lower"] = df["close"] < df["BB_lower"]
-
-        # 스퀴즈 감지 (밴드 폭 압축)
-        df["BB_width_sma"] = talib.SMA(df["BB_width"], timeperiod=20)
-        df["squeeze"] = df["BB_width"] < df["BB_width_sma"] * (
-            1 - self.config.bb_squeeze_threshold
-        )
-
-        # RSI 필터 (선택적)
-        if self.config.rsi_filter:
-            df["RSI"] = talib.RSI(df["close"], timeperiod=self.config.rsi_period)
-
-        # 거래량 지표
-        if self.config.volume_confirmation:
-            df["volume_sma"] = talib.SMA(df["volume"], timeperiod=20)
-            df["volume_ratio"] = df["volume"] / df["volume_sma"]
-
-        # 추가 보조 지표
-        df["SMA_20"] = talib.SMA(df["close"], timeperiod=20)
-
-        # 밴드 확장/압축 추세
-        df["band_expanding"] = df["BB_width"] > df["BB_width"].shift(1)
-        df["band_contracting"] = df["BB_width"] < df["BB_width"].shift(1)
-
+        # 기존 중복 코드 제거 - 통합 지표 활용
+        # RSI, SMA, volume 등은 이미 계산됨
+        
         return df
 
     def _assess_risk_level(self, current_row: pd.Series, confidence: float) -> str:
@@ -128,19 +109,17 @@ class BollingerBandStrategy(BaseStrategy):
         for i in range(len(df)):
             current_row = df.iloc[i]
 
-            # 데이터 부족 시 건너뛰기
-            if pd.isna(current_row.get("BB_lower")) or pd.isna(
-                current_row.get("BB_position")
-            ):
+            # 데이터 부족 시 건너뛰기 (완화된 검증)
+            if pd.isna(current_row.get("BB_lower")) or pd.isna(current_row.get("close")):
                 continue
 
             price = current_row["close"]
-            bb_position = current_row["BB_position"]
-            bb_width = current_row["BB_width"]
-            touching_lower = current_row.get("touching_lower", False)
-            squeeze = current_row.get("squeeze", False)
+            bb_position = current_row.get("BB_position", 0.5)
+            bb_width = current_row.get("BB_width", 0.05)
+            touching_lower = current_row.get("BB_touch_lower", False)
+            squeeze = current_row.get("BB_squeeze", False)
 
-            # 기본 매수 조건들
+            # 매수 조건들 (다양한 기회 제공)
             buy_conditions = []
             confidence = 0.0
             reasons = []
@@ -152,24 +131,30 @@ class BollingerBandStrategy(BaseStrategy):
                 reasons.append("하단 밴드 터치 후 반등")
 
             # 조건 2: 스퀴즈 후 상승 돌파
-            elif (
-                squeeze
-                and current_row.get("band_expanding", False)
-                and price > current_row["BB_middle"]
-            ):
+            elif squeeze and current_row.get("band_expanding", False) and price > current_row.get("BB_middle", price):
                 buy_conditions.append(True)
                 confidence += 35
                 reasons.append("스퀴즈 후 상승 돌파")
 
             # 조건 3: 중간선 상승 돌파 (추세 추종)
-            elif (
-                price > current_row["BB_middle"]
-                and current_row["close"] > current_row["SMA_20"]
-                and bb_width > 0.03
-            ):  # 충분한 변동성
+            elif (price > current_row.get("BB_middle", price) and 
+                  current_row.get("close", 0) > current_row.get("SMA_20", 0) and 
+                  bb_width > 0.03):
                 buy_conditions.append(True)
                 confidence += 30
                 reasons.append("중간선 상승 돌파")
+
+            # 조건 4: 밴드 중앙 근처에서 상승 추세
+            elif 0.3 <= bb_position <= 0.7 and price > current_row.get("close", price):
+                buy_conditions.append(True)
+                confidence += 25
+                reasons.append("밴드 중앙 상승 추세")
+
+            # 조건 5: 밴드 하단 근처에서 반등
+            elif bb_position < 0.3 and price > current_row.get("BB_lower", price):
+                buy_conditions.append(True)
+                confidence += 20
+                reasons.append("밴드 하단 근처 반등")
 
             if not any(buy_conditions):
                 continue
@@ -197,8 +182,8 @@ class BollingerBandStrategy(BaseStrategy):
                 confidence += 10
                 reasons.append("밴드 확장 (변동성 증가)")
 
-            # 신뢰도 임계점 확인
-            if confidence >= 60:
+            # 신뢰도 임계점 확인 (완화)
+            if confidence >= 50:  # 60에서 50으로 완화
                 reason = "; ".join(reasons)
 
                 signal = TradeSignal(
@@ -209,9 +194,9 @@ class BollingerBandStrategy(BaseStrategy):
                     confidence=confidence,
                     reason=reason,
                     indicators={
-                        "BB_upper": current_row["BB_upper"],
-                        "BB_middle": current_row["BB_middle"],
-                        "BB_lower": current_row["BB_lower"],
+                        "BB_upper": current_row.get("BB_upper", price),
+                        "BB_middle": current_row.get("BB_middle", price),
+                        "BB_lower": current_row.get("BB_lower", price),
                         "BB_position": bb_position,
                         "BB_width": bb_width,
                         "RSI": current_row.get("RSI", 50),
@@ -325,7 +310,7 @@ class BollingerBandStrategy(BaseStrategy):
 
         return signals
 
-    def generate_signals(self, data: pd.DataFrame) -> list:
+    def generate_signals(self, data: pd.DataFrame, symbol: str = None) -> list:
         """Bollinger Band 신호 생성: 데이터 컬럼 체크 및 예외 발생 시 빈 리스트 반환, 상세 로깅"""
         logger.debug(f"[BollingerBandStrategy] 입력 데이터 shape: {data.shape}, 컬럼: {list(data.columns)}")
         required_cols = ['close']
@@ -333,27 +318,24 @@ class BollingerBandStrategy(BaseStrategy):
             if col not in data.columns:
                 logger.error(f"[BollingerBandStrategy] 필수 컬럼 누락: {col}")
                 return []
+        
         try:
-            import talib
-            df = data.copy()
-            upper, middle, lower = talib.BBANDS(df['close'], timeperiod=20, nbdevup=2, nbdevdn=2, matype=0)
-            df['BB_UPPER'] = upper
-            df['BB_MIDDLE'] = middle
-            df['BB_LOWER'] = lower
-            logger.debug(f"[BollingerBandStrategy] BB_UPPER 컬럼 생성 여부: {'BB_UPPER' in df.columns}, 첫 5개: {df['BB_UPPER'].head().tolist()}")
-            signals = []
+            # symbol이 None이면 데이터에서 추출하거나 기본값 사용
+            if symbol is None:
+                symbol = data['symbol'].iloc[0] if 'symbol' in data.columns else 'Unknown'
+            
             # 지표 계산
             df = self.calculate_indicators(data)
 
             # 매수/매도 신호 생성
-            buy_signals = self._generate_buy_signals(df, data['symbol'].iloc[0] if 'symbol' in data.columns else 'Unknown')
-            sell_signals = self._generate_sell_signals(df, data['symbol'].iloc[0] if 'symbol' in data.columns else 'Unknown')
+            buy_signals = self._generate_buy_signals(df, symbol)
+            sell_signals = self._generate_sell_signals(df, symbol)
 
             # 신호 합치고 시간순 정렬
             all_signals = buy_signals + sell_signals
             all_signals.sort(key=lambda x: x.timestamp)
 
-            logger.info(f"볼린저밴드 전략 신호 생성: {len(all_signals)}개 (데이터 shape: {df.shape})")
+            logger.info(f"{symbol} 볼린저밴드 전략 신호 생성: 매수 {len(buy_signals)}개, 매도 {len(sell_signals)}개")
             logger.debug(f"[BollingerBandStrategy] 생성된 신호 수: {len(all_signals)}")
             return all_signals
         except Exception as e:

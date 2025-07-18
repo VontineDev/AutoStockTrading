@@ -36,54 +36,49 @@ def get_available_symbols_for_backtest() -> pd.DataFrame:
 
 
 def get_stock_data_for_backtest(
-    symbol: str, start_date: str = None, end_date: str = None, days: int = 365
+    symbol: str, start_date: Optional[str] = None, end_date: Optional[str] = None
 ) -> pd.DataFrame:
     """
-    백테스팅용 주식 데이터 조회
+    백테스트용 종목 데이터 조회
+    start_date, end_date가 None이면 전체 데이터 조회
     """
-    conn = get_connection(DB_PATH)
-    if conn is None:
-        return pd.DataFrame()
-
     try:
         if start_date and end_date:
-            # 날짜 직접 지정
             query = """
-                SELECT date, open, high, low, close, volume
-                FROM stock_data 
-                WHERE symbol = ? AND date BETWEEN ? AND ?
-                ORDER BY date
+            SELECT date, open, high, low, close, volume
+            FROM stock_ohlcv
+            WHERE symbol = ? AND date BETWEEN ? AND ?
+            ORDER BY date
             """
             params = (symbol, start_date, end_date)
         else:
-            # 최근 N일
-            end_date_calc = datetime.now().strftime("%Y-%m-%d")
-            start_date_calc = (datetime.now() - timedelta(days=days)).strftime(
-                "%Y-%m-%d"
-            )
             query = """
-                SELECT date, open, high, low, close, volume
-                FROM stock_data 
-                WHERE symbol = ? AND date BETWEEN ? AND ?
-                ORDER BY date
+            SELECT date, open, high, low, close, volume
+            FROM stock_ohlcv
+            WHERE symbol = ?
+            ORDER BY date
             """
-            params = (symbol, start_date_calc, end_date_calc)
+            params = (symbol,)
+
+        conn = get_connection(DB_PATH)
+        if conn is None:
+            return pd.DataFrame()
 
         dm = DatabaseManager(db_path=DB_PATH)
-        df = dm.fetchdf(query, params=params)
+        df = dm.fetchdf(query, params)
 
         if not df.empty:
-            # 날짜를 인덱스로 설정 (시간 정보 포함된 날짜 문자열 처리)
-            df["date"] = pd.to_datetime(df["date"], format="mixed", errors="coerce")
+            df["date"] = pd.to_datetime(df["date"])
             df.set_index("date", inplace=True)
 
         return df
 
     except Exception as e:
-        logging.error(f"주식 데이터 조회 실패 {symbol}: {e}")
+        logging.error(f"백테스트 데이터 조회 실패 ({symbol}): {e}")
         return pd.DataFrame()
     finally:
-        conn.close()
+        if conn:
+            conn.close()
 
 
 def get_strategy_class(strategy_name: str):
@@ -244,7 +239,7 @@ def run_backtest_ui(
             if start_date and end_date:
                 data = get_stock_data_for_backtest(symbol, start_date, end_date)
             else:
-                data = get_stock_data_for_backtest(symbol, days=365)
+                data = get_stock_data_for_backtest(symbol)
 
             if data.empty:
                 logging.warning(f"데이터 없음: {symbol}")

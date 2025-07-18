@@ -2,12 +2,13 @@
 TA-Lib 기반 기술적 분석 지표 계산 모듈
 
 스윙 트레이딩에 최적화된 주요 지표들을 TA-Lib을 활용하여 계산합니다.
+이 모듈은 strategies 패키지의 중앙 지표 계산 엔진 역할을 합니다.
 """
 
 import numpy as np
 import pandas as pd
 import talib
-from typing import Dict, Tuple, Optional
+from typing import Dict, Tuple, Optional, List
 import logging
 
 logger = logging.getLogger(__name__)
@@ -25,7 +26,7 @@ SWING_TRADING_PARAMS = {
 
 
 class TALibIndicators:
-    """TA-Lib 기반 기술적 분석 지표 계산 클래스"""
+    """TA-Lib 기반 기술적 분석 지표 계산 클래스 (통합 지표 엔진)"""
 
     def __init__(self, data: pd.DataFrame):
         """
@@ -162,11 +163,15 @@ class TALibIndicators:
 
         # ADOSC (A/D Oscillator)
         df["ADOSC"] = talib.ADOSC(df["high"], df["low"], df["close"], df["volume"])
+        
+        # 기본 거래량 지표
+        df["volume_sma"] = df["volume"].rolling(window=20).mean()
+        df["volume_ratio"] = df["volume"] / df["volume_sma"]
 
         return df
 
     def calculate_all_indicators(self) -> pd.DataFrame:
-        """모든 지표를 한번에 계산"""
+        """모든 지표를 한번에 계산 (중앙 집중식 지표 계산)"""
         try:
             df = self.data.copy()
 
@@ -183,6 +188,10 @@ class TALibIndicators:
                 new_columns = [col for col in temp_df.columns if col not in df.columns]
                 indicator_columns.extend(new_columns)
                 df[new_columns] = temp_df[new_columns]
+
+            # ATR 비율 계산 (리스크 관리용)
+            if 'ATR' in df.columns:
+                df['atr_ratio'] = df['ATR'] / df['close']
 
             logger.info(
                 f"총 {len(indicator_columns)}개 지표 계산 완료: {indicator_columns}"
@@ -286,10 +295,22 @@ def get_indicator_info() -> Dict:
             "trend": ["SMA", "EMA", "MACD", "ADX", "SAR"],
             "momentum": ["RSI", "STOCH", "WILLR", "ROC", "CCI", "MFI"],
             "volatility": ["BB", "ATR", "DC"],
-            "volume": ["OBV", "AD", "ADOSC"],
+            "volume": ["OBV", "AD", "ADOSC", "volume_sma", "volume_ratio"],
         },
         "description": "스윙 트레이딩에 최적화된 TA-Lib 기반 기술적 분석 지표",
+        "integration": "strategies 패키지와 완전 통합된 중앙 지표 계산 엔진",
     }
+
+
+def create_indicator_calculator(data: pd.DataFrame) -> TALibIndicators:
+    """TALibIndicators 인스턴스 생성 헬퍼 함수"""
+    return TALibIndicators(data)
+
+
+def quick_calculate_all(data: pd.DataFrame) -> pd.DataFrame:
+    """빠른 모든 지표 계산 (원샷 함수)"""
+    calculator = TALibIndicators(data)
+    return calculator.calculate_all_indicators()
 
 
 # 패턴 인식 함수들
@@ -341,6 +362,9 @@ class TechnicalIndicators:
 
 if __name__ == "__main__":
     # 테스트 코드
-    print("TA-Lib Indicators 모듈 테스트")
+    print("TA-Lib Indicators 모듈 테스트 (리팩토링 완료)")
     print(f"권장 설정: {SWING_TRADING_PARAMS}")
-    print(f"지표 정보: {get_indicator_info()}")
+    
+    indicator_info = get_indicator_info()
+    print(f"지표 정보: {indicator_info}")
+    print("🔧 strategies 패키지와 완전 통합됨")

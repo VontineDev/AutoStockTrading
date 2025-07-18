@@ -6,7 +6,7 @@ import logging
 import os
 from src.data.database import DatabaseManager
 from src.data.updater import StockDataUpdater
-from src.data.indicators import TechnicalIndicators
+from src.data.indicators import TALibIndicators, TechnicalIndicators
 
 from src.utils.constants import PROJECT_ROOT  # PROJECT_ROOT 임포트 추가
 
@@ -40,35 +40,35 @@ class StockDataManager:
     def add_stock_by_code(self, stock_code):
         """종목코드로 한국거래소에서 정보를 조회하여 자동 추가"""
         try:
-            symbol_info = self.updater.get_symbol_info(stock_code)
-            if symbol_info and symbol_info["name"]:
-                stock_name = symbol_info["name"]
-                market = symbol_info["market"]
-
-                self.add_stock(stock_code, stock_name, market)
-                return True, f"{stock_code} - {stock_name} ({market}) 추가 완료"
-            else:
+            # pykrx를 직접 사용하여 종목 정보 조회
+            from pykrx import stock
+            today = datetime.now().strftime('%Y%m%d')
+            
+            # 종목명 조회
+            stock_name = stock.get_market_ticker_name(stock_code)
+            if not stock_name:
                 return False, f"종목코드 {stock_code}를 찾을 수 없습니다."
+            
+            # 시장 구분 (KOSPI/KOSDAQ)
+            kospi_tickers = stock.get_market_ticker_list(today, market="KOSPI")
+            market = "KOSPI" if stock_code in kospi_tickers else "KOSDAQ"
+            
+            self.add_stock(stock_code, stock_name, market)
+            return True, f"{stock_code} - {stock_name} ({market}) 추가 완료"
+            
         except Exception as e:
             return False, f"종목 정보 조회 실패: {e}"
 
     def collect_and_save_daily(self, stock_code, start_date, end_date, source="pykrx"):
         """StockDataUpdater를 사용하여 일별 OHLCV 데이터를 수집하고 저장"""
-        # StockDataUpdater의 update_symbol 메서드를 사용하여 데이터 수집 및 저장
-        # update_symbol은 내부적으로 데이터베이스에 저장하므로 별도의 저장 로직 불필요
-        success = self.updater.update_symbol(
-            symbol=stock_code,
-            start_date=start_date,
-            end_date=end_date,
-            force_update=True,  # 강제 업데이트 (기존 데이터 덮어쓰기)
-            source=source,
-        )
-
-        if success:
-            # 데이터가 성공적으로 업데이트되었는지 확인하기 위해 다시 로드
+        try:
+            # StockDataUpdater의 update_specific_stock_data 메서드 사용
+            self.updater.update_specific_stock_data(stock_code, start_date, end_date)
+            
+            # 데이터가 성공적으로 업데이트되었는지 확인
             df = self.db.fetchdf(
                 """
-                SELECT * FROM stock_data WHERE symbol = ? AND date BETWEEN ? AND ? ORDER BY date
+                SELECT * FROM stock_ohlcv WHERE symbol = ? AND date BETWEEN ? AND ? ORDER BY date
                 """,
                 (
                     stock_code,
@@ -76,16 +76,11 @@ class StockDataManager:
                     end_date[:4] + "-" + end_date[4:6] + "-" + end_date[6:8],
                 ),
             )
-            if not df.empty:
-                # 등락률 계산 (StockDataUpdater에서 처리하지 않는 경우)
-                df["change_rate"] = (
-                    (df["close"] - df["close"].shift(1)) / df["close"].shift(1) * 100
-                )
-                # 업데이트된 데이터로 DB에 다시 저장 (등락률 포함)
-                with sqlite3.connect(self.db.db_path) as conn:
-                    df.to_sql("stock_data", conn, if_exists="replace", index=False)
-                return True
-        return False
+            return not df.empty
+            
+        except Exception as e:
+            logging.error(f"데이터 수집 실패 {stock_code}: {e}")
+            return False
 
     def calculate_and_save_indicators(self, stock_code):
         """기술적 지표 계산 및 저장"""
@@ -150,7 +145,7 @@ class StockDataManager:
         """특정 기간의 특정 종목 데이터를 데이터베이스에서 조회합니다."""
         query = """
         SELECT date, open, high, low, close, volume
-        FROM stock_data 
+        FROM stock_ohlcv 
         WHERE symbol = ? AND date BETWEEN ? AND ?
         ORDER BY date
         """
@@ -162,7 +157,7 @@ class StockDataManager:
 
     def get_all_symbols(self) -> list:
         """데이터베이스에 저장된 모든 고유 종목 코드를 반환합니다."""
-        query = "SELECT DISTINCT symbol FROM stock_data ORDER BY symbol"
+        query = "SELECT DISTINCT symbol FROM stock_ohlcv ORDER BY symbol"
         results = self.db.fetchall(query)
         return [row[0] for row in results]
 
@@ -179,11 +174,11 @@ class StockDataManager:
             si.symbol, 
             si.name, 
             si.market,
-            COUNT(sd.date) as data_count,
-            MIN(sd.date) as earliest_date,
-            MAX(sd.date) as latest_date
+            COUNT(so.date) as data_count,
+            MIN(so.date) as earliest_date,
+            MAX(so.date) as latest_date
         FROM stock_info si
-        JOIN stock_data sd ON si.symbol = sd.symbol
+        JOIN stock_ohlcv so ON si.symbol = so.symbol
         GROUP BY si.symbol
         HAVING data_count >= ?
         ORDER BY data_count DESC
@@ -196,14 +191,34 @@ class StockDataManager:
             )
         return df
 
-    def get_top_market_cap_symbols(self, top_n: int, market: str = 'KOSPI'):
+    def get_top_market_cap_symbols(self, top_n: int, market: str = 'KOSPI') -> list:
         """시가총액 상위 N개 종목 코드를 반환합니다."""
-        return self.updater.get_kospi_top_symbols(top_n) # 혹은 get_kosdaq_top_symbols
+        try:
+            from pykrx import stock
+            today = datetime.now().strftime('%Y%m%d')
+            
+            # 시가총액 기준 상위 종목 조회
+            market_cap_df = stock.get_market_cap_by_ticker(today, market=market)
+            top_symbols = market_cap_df.nlargest(top_n, '시가총액').index.tolist()
+            return top_symbols
+            
+        except Exception as e:
+            logging.error(f"시가총액 상위 종목 조회 실패: {e}")
+            return []
 
     def update_and_calculate_indicators(self, symbols: list, start_date: str, end_date: str, force_update: bool = False):
         """데이터 업데이트와 기술적 지표 계산을 함께 수행합니다."""
         logging.info("=== 데이터 업데이트 및 지표 계산 시작 ===")
-        results = self.updater.update_multiple_symbols(symbols, start_date, end_date, force_update)
+        
+        # 개별 종목별로 업데이트
+        results = {}
+        for symbol in symbols:
+            try:
+                self.updater.update_specific_stock_data(symbol, start_date, end_date)
+                results[symbol] = True
+            except Exception as e:
+                logging.error(f"{symbol} 데이터 업데이트 실패: {e}")
+                results[symbol] = False
         
         success_count = sum(1 for success in results.values() if success)
         logging.info(f"데이터 업데이트 성공: {success_count}/{len(symbols)} 종목")
@@ -219,6 +234,33 @@ class StockDataManager:
         
         logging.info(f"기술적 지표 계산 성공: {indicator_success_count}/{success_count} 종목")
         return results
+
+    def get_latest_data(self, symbol: str, days: int) -> pd.DataFrame:
+        """최근 N일 데이터 조회"""
+        query = """
+        SELECT * FROM stock_ohlcv 
+        WHERE symbol = ? 
+        ORDER BY date DESC 
+        LIMIT ?
+        """
+        return self.db.fetchdf(query, params=(symbol, days))
+
+    def get_data_summary(self) -> pd.DataFrame:
+        """데이터 현황 요약"""
+        query = """
+        SELECT 
+            si.symbol,
+            si.name,
+            si.market,
+            COUNT(so.date) as data_count,
+            MIN(so.date) as start_date,
+            MAX(so.date) as end_date
+        FROM stock_info si
+        JOIN stock_ohlcv so ON si.symbol = so.symbol
+        GROUP BY si.symbol, si.name, si.market
+        ORDER BY data_count DESC
+        """
+        return self.db.fetchdf(query)
 
 
 # 사용 예시

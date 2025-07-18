@@ -148,7 +148,9 @@ class BacktestEngine:
         for symbol, df in data.items():
             logger.info(f"generate_signals 호출: {symbol}, 데이터 shape: {df.shape}")
             try:
-                signals = strategy.generate_signals(df)
+                signals = strategy.generate_signals(df, symbol) if hasattr(strategy, 'generate_signals') else strategy.run_strategy(df, symbol)
+                if signals is None:
+                    signals = []
                 logger.info(f"{symbol} 신호 개수: {len(signals)}")
             except Exception as e:
                 logger.error(f"{symbol} generate_signals 예외: {e}", exc_info=True)
@@ -241,6 +243,8 @@ class BacktestEngine:
                     continue
 
                 signals = strategy.run_strategy(historical_data, symbol)
+                if signals is None:
+                    signals = []
 
                 # 모든 신호 처리 (중복 방지)
                 for signal in signals:

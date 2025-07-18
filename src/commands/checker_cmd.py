@@ -1,6 +1,5 @@
 import logging
 from pathlib import Path
-from src.utils.display_utils import display_data_summary
 
 logger = logging.getLogger(__name__)
 
@@ -33,61 +32,64 @@ def check_dependencies():
     logger.info("✅ 모든 필수 패키지가 설치되어 있습니다.")
     return True
 
-def run_check_data(args):
-    """종합 데이터 상태 확인 (check_data_status.py 기능 통합)"""
+def run_check_data(args=None):
+    """간단한 데이터 상태 확인"""
     try:
-        from scripts.data_update import StockDataUpdater
+        from src.data.updater import StockDataUpdater
+        import sqlite3
+        import pandas as pd
 
         updater = StockDataUpdater()
 
         if not Path(updater.db_path).exists():
             logger.error("❌ 데이터베이스가 없습니다.")
             logger.info("다음 명령어로 데이터를 먼저 수집하세요:")
-            logger.info("python src/main.py update-data --top-kospi 50 --period 6m")
+            logger.info("python src/main.py update-data --period 6m")
             return
 
-        logger.info("🔍 데이터 상태 종합 분석 중...")
-        display_data_summary(updater, include_backtest_analysis=True)
-
-        comprehensive_status = updater.get_comprehensive_status(
-            include_backtest_analysis=True
-        )
-        basic = comprehensive_status.get("basic_summary", {})
-        backtest = comprehensive_status.get("backtest_analysis", {})
-        valid_count = backtest.get("valid_symbols_count", 0)
-        total_count = basic.get("symbols_count", 0)
+        logger.info("🔍 데이터 상태 확인 중...")
+        
+        # 기본 데이터베이스 정보 확인
+        with sqlite3.connect(updater.db_path) as conn:
+            # 종목 수 확인
+            symbols_count = pd.read_sql_query("SELECT COUNT(*) as count FROM stock_info", conn).iloc[0]['count']
+            logger.info(f"📊 등록된 종목 수: {symbols_count:,}개")
+            
+            # 데이터 보유 종목 수 확인
+            data_symbols_count = pd.read_sql_query("SELECT COUNT(DISTINCT symbol) as count FROM stock_ohlcv", conn).iloc[0]['count']
+            logger.info(f"📈 데이터 보유 종목 수: {data_symbols_count:,}개")
+            
+            # 최신 데이터 날짜 확인
+            if data_symbols_count > 0:
+                latest_date = pd.read_sql_query("SELECT MAX(date) as latest FROM stock_ohlcv", conn).iloc[0]['latest']
+                logger.info(f"📅 최신 데이터 날짜: {latest_date}")
+                
+                # 총 데이터 포인트 수
+                total_data_points = pd.read_sql_query("SELECT COUNT(*) as count FROM stock_ohlcv", conn).iloc[0]['count']
+                logger.info(f"💾 총 데이터 포인트: {total_data_points:,}개")
 
         logger.info(f"\n" + "=" * 50)
-        logger.info("💡 권장사항")
+        logger.info("💡 데이터 업데이트 권장사항:")
         logger.info("=" * 50)
 
-        if valid_count == 0:
-            logger.info("⚠️  백테스팅 가능한 종목이 없습니다.")
-            logger.info("   데이터를 더 수집하거나 기간을 늘려보세요:")
-            logger.info("   python src/main.py update-data --top-kospi 100 --period 1y")
-        elif valid_count < 10:
-            logger.info("⚠️  백테스팅 가능한 종목이 부족합니다.")
+        if data_symbols_count == 0:
+            logger.info("⚠️  데이터가 없습니다.")
+            logger.info("   데이터를 수집하세요:")
+            logger.info("   python src/main.py update-data --period 1y")
+        elif data_symbols_count < 10:
+            logger.info("⚠️  데이터 보유 종목이 부족합니다.")
             logger.info("   더 많은 종목 데이터 수집을 권장합니다:")
-            logger.info("   python src/main.py update-data --top-kospi 50 --period 6m")
-        elif valid_count < 50:
+            logger.info("   python src/main.py update-data --period 6m")
+        elif data_symbols_count < 100:
             logger.info("✅ 소규모 백테스팅에 적합합니다.")
             logger.info("   추가 종목 수집으로 더 정확한 분석이 가능합니다:")
-            logger.info("   python src/main.py update-data --top-kospi 100 --period 1y")
+            logger.info("   python src/main.py update-data --period 1y")
         else:
             logger.info("🎉 대규모 백테스팅에 최적화된 상태입니다!")
             logger.info("   병렬 백테스팅으로 효율적인 분석을 진행하세요:")
-            logger.info(
-                "   python src/main.py backtest --all-kospi --parallel --workers 8"
-            )
-
-        test_symbols = backtest.get("test_symbols_string", "")
-        if test_symbols:
-            logger.info(f"\n🚀 바로 시작할 수 있는 명령어:")
-            logger.info(
-                f"   python src/main.py backtest --symbols {' '.join(backtest.get('test_symbols', [])[:5])}"
-            )
+            logger.info("   python src/main.py backtest --parallel --workers 8")
 
     except Exception as e:
         logger.error(f"데이터 상태 확인 실패: {e}")
-        logger.info("기본 상태 확인을 시도하세요:")
-        logger.info("python src/main.py update-data --summary")
+        logger.info("다음 명령어로 데이터를 먼저 수집하세요:")
+        logger.info("python src/main.py update-data --period 6m")

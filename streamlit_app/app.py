@@ -4,8 +4,26 @@ TA-Lib 스윙 트레이딩 자동매매 시스템 Streamlit 앱
 pykrx + TA-Lib 기반의 100만원 규모 스윙 트레이딩 웹 인터페이스
 """
 
+import sys
+import os
+from pathlib import Path
+from typing import Dict, List, Optional, Any
+from datetime import datetime, timedelta
+import pandas as pd
 
+# 프로젝트 루트를 sys.path에 추가
+current_dir = Path(__file__).parent
+project_root = current_dir.parent
+sys.path.insert(0, str(project_root))
 
+# PROJECT_ROOT 가져오기
+from src.config_loader import get_project_root
+PROJECT_ROOT = get_project_root()
+
+import streamlit as st
+import plotly.graph_objects as go
+import plotly.express as px
+from plotly.subplots import make_subplots
 
 from src.data.stock_data_manager import StockDataManager
 

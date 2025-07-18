@@ -13,6 +13,9 @@ import logging
 from dataclasses import dataclass
 from datetime import datetime
 
+# indicators.py 통합
+from src.data.indicators import TALibIndicators, get_indicator_info, SWING_TRADING_PARAMS
+
 logger = logging.getLogger(__name__)
 
 
@@ -36,15 +39,15 @@ class StrategyConfig:
 
     name: str = "BaseStrategy"
     description: str = "기본 전략"
-    parameters: Dict[str, Any] = None
-    risk_management: Dict[str, float] = None
+    parameters: Optional[Dict[str, Any]] = None
+    risk_management: Optional[Dict[str, float]] = None
     min_data_length: int = 50
-    required_indicators: List[str] = None
+    required_indicators: Optional[List[str]] = None
 
     def __post_init__(self):
-        if getattr(self, 'risk_management', None) is None:
+        if self.risk_management is None:
             self.risk_management = {}
-        if getattr(self, 'parameters', None) is None:
+        if self.parameters is None:
             self.parameters = {}
         if self.required_indicators is None:
             self.required_indicators = []
@@ -60,8 +63,7 @@ class BaseStrategy(ABC):
         """
         self.config = config
         self.name = config.name
-        self.parameters = config.parameters
-        self.risk_management = config.risk_management
+        self.parameters: Dict[str, Any] = config.parameters or {}
         self.signals_history: List[TradeSignal] = []
         self.performance_metrics: Dict[str, float] = {}
 
@@ -72,15 +74,167 @@ class BaseStrategy(ABC):
             "position_size_pct": 0.2,  # 포트폴리오의 20%
             "max_positions": 5,  # 최대 보유 종목 수
         }
-        self.risk_management = {**self.default_risk_settings, **(self.risk_management or {})}
+        self.risk_management: Dict[str, float] = {**self.default_risk_settings, **(config.risk_management or {})}
 
         logger.info(f"전략 '{self.name}' 초기화 완료")
+
+    def calculate_all_indicators(self, data: pd.DataFrame, custom_params: Optional[Dict] = None) -> pd.DataFrame:
+        """
+        통합된 기술적 지표 계산 (indicators.py 활용)
+        
+        Args:
+            data: OHLCV 데이터
+            custom_params: 사용자 정의 매개변수 (선택사항)
+            
+        Returns:
+            모든 지표가 계산된 데이터프레임
+        """
+        try:
+            # 데이터 검증 및 전처리
+            if data.empty:
+                logger.warning("빈 데이터프레임이 전달되었습니다.")
+                return data.copy()
+            
+            # 필수 컬럼 확인
+            required_columns = ["open", "high", "low", "close", "volume"]
+            missing_columns = [col for col in required_columns if col not in data.columns]
+            
+            if missing_columns:
+                logger.error(f"필수 컬럼이 누락되었습니다: {missing_columns}")
+                logger.info(f"사용 가능한 컬럼: {list(data.columns)}")
+                return data.copy()
+            
+            # 데이터 길이 확인
+            if len(data) < 50:
+                logger.warning(f"데이터가 부족합니다. 최소 50개 필요, 현재 {len(data)}개")
+                # 최소 데이터 요구사항을 낮춤
+                if len(data) < 20:
+                    logger.error("데이터가 너무 부족하여 지표 계산을 건너뜁니다.")
+                    return data.copy()
+            
+            # TALibIndicators 인스턴스 생성
+            calculator = TALibIndicators(data)
+            
+            # 모든 지표 계산
+            if custom_params:
+                df_with_indicators = calculator.calculate_custom_indicators(data, custom_params)
+            else:
+                df_with_indicators = calculator.calculate_all_indicators()
+            
+            # 지표 계산 결과 확인
+            original_columns = set(data.columns)
+            new_columns = set(df_with_indicators.columns) - original_columns
+            
+            if not new_columns:
+                logger.warning("지표가 계산되지 않았습니다. 기본 지표만 추가합니다.")
+                # 기본 지표 수동 계산
+                df_with_indicators = self._calculate_basic_indicators(data)
+            
+            logger.info(f"기술적 지표 계산 완료: {len(new_columns)}개 지표 추가")
+            return df_with_indicators
+            
+        except Exception as e:
+            logger.error(f"지표 계산 실패: {e}")
+            logger.info("기본 지표 계산으로 대체합니다.")
+            # 실패 시 기본 지표만 계산
+            return self._calculate_basic_indicators(data)
+    
+    def _calculate_basic_indicators(self, data: pd.DataFrame) -> pd.DataFrame:
+        """기본 지표만 계산 (fallback)"""
+        try:
+            df = data.copy()
+            
+            # 기본 이동평균
+            df["SMA_20"] = df["close"].rolling(window=20).mean()
+            df["SMA_50"] = df["close"].rolling(window=50).mean()
+            
+            # 기본 RSI (pandas로 계산)
+            delta = df["close"].diff()
+            gain = (delta.where(delta > 0, 0)).rolling(window=14).mean()
+            loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
+            rs = gain / loss
+            df["RSI"] = 100 - (100 / (1 + rs))
+            
+            # 기본 볼린저 밴드
+            df["BB_middle"] = df["close"].rolling(window=20).mean()
+            bb_std = df["close"].rolling(window=20).std()
+            df["BB_upper"] = df["BB_middle"] + (bb_std * 2)
+            df["BB_lower"] = df["BB_middle"] - (bb_std * 2)
+            
+            # 기본 거래량 지표
+            df["volume_sma"] = df["volume"].rolling(window=20).mean()
+            df["volume_ratio"] = df["volume"] / df["volume_sma"]
+            
+            logger.info("기본 지표 계산 완료 (fallback)")
+            return df
+            
+        except Exception as e:
+            logger.error(f"기본 지표 계산도 실패: {e}")
+            return data.copy()
+
+    def get_trading_signals_from_indicators(self, data: pd.DataFrame) -> pd.DataFrame:
+        """
+        indicators.py의 매매 신호 생성 기능 활용
+        
+        Args:
+            data: 지표가 계산된 데이터
+            
+        Returns:
+            매매 신호가 추가된 데이터프레임
+        """
+        try:
+            calculator = TALibIndicators(data)
+            return calculator.get_trading_signals(data)
+        except Exception as e:
+            logger.error(f"매매 신호 생성 실패: {e}")
+            return data.copy()
+
+    def calculate_specific_indicators(self, data: pd.DataFrame, indicator_types: List[str]) -> pd.DataFrame:
+        """
+        특정 카테고리의 지표만 계산
+        
+        Args:
+            data: OHLCV 데이터
+            indicator_types: ['trend', 'momentum', 'volatility', 'volume'] 중 선택
+            
+        Returns:
+            선택된 지표가 계산된 데이터프레임
+        """
+        try:
+            calculator = TALibIndicators(data)
+            df_result = data.copy()
+            
+            if 'trend' in indicator_types:
+                trend_df = calculator.calculate_trend_indicators()
+                new_columns = [col for col in trend_df.columns if col not in df_result.columns]
+                df_result[new_columns] = trend_df[new_columns]
+            
+            if 'momentum' in indicator_types:
+                momentum_df = calculator.calculate_momentum_indicators()
+                new_columns = [col for col in momentum_df.columns if col not in df_result.columns]
+                df_result[new_columns] = momentum_df[new_columns]
+            
+            if 'volatility' in indicator_types:
+                volatility_df = calculator.calculate_volatility_indicators()
+                new_columns = [col for col in volatility_df.columns if col not in df_result.columns]
+                df_result[new_columns] = volatility_df[new_columns]
+            
+            if 'volume' in indicator_types:
+                volume_df = calculator.calculate_volume_indicators()
+                new_columns = [col for col in volume_df.columns if col not in df_result.columns]
+                df_result[new_columns] = volume_df[new_columns]
+            
+            return df_result
+            
+        except Exception as e:
+            logger.error(f"선택 지표 계산 실패: {e}")
+            return data.copy()
 
     @abstractmethod
     def calculate_indicators(self, data: pd.DataFrame) -> pd.DataFrame:
         """
-        전략에 필요한 기술적 지표 계산 (TA-Lib 사용)
-
+        전략별 특화 지표 계산 (필요시 calculate_all_indicators 활용 권장)
+        
         Args:
             data: OHLCV 데이터
 
@@ -223,8 +377,8 @@ class BaseStrategy(ABC):
 # 유틸리티 함수들
 def create_default_config(
     strategy_name: str,
-    parameters: Dict[str, Any] = None,
-    risk_settings: Dict[str, float] = None,
+    parameters: Optional[Dict[str, Any]] = None,
+    risk_settings: Optional[Dict[str, float]] = None,
 ) -> StrategyConfig:
     """기본 전략 설정 생성"""
     return StrategyConfig(
@@ -253,7 +407,7 @@ def calculate_signal_confidence(
                 max_distance = max(abs(max_threshold - min_threshold), 1.0)
                 confidence_scores.append(max(0.0, 1.0 - distance / max_distance))
 
-    return np.mean(confidence_scores) if confidence_scores else 0.5
+    return float(np.mean(confidence_scores)) if confidence_scores else 0.5
 
 
 if __name__ == "__main__":

@@ -49,7 +49,7 @@ if not os.path.exists(db_path):
     print(f"   경로: {db_path}")
     print("")
     print("다음 명령어로 데이터를 먼저 수집하세요:")
-    print("   python src/main.py update-data --top-kospi 50 --period 6m")
+    print("   python src/main.py update-data --period 6m")
     print("")
     print("=" * 60)
     print("⚠️  앞으로는 다음 명령어를 사용하세요:")

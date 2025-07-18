@@ -21,7 +21,7 @@ class DataCollectionConstants:
     DEFAULT_HISTORICAL_DAYS = 730  # 2년
 
     # 코스피 상위 종목 기본값
-    DEFAULT_TOP_KOSPI_COUNT = 30
+    # DEFAULT_TOP_KOSPI_COUNT 상수 제거됨
     TOTAL_KOSPI_SYMBOLS = 962  # 코스피 전체 종목 수
 
     # 병렬 처리 설정

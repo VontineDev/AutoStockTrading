@@ -14,4 +14,10 @@ __pycache__/
 # 기타
 .DS_Store
 
+# 빌드 파일들
+build/
+dist/
+*.spec
+*.exe
+
 venv/ 
