@@ -124,7 +124,7 @@ class SystemConstants:
     """시스템 설정 관련 상수"""
 
     # 데이터베이스 설정
-    DEFAULT_DB_NAME = "stock_data.db"
+    DEFAULT_DB_NAME = "trading.db"
     CONNECTION_TIMEOUT = 30
     MAX_CONNECTIONS = 10
 

@@ -62,6 +62,8 @@ def run_check_data(args=None):
             # 최신 데이터 날짜 확인
             if data_symbols_count > 0:
                 latest_date = pd.read_sql_query("SELECT MAX(date) as latest FROM stock_ohlcv", conn).iloc[0]['latest']
+                earliest_date = pd.read_sql_query("SELECT MIN(date) as earliest FROM stock_ohlcv", conn).iloc[0]['earliest']
+                logger.info(f"⏳ 데이터 시작일: {earliest_date}")
                 logger.info(f"📅 최신 데이터 날짜: {latest_date}")
                 
                 # 총 데이터 포인트 수

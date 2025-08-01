@@ -118,23 +118,67 @@ class DataUpdateCacheManager:
             return False
     
     def get_missing_date_ranges(self, symbol: str, start_date: str, end_date: str) -> List[Tuple[str, str]]:
-        """누락된 날짜 범위 확인"""
+        """누락된 날짜 범위 확인 - 개선된 버전"""
         try:
             with sqlite3.connect(self.db_path) as conn:
+                # 기존 데이터 조회 (날짜 순으로 정렬)
                 df = pd.read_sql_query(
                     """
-                    SELECT date FROM stock_ohlcv WHERE symbol = ? 
-                    AND date BETWEEN ? AND ? ORDER BY date
+                    SELECT date FROM stock_ohlcv 
+                    WHERE symbol = ? AND date BETWEEN ? AND ? 
+                    ORDER BY date
                     """,
                     conn,
                     params=[symbol, start_date, end_date]
                 )
             
             if df.empty:
+                logger.debug(f"종목 {symbol}: 기존 데이터 없음, 전체 범위 업데이트 필요")
                 return [(start_date, end_date)]
             
-            # 실제 구현에서는 더 정교한 날짜 범위 분석 필요
-            return []
+            # 날짜 범위 분석
+            existing_dates = set(df['date'].tolist())
+            start_dt = datetime.strptime(start_date, '%Y-%m-%d')
+            end_dt = datetime.strptime(end_date, '%Y-%m-%d')
+            
+            missing_ranges = []
+            current_start = start_dt
+            
+            # 날짜 범위를 순회하며 누락된 구간 찾기
+            for current_dt in pd.date_range(start_dt, end_dt):
+                current_date_str = current_dt.strftime('%Y-%m-%d')
+                
+                if current_date_str not in existing_dates:
+                    # 누락된 날짜 발견
+                    if current_start == current_dt:
+                        continue
+                    else:
+                        # 누락 구간의 시작점이 현재 날짜보다 이전이면 범위 추가
+                        if current_start < current_dt:
+                            missing_ranges.append((
+                                current_start.strftime('%Y-%m-%d'),
+                                (current_dt - timedelta(days=1)).strftime('%Y-%m-%d')
+                            ))
+                        current_start = current_dt
+                else:
+                    # 기존 데이터가 있으면 다음 누락 구간의 시작점으로 설정
+                    current_start = current_dt + timedelta(days=1)
+            
+            # 마지막 범위 처리 (끝까지 누락된 경우)
+            if current_start <= end_dt:
+                missing_ranges.append((
+                    current_start.strftime('%Y-%m-%d'),
+                    end_date
+                ))
+            
+            if missing_ranges:
+                logger.debug(f"종목 {symbol}: 누락된 범위 {len(missing_ranges)}개 발견")
+                for range_start, range_end in missing_ranges:
+                    logger.debug(f"  - {range_start} ~ {range_end}")
+            else:
+                logger.debug(f"종목 {symbol}: 모든 데이터가 존재함")
+            
+            return missing_ranges
             
         except Exception as e:
             logger.error(f"누락 날짜 범위 확인 실패 ({symbol}): {e}")
@@ -609,14 +653,62 @@ class StockDataUpdater:
             logger.error(f"종목 {symbol} 최적화 업데이트 실패: {e}")
             return False
 
+    def _validate_data_quality(self, symbol: str, df: pd.DataFrame) -> bool:
+        """데이터 품질 검증"""
+        if df.empty:
+            logger.warning(f"종목 {symbol}: 빈 데이터프레임")
+            return False
+        
+        # 필수 컬럼 확인
+        required_columns = ['시가', '고가', '저가', '종가', '거래량']
+        missing_columns = [col for col in required_columns if col not in df.columns]
+        if missing_columns:
+            logger.error(f"종목 {symbol}: 필수 컬럼 누락 - {missing_columns}")
+            return False
+        
+        # 데이터 타입 및 범위 검증
+        try:
+            # 가격 데이터가 양수인지 확인
+            price_columns = ['시가', '고가', '저가', '종가']
+            for col in price_columns:
+                if (df[col] <= 0).any():
+                    logger.warning(f"종목 {symbol}: {col}에 0 이하 값 존재")
+                    return False
+            
+            # 고가 >= 저가 확인
+            if (df['고가'] < df['저가']).any():
+                logger.error(f"종목 {symbol}: 고가가 저가보다 낮은 데이터 존재")
+                return False
+            
+            # 거래량이 음수가 아닌지 확인
+            if (df['거래량'] < 0).any():
+                logger.error(f"종목 {symbol}: 음수 거래량 존재")
+                return False
+            
+            # 날짜 인덱스가 올바른지 확인
+            if not isinstance(df.index, pd.DatetimeIndex):
+                logger.warning(f"종목 {symbol}: 날짜 인덱스가 DatetimeIndex가 아님")
+                return False
+            
+            return True
+            
+        except Exception as e:
+            logger.error(f"종목 {symbol}: 데이터 검증 중 오류 - {e}")
+            return False
+
     def _fetch_and_save_data(self, symbol: str, start_date: str, end_date: str) -> bool:
-        """데이터 조회 및 저장"""
+        """데이터 조회 및 저장 - 품질 검증 추가"""
         try:
             # pykrx로 데이터 조회
             df = stock.get_market_ohlcv_by_date(start_date, end_date, symbol)
 
             if df.empty:
                 logger.warning(f"종목 {symbol}: 데이터 없음 ({start_date}~{end_date})")
+                return False
+
+            # 데이터 품질 검증
+            if not self._validate_data_quality(symbol, df):
+                logger.error(f"종목 {symbol}: 데이터 품질 검증 실패")
                 return False
 
             # 데이터베이스에 저장
@@ -628,7 +720,7 @@ class StockDataUpdater:
             return False
 
     def _save_ohlcv_data_optimized(self, symbol: str, df: pd.DataFrame):
-        """최적화된 OHLCV 데이터 저장"""
+        """최적화된 OHLCV 데이터 저장 - 중복 처리 개선"""
         try:
             with sqlite3.connect(self.db_path) as conn:
                 # 데이터 변환
@@ -654,9 +746,40 @@ class StockDataUpdater:
                     required_columns.append("amount")
 
                 df_final = df_to_save[required_columns]
-
-                # 데이터베이스에 저장
-                df_final.to_sql("stock_ohlcv", conn, if_exists="append", index=False, method="multi")
+                
+                # 중복 데이터 처리: UPSERT 방식 사용
+                for _, row in df_final.iterrows():
+                    # 기존 데이터 확인
+                    cursor = conn.execute(
+                        "SELECT COUNT(*) FROM stock_ohlcv WHERE symbol = ? AND date = ?",
+                        (row['symbol'], row['date'])
+                    )
+                    exists = cursor.fetchone()[0] > 0
+                    
+                    if exists:
+                        # 기존 데이터 업데이트
+                        conn.execute(
+                            """
+                            UPDATE stock_ohlcv 
+                            SET open = ?, high = ?, low = ?, close = ?, volume = ?
+                            WHERE symbol = ? AND date = ?
+                            """,
+                            (row['open'], row['high'], row['low'], row['close'], row['volume'],
+                             row['symbol'], row['date'])
+                        )
+                    else:
+                        # 새 데이터 삽입
+                        conn.execute(
+                            """
+                            INSERT INTO stock_ohlcv (symbol, date, open, high, low, close, volume)
+                            VALUES (?, ?, ?, ?, ?, ?, ?)
+                            """,
+                            (row['symbol'], row['date'], row['open'], row['high'], 
+                             row['low'], row['close'], row['volume'])
+                        )
+                
+                conn.commit()
+                logger.debug(f"종목 {symbol}: {len(df_final)}개 데이터 저장 완료 (중복 처리 포함)")
 
         except Exception as e:
             logger.error(f"DB 저장 실패 ({symbol}): {e}")
@@ -694,6 +817,359 @@ class StockDataUpdater:
                 "api_delay": self.optimization_config.api_delay,
             },
         }
+
+    def check_data_consistency(self, symbol: str, start_date: str, end_date: str) -> Dict[str, Any]:
+        """데이터 일관성 검사"""
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                # 기존 데이터 조회
+                df = pd.read_sql_query(
+                    """
+                    SELECT date, open, high, low, close, volume 
+                    FROM stock_ohlcv 
+                    WHERE symbol = ? AND date BETWEEN ? AND ? 
+                    ORDER BY date
+                    """,
+                    conn,
+                    params=[symbol, start_date, end_date]
+                )
+            
+            if df.empty:
+                return {
+                    "symbol": symbol,
+                    "total_days": 0,
+                    "missing_days": 0,
+                    "data_quality_issues": [],
+                    "is_consistent": False
+                }
+            
+            # 날짜 범위 계산
+            start_dt = datetime.strptime(start_date, '%Y-%m-%d')
+            end_dt = datetime.strptime(end_date, '%Y-%m-%d')
+            expected_days = (end_dt - start_dt).days + 1
+            actual_days = len(df)
+            
+            # 누락된 날짜 확인
+            existing_dates = set(df['date'].tolist())
+            all_dates = set()
+            for dt in pd.date_range(start_dt, end_dt):
+                all_dates.add(dt.strftime('%Y-%m-%d'))
+            
+            missing_dates = all_dates - existing_dates
+            
+            # 데이터 품질 이슈 확인
+            quality_issues = []
+            
+            # 가격 데이터 검증
+            if (df['high'] < df['low']).any():
+                quality_issues.append("고가가 저가보다 낮은 데이터 존재")
+            
+            if (df['open'] <= 0).any() or (df['close'] <= 0).any():
+                quality_issues.append("0 이하 가격 데이터 존재")
+            
+            if (df['volume'] < 0).any():
+                quality_issues.append("음수 거래량 존재")
+            
+            # 연속성 검증
+            df['date'] = pd.to_datetime(df['date'])
+            df_sorted = df.sort_values('date')
+            date_gaps = df_sorted['date'].diff().dt.days > 1
+            
+            if date_gaps.any():
+                quality_issues.append("날짜 간격이 1일을 초과하는 구간 존재")
+            
+            return {
+                "symbol": symbol,
+                "total_days": expected_days,
+                "actual_days": actual_days,
+                "missing_days": len(missing_dates),
+                "missing_dates": sorted(list(missing_dates)),
+                "data_quality_issues": quality_issues,
+                "is_consistent": len(missing_dates) == 0 and len(quality_issues) == 0
+            }
+            
+        except Exception as e:
+            logger.error(f"데이터 일관성 검사 실패 ({symbol}): {e}")
+            return {
+                "symbol": symbol,
+                "error": str(e),
+                "is_consistent": False
+            }
+
+    def get_incremental_update_stats(self, symbols: List[str], start_date: str, end_date: str) -> Dict[str, Any]:
+        """증분 업데이트 통계 정보"""
+        stats = {
+            "total_symbols": len(symbols),
+            "symbols_with_missing_data": 0,
+            "symbols_with_quality_issues": 0,
+            "total_missing_days": 0,
+            "update_recommendations": []
+        }
+        
+        for symbol in symbols:
+            consistency = self.check_data_consistency(symbol, start_date, end_date)
+            
+            if not consistency.get("is_consistent", False):
+                stats["symbols_with_missing_data"] += 1
+                stats["total_missing_days"] += consistency.get("missing_days", 0)
+                
+                if consistency.get("data_quality_issues"):
+                    stats["symbols_with_quality_issues"] += 1
+                
+                # 업데이트 권장사항 생성
+                if consistency.get("missing_days", 0) > 0:
+                    stats["update_recommendations"].append({
+                        "symbol": symbol,
+                        "action": "incremental_update",
+                        "missing_days": consistency.get("missing_days", 0),
+                        "priority": "high" if consistency.get("missing_days", 0) > 10 else "medium"
+                    })
+                
+                if consistency.get("data_quality_issues"):
+                    stats["update_recommendations"].append({
+                        "symbol": symbol,
+                        "action": "data_quality_fix",
+                        "issues": consistency.get("data_quality_issues", []),
+                        "priority": "high"
+                    })
+        
+        return stats
+
+    def smart_incremental_update(
+        self, 
+        symbols: List[str], 
+        start_date: str, 
+        end_date: str,
+        strategy: str = "auto"
+    ) -> Dict[str, Any]:
+        """스마트 증분 업데이트 - 데이터 분석 기반 최적화"""
+        
+        logger.info(f"스마트 증분 업데이트 시작: {len(symbols)}개 종목")
+        
+        # 1단계: 데이터 일관성 분석
+        logger.info("1단계: 데이터 일관성 분석 중...")
+        consistency_stats = self.get_incremental_update_stats(symbols, start_date, end_date)
+        
+        # 2단계: 업데이트 전략 결정
+        logger.info("2단계: 업데이트 전략 결정 중...")
+        update_plan = self._create_update_plan(consistency_stats, strategy)
+        
+        # 3단계: 우선순위별 업데이트 실행
+        logger.info("3단계: 우선순위별 업데이트 실행 중...")
+        results = self._execute_update_plan(update_plan, start_date, end_date)
+        
+        # 4단계: 결과 검증
+        logger.info("4단계: 결과 검증 중...")
+        final_stats = self.get_incremental_update_stats(symbols, start_date, end_date)
+        
+        return {
+            "initial_stats": consistency_stats,
+            "update_plan": update_plan,
+            "results": results,
+            "final_stats": final_stats,
+            "improvement": {
+                "symbols_fixed": consistency_stats["symbols_with_missing_data"] - final_stats["symbols_with_missing_data"],
+                "missing_days_reduced": consistency_stats["total_missing_days"] - final_stats["total_missing_days"],
+                "quality_issues_fixed": consistency_stats["symbols_with_quality_issues"] - final_stats["symbols_with_quality_issues"]
+            }
+        }
+
+    def _create_update_plan(self, stats: Dict[str, Any], strategy: str) -> Dict[str, Any]:
+        """업데이트 계획 생성"""
+        plan = {
+            "high_priority": [],
+            "medium_priority": [],
+            "low_priority": [],
+            "skip_symbols": []
+        }
+        
+        recommendations = stats.get("update_recommendations", [])
+        
+        for rec in recommendations:
+            symbol = rec["symbol"]
+            priority = rec.get("priority", "medium")
+            action = rec.get("action", "incremental_update")
+            
+            if strategy == "conservative" and priority == "high":
+                # 보수적 전략: 고위험 업데이트는 건너뛰기
+                plan["skip_symbols"].append({
+                    "symbol": symbol,
+                    "reason": "high_risk_update",
+                    "action": action
+                })
+            elif strategy == "aggressive":
+                # 공격적 전략: 모든 업데이트 실행
+                plan[f"{priority}_priority"].append({
+                    "symbol": symbol,
+                    "action": action,
+                    "details": rec
+                })
+            else:  # auto 또는 기본 전략
+                plan[f"{priority}_priority"].append({
+                    "symbol": symbol,
+                    "action": action,
+                    "details": rec
+                })
+        
+        return plan
+
+    def _execute_update_plan(self, plan: Dict[str, Any], start_date: str, end_date: str) -> Dict[str, Any]:
+        """업데이트 계획 실행"""
+        results = {
+            "high_priority": {"success": 0, "failed": 0, "details": []},
+            "medium_priority": {"success": 0, "failed": 0, "details": []},
+            "low_priority": {"success": 0, "failed": 0, "details": []},
+            "skipped": len(plan["skip_symbols"])
+        }
+        
+        # 우선순위별로 업데이트 실행
+        for priority in ["high_priority", "medium_priority", "low_priority"]:
+            symbols_to_update = [item["symbol"] for item in plan[priority]]
+            
+            if symbols_to_update:
+                logger.info(f"{priority} 업데이트 시작: {len(symbols_to_update)}개 종목")
+                
+                # 병렬 업데이트 실행
+                update_results = self.update_multiple_symbols_parallel(
+                    symbols=symbols_to_update,
+                    start_date=start_date,
+                    end_date=end_date,
+                    force_update=False  # 증분 업데이트 사용
+                )
+                
+                # 결과 집계
+                success_count = sum(1 for success in update_results["results"].values() if success)
+                failed_count = len(symbols_to_update) - success_count
+                
+                results[priority]["success"] = success_count
+                results[priority]["failed"] = failed_count
+                results[priority]["details"] = update_results["results"]
+                
+                logger.info(f"{priority} 완료: 성공 {success_count}개, 실패 {failed_count}개")
+        
+        return results
+
+    def backup_before_update(self, symbols: List[str], backup_name: Optional[str] = None) -> str:
+        """업데이트 전 데이터 백업"""
+        if not backup_name:
+            backup_name = f"backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        
+        backup_path = PROJECT_ROOT / "data" / "backups" / f"{backup_name}.db"
+        backup_path.parent.mkdir(parents=True, exist_ok=True)
+        
+        try:
+            with sqlite3.connect(self.db_path) as source_conn:
+                with sqlite3.connect(backup_path) as backup_conn:
+                    # 선택된 종목들의 데이터만 백업
+                    for symbol in symbols:
+                        # OHLCV 데이터 백업
+                        df_ohlcv = pd.read_sql_query(
+                            "SELECT * FROM stock_ohlcv WHERE symbol = ?",
+                            source_conn, params=[symbol]
+                        )
+                        if not df_ohlcv.empty:
+                            df_ohlcv.to_sql("stock_ohlcv", backup_conn, if_exists="append", index=False)
+                        
+                        # 종목 정보 백업
+                        df_info = pd.read_sql_query(
+                            "SELECT * FROM stock_info WHERE symbol = ?",
+                            source_conn, params=[symbol]
+                        )
+                        if not df_info.empty:
+                            df_info.to_sql("stock_info", backup_conn, if_exists="append", index=False)
+            
+            logger.info(f"백업 완료: {backup_path} ({len(symbols)}개 종목)")
+            return str(backup_path)
+            
+        except Exception as e:
+            logger.error(f"백업 실패: {e}")
+            raise
+
+    def restore_from_backup(self, backup_path: str, symbols: List[str]) -> bool:
+        """백업에서 데이터 복원"""
+        try:
+            with sqlite3.connect(backup_path) as backup_conn:
+                with sqlite3.connect(self.db_path) as target_conn:
+                    for symbol in symbols:
+                        # 기존 데이터 삭제
+                        target_conn.execute("DELETE FROM stock_ohlcv WHERE symbol = ?", (symbol,))
+                        target_conn.execute("DELETE FROM stock_info WHERE symbol = ?", (symbol,))
+                        
+                        # 백업 데이터 복원
+                        df_ohlcv = pd.read_sql_query(
+                            "SELECT * FROM stock_ohlcv WHERE symbol = ?",
+                            backup_conn, params=[symbol]
+                        )
+                        if not df_ohlcv.empty:
+                            df_ohlcv.to_sql("stock_ohlcv", target_conn, if_exists="append", index=False)
+                        
+                        df_info = pd.read_sql_query(
+                            "SELECT * FROM stock_info WHERE symbol = ?",
+                            backup_conn, params=[symbol]
+                        )
+                        if not df_info.empty:
+                            df_info.to_sql("stock_info", target_conn, if_exists="append", index=False)
+                    
+                    target_conn.commit()
+            
+            logger.info(f"복원 완료: {len(symbols)}개 종목")
+            return True
+            
+        except Exception as e:
+            logger.error(f"복원 실패: {e}")
+            return False
+
+    def safe_incremental_update(
+        self,
+        symbols: List[str],
+        start_date: str,
+        end_date: str,
+        create_backup: bool = True,
+        strategy: str = "auto"
+    ) -> Dict[str, Any]:
+        """안전한 증분 업데이트 - 백업 포함"""
+        
+        backup_path = None
+        try:
+            # 1단계: 백업 생성
+            if create_backup:
+                logger.info("백업 생성 중...")
+                backup_path = self.backup_before_update(symbols)
+            
+            # 2단계: 스마트 증분 업데이트 실행
+            logger.info("스마트 증분 업데이트 실행 중...")
+            result = self.smart_incremental_update(symbols, start_date, end_date, strategy)
+            
+            # 3단계: 결과 검증
+            if result["final_stats"]["symbols_with_missing_data"] > 0:
+                logger.warning("일부 종목에서 여전히 누락된 데이터가 있습니다.")
+            
+            result["backup_path"] = backup_path
+            result["success"] = True
+            
+            return result
+            
+        except Exception as e:
+            logger.error(f"안전한 증분 업데이트 실패: {e}")
+            
+            # 복원 시도
+            if backup_path and os.path.exists(backup_path):
+                logger.info("백업에서 복원 시도 중...")
+                restore_success = self.restore_from_backup(backup_path, symbols)
+                
+                return {
+                    "success": False,
+                    "error": str(e),
+                    "backup_path": backup_path,
+                    "restore_success": restore_success
+                }
+            
+            return {
+                "success": False,
+                "error": str(e),
+                "backup_path": backup_path,
+                "restore_success": False
+            }
 
 
 def main():

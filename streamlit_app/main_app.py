@@ -373,7 +373,7 @@ def render_settings_page():
         "Python 버전": sys.version.split()[0],
         "Streamlit 버전": st.__version__,
         "프로젝트 루트": str(project_root),
-        "데이터베이스 경로": "stock_data.db"
+        "데이터베이스 경로": "trading.db"
     }
     
     for key, value in system_info.items():

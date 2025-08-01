@@ -12,7 +12,7 @@ from src.utils.constants import PROJECT_ROOT  # PROJECT_ROOT 임포트 추가
 
 
 class StockDataManager:
-    def __init__(self, db_path="stock_data.db", schema_path=None):
+    def __init__(self, db_path="trading.db", schema_path=None):
         # PROJECT_ROOT를 사용하여 스키마 파일 경로 설정
         default_schema_path = PROJECT_ROOT / "data" / "schema.sql"
 
@@ -31,7 +31,7 @@ class StockDataManager:
         """종목 정보 추가"""
         self.db.execute(
             """
-            INSERT OR REPLACE INTO stocks (stock_code, stock_name, market, sector)
+            INSERT OR REPLACE INTO stock_info (symbol, name, market, sector)
             VALUES (?, ?, ?, ?)
             """,
             (stock_code, stock_name, market, sector),
@@ -266,7 +266,7 @@ class StockDataManager:
 # 사용 예시
 if __name__ == "__main__":
     # 데이터 관리자 초기화
-    dm = StockDataManager("stock_data.db")
+    dm = StockDataManager("trading.db")
 
     # 삼성전자 정보 추가
     dm.add_stock("005930", "삼성전자", "KOSPI", "반도체")
