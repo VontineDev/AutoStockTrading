@@ -41,7 +41,7 @@ class StrategyConfig:
     description: str = "기본 전략"
     parameters: Optional[Dict[str, Any]] = None
     risk_management: Optional[Dict[str, float]] = None
-    min_data_length: int = 50
+    min_data_length: int = 20
     required_indicators: Optional[List[str]] = None
 
     def __post_init__(self):

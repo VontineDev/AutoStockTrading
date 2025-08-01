@@ -25,7 +25,7 @@ class RSIConfig(StrategyConfig):
     rsi_period: int = 14
     rsi_oversold: float = 30
     rsi_overbought: float = 70
-    min_data_length: int = 50
+    min_data_length: int = 20
     stop_loss_pct: float = 0.04
     take_profit_pct: float = 0.08
     volume_filter: bool = False

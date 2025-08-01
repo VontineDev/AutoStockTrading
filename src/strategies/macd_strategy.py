@@ -30,7 +30,7 @@ class MACDConfig(StrategyConfig):
     slow_period: int = 26
     signal_period: int = 9
     histogram_threshold: float = 0.0
-    min_data_length: int = 50
+    min_data_length: int = 20
     stop_loss_pct: float = 0.04
     take_profit_pct: float = 0.08
     rsi_filter: bool = False

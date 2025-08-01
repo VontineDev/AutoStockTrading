@@ -6,7 +6,7 @@
     },
     {
       "title": "터미널 명령어 처리 원칙",
-      "description": "운영체제 감지 후 OS별로 적합한 명령어를 사용해야 하며, Python 실행파일, 가상환경 경로, 경로 구분자, 셸 타입 등도 OS에 맞게 구분하여 사용한다."
+      "description": "터미널 명령어 실행 시 반드시 다음 순서를 준수한다: 1) platform.system() 또는 os.name으로 운영체제 감지 후 OS별 적합한 명령어 사용 (Windows: python, venv\\Scripts\\activate, \\ 경로구분자 / Linux/macOS: python3, venv/bin/activate, / 경로구분자), 2) 가상환경 활성화 상태 확인 후 필요시 활성화 (Windows: .\\venv\\Scripts\\activate / Linux/macOS: source venv/bin/activate), 3) Python 실행파일, 가상환경 경로, 경로 구분자, 셸 타입 등도 OS에 맞게 구분하여 사용한다."
     },
     {
       "title": "코드 품질 원칙",

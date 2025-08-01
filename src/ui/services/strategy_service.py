@@ -99,8 +99,8 @@ class StrategyService:
                 'name': '볼린저 밴드 전략',
                 'description': '볼린저 밴드의 밴드 터치 및 돌파를 이용한 전략',
                 'parameters': {
-                    'period': {'default': 20, 'min': 10, 'max': 50, 'type': 'int'},
-                    'std_dev': {'default': 2.0, 'min': 1.0, 'max': 3.0, 'type': 'float'}
+                    'bb_period': {'default': 20, 'min': 10, 'max': 50, 'type': 'int'},
+                    'bb_deviation': {'default': 2.0, 'min': 1.0, 'max': 3.0, 'type': 'float'}
                 },
                 'suitable_for': '변동성이 있는 시장',
                 'risk_level': '중간'

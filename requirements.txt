@@ -9,6 +9,8 @@ numpy>=1.24.0
 # 기술적 분석
 TA-Lib>=0.4.25
 pykrx>=1.0.51
+# 로컬 TA-Lib wheel 파일 (Windows용)
+./ta_lib-0.6.4-cp310-cp310-win_amd64.whl
 
 # 시각화
 plotly>=5.17.0

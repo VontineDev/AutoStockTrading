@@ -143,17 +143,24 @@ class BacktestEngine:
            strategy = strategy()
         logger.info(f"전략 인스턴스: {type(strategy)}")
 
-        # 전체 날짜 범위 수집
+        # 전체 데이터로 신호 생성
+        all_signals = {}
         all_dates = set()
+        
         for symbol, df in data.items():
             logger.info(f"generate_signals 호출: {symbol}, 데이터 shape: {df.shape}")
             try:
+                # 전체 데이터로 신호 생성
                 signals = strategy.generate_signals(df, symbol) if hasattr(strategy, 'generate_signals') else strategy.run_strategy(df, symbol)
                 if signals is None:
                     signals = []
                 logger.info(f"{symbol} 신호 개수: {len(signals)}")
+                all_signals[symbol] = signals
             except Exception as e:
                 logger.error(f"{symbol} generate_signals 예외: {e}", exc_info=True)
+                all_signals[symbol] = []
+            
+            # 날짜 범위 수집
             if "date" in df.columns:
                 all_dates.update(
                     pd.to_datetime(df["date"], format="mixed", errors="coerce").dt.date
@@ -187,7 +194,7 @@ class BacktestEngine:
         # 백테스팅 실행
         for date in sorted_dates:
             self.current_date = pd.to_datetime(date, format="mixed", errors="coerce")
-            self._process_daily_signals(strategy, data, date)
+            self._process_daily_signals(strategy, data, date, all_signals)
             self._update_positions(data, date)
             self._record_equity()
 
@@ -203,7 +210,7 @@ class BacktestEngine:
 
         return results
 
-    def _process_daily_signals(self, strategy, data: Dict[str, pd.DataFrame], date):
+    def _process_daily_signals(self, strategy, data: Dict[str, pd.DataFrame], date, all_signals: Dict[str, List] = None):
         """일별 매매 신호 처리"""
         for symbol, df in data.items():
             # 해당 날짜의 데이터 추출
@@ -224,80 +231,45 @@ class BacktestEngine:
             if day_data.empty:
                 continue
 
-            # 전략 실행 (충분한 과거 데이터 포함)
-            try:
-                historical_data = (
-                    df[
-                        df.index
-                        <= pd.to_datetime(date, format="mixed", errors="coerce")
-                    ]
-                    if "date" not in df.columns
-                    else df[
-                        df["date"]
-                        <= pd.to_datetime(date, format="mixed", errors="coerce")
-                    ]
-                )
+            # 미리 생성된 신호 사용
+            signals = all_signals.get(symbol, []) if all_signals else []
+            
+            # 해당 날짜의 신호만 필터링
+            daily_signals = []
+            for signal in signals:
+                if hasattr(signal.timestamp, "date"):
+                    signal_date = signal.timestamp.date()
+                else:
+                    signal_date = pd.to_datetime(
+                        signal.timestamp, format="mixed", errors="coerce"
+                    ).date()
 
-                if len(historical_data) < strategy.config.min_data_length:
-                    logger.debug(f"{symbol}: 데이터 부족 (필요: {strategy.config.min_data_length}, 실제: {len(historical_data)}) - 신호 무시")
-                    continue
+                # 신호 날짜가 현재 처리 날짜와 일치하는 경우만 처리
+                if signal_date == date:
+                    daily_signals.append(signal)
 
-                signals = strategy.run_strategy(historical_data, symbol)
-                if signals is None:
-                    signals = []
+            # 신호 처리
+            for signal in daily_signals:
+                signal_key = f"{symbol}_{signal.timestamp.date()}_{signal.signal_type}_{signal.price}"
 
-                # 모든 신호 처리 (중복 방지)
-                for signal in signals:
-                    if hasattr(signal.timestamp, "date"):
-                        signal_date = signal.timestamp.date()
+                # 중복 처리 방지
+                if not hasattr(self, "_processed_signals"):
+                    self._processed_signals = set()
+
+                if signal_key not in self._processed_signals:
+                    # 신호 날짜의 시장 데이터 사용
+                    market_data = day_data.iloc[-1] if not day_data.empty else None
+                    
+                    if market_data is not None:
+                        # 신호 처리 및 기록
+                        self._execute_signal(signal, market_data)
+                        self._processed_signals.add(signal_key)
+
+                        logger.debug(
+                            f"신호 처리: {signal.timestamp.date()} {signal.signal_type} {symbol} @ {signal.price:.0f}원"
+                        )
                     else:
-                        signal_date = pd.to_datetime(
-                            signal.timestamp, format="mixed", errors="coerce"
-                        ).date()
-
-                    # 신호 날짜가 현재 처리 날짜보다 미래가 아니고, 아직 처리되지 않은 신호만 처리
-                    if signal_date <= date:
-                        signal_key = f"{symbol}_{signal_date}_{signal.signal_type}_{signal.price}"
-
-                        # 중복 처리 방지
-                        if not hasattr(self, "_processed_signals"):
-                            self._processed_signals = set()
-
-                        if signal_key not in self._processed_signals:
-                            # 신호 날짜의 시장 데이터 찾기
-                            if signal_date == date:
-                                market_data = day_data.iloc[-1]
-                            else:
-                                # 과거 신호의 경우 해당 날짜 데이터 찾기
-                                if "date" in df.columns:
-                                    signal_day_data = (
-                                        df[df["date"].dt.date == signal_date]
-                                        if hasattr(df["date"], "dt")
-                                        else df[df["date"] == signal_date]
-                                    )
-                                else:
-                                    signal_day_data = (
-                                        df[df.index.date == signal_date]
-                                        if hasattr(df.index, "date")
-                                        else pd.DataFrame()
-                                    )
-
-                                if not signal_day_data.empty:
-                                    market_data = signal_day_data.iloc[-1]
-                                else:
-                                    logger.debug(f"{symbol}: 신호 날짜({signal_date})에 해당하는 시장 데이터 없음, 신호 무시 (신호: {signal})")
-                                    continue
-
-                            # 신호 처리 및 기록
-                            self._execute_signal(signal, market_data)
-                            self._processed_signals.add(signal_key)
-
-                            logger.debug(
-                                f"신호 처리: {signal_date} {signal.signal_type} {symbol} @ {signal.price:.0f}원 (신호: {signal})"
-                            )
-
-            except Exception as e:
-                logger.warning(f"신호 처리 중 오류 ({symbol}, {date}): {e}")
+                        logger.debug(f"{symbol}: 신호 날짜({signal.timestamp.date()})에 해당하는 시장 데이터 없음, 신호 무시")
 
     def _execute_signal(self, signal, market_data: pd.Series):
         """매매 신호 실행"""
@@ -626,6 +598,15 @@ class BacktestEngine:
 
     def _empty_results(self) -> Dict[str, Any]:
         """거래가 없을 때의 빈 결과"""
+        # 빈 equity_curve에 total_value 컬럼 추가
+        empty_equity_curve = pd.DataFrame({
+            'date': [],
+            'cash': [],
+            'positions_value': [],
+            'total_value': [],
+            'open_positions': []
+        })
+        
         return {
             "total_trades": 0,
             "winning_trades": 0,
@@ -641,7 +622,7 @@ class BacktestEngine:
             "avg_holding_days": 0,
             "max_holding_days": 0,
             "total_commission": 0,
-            "equity_curve": pd.DataFrame(),
+            "equity_curve": empty_equity_curve,
             "daily_returns": pd.Series(),
             "trades": pd.DataFrame(),
         }

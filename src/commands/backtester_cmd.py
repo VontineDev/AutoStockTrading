@@ -105,7 +105,26 @@ def run_backtest_with_symbols(symbols, strategies, start_date, end_date, days, p
             # 전략 인스턴스 생성 (첫 번째 전략 사용)
             strategy_name = strategies[0] if isinstance(strategies, list) else strategies
             strategy_class = strategy_map.get(strategy_name.lower(), RSIStrategy)
-            strategy = strategy_class()
+            
+            # 전략별 매개변수 매핑
+            strategy_params = {}
+            if strategy_name.lower() == 'bollinger':
+                # BollingerBand 전략은 bb_period, bb_deviation 사용
+                strategy_params = {'bb_period': 20, 'bb_deviation': 2.0}
+            elif strategy_name.lower() == 'macd':
+                strategy_params = {'fast_period': 12, 'slow_period': 26, 'signal_period': 9}
+            elif strategy_name.lower() == 'rsi':
+                strategy_params = {'rsi_period': 14, 'rsi_oversold': 30, 'rsi_overbought': 70}
+            elif strategy_name.lower() == 'ma':
+                strategy_params = {'fast_period': 5, 'slow_period': 20}
+            
+            # 매개변수가 있으면 config 객체를 생성하여 전략 인스턴스 생성
+            if strategy_params and hasattr(strategy_class, 'ConfigClass'):
+                config_class = strategy_class.ConfigClass
+                config = config_class(**strategy_params)
+                strategy = strategy_class(config=config)
+            else:
+                strategy = strategy_class()
             
             print(f"{symbol}: {strategy_name} 전략 사용")
             

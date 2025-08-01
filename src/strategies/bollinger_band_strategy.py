@@ -24,7 +24,7 @@ class BollingerBandConfig(StrategyConfig):
     name: str = "BollingerBand_SwingTrading"
     bb_period: int = 20
     bb_deviation: float = 2.0
-    min_data_length: int = 50
+    min_data_length: int = 20
 
     # 신호 조건
     bb_squeeze_threshold: float = 0.02  # 밴드 폭 압축 기준 (2%)
